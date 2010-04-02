@@ -1,0 +1,8 @@
+*.exe
+*.manifest
+*.txt
+*.cache
+*.resources
+obj/
+bin/
+bin/*/
