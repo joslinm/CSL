@@ -21,7 +21,6 @@ namespace CSL_Test__1
         string fileName;
         string birth; //Waffles | What.CD
         string destPath;
-
         bool discard;
 
 

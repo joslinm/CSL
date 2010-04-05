@@ -31,7 +31,7 @@ namespace CSL_Test__1
         }
         private void SelectionTextBox_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (e.KeyChar.Equals(Keys.Return))
+            if (e.KeyChar.Equals(Keys.Enter) || e.KeyChar.Equals(Keys.Return))
             {
                 OkButton.PerformClick();
             }

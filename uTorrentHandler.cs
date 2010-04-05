@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Diagnostics;
+using System.Data;
 
 namespace CSL_Test__1
 {
@@ -14,33 +15,37 @@ namespace CSL_Test__1
 
         public void SendTorrents()
         {
-            System.Data.DataRowCollection rows = xml.dataset.Tables[0].Rows;
-
-            for (int a = 0; a < rows.Count; a++)
+            foreach(DataRow row in xml.dataset.Tables[0].Rows)
             {
                 try
                 {
                     Process sendTorrentProcess = new Process();
                     //torrentClient.exe /directory "C:\Save Path" "D:\Some folder\your.torrent"
 
-                    string fullArgument = "//directory " + "\"" + settings.GetDownloadDirectory() + "\" "
-                        + "\"" + rows[a]["File"] + "\"";
+                    string fullArgument = "/directory " + "\"" + row["Save Structure"] + "\" "
+                        + "\"" + row["File Path"] + "\"";
                     sendTorrentProcess.StartInfo.WorkingDirectory = settings.GetTorrentClientFolder();
                     sendTorrentProcess.StartInfo.Arguments = fullArgument;
                     sendTorrentProcess.StartInfo.FileName = settings.GetTorrentClient();
 
-                    sendTorrentProcess.Start();
+                    /*sendTorrentProcess.Start();
 
                     Thread.Sleep(100);
                     sendTorrentProcess.WaitForInputIdle();
                     sendTorrentProcess.Dispose();
-                    sendTorrentProcess.Close();
+                    sendTorrentProcess.Close();*/
+
                 }
                 catch (Exception e)
                 {
                     Debug.Print(e.ToString());
                 }
+
+                row.BeginEdit();
+                row["Handled"] = true;
+                row.EndEdit();
             }
+            xml.dataset.AcceptChanges();
         }
 
     }

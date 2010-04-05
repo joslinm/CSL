@@ -38,13 +38,14 @@ namespace CSL_Test__1
         public Torrent[] Build(string[] files)
         {
             Torrent[] torrent = new Torrent[files.Length];
+            information[14] = null;
 
             for (int a = 0; a < files.Length; a++)
             {
                 string birth = GetTorrentBirth(files[a]);
 
                 torrent[a] = ProcessTorrent(files[a], birth);
-                if(!information[14].Equals("true"))
+                if (information[14] == "true") 
                     VerifyTorrent(torrent[a]);
 
                 //Clear out information for this run to avoid misinformation on the next run
@@ -91,67 +92,61 @@ namespace CSL_Test__1
 
                         case ('a'):
                             {
-                                directoryName += ExtractArtist(birth, file);
+                                string artist = ExtractArtist(birth, file);
+                                directoryName += artist;
+                                information[0] = artist;
                                 a++;
                             } break;
                         case ('y'):
                             {
-                                directoryName += ExtractYear(birth, file);
+                                string year = ExtractYear(birth, file);
+                                directoryName += year;
+                                information[4] = year;
                                 a++;
                             } break;
                         case ('b'):
                             {
-                                directoryName += ExtractBitrate(birth, file);
+                                string bitrate = ExtractBitrate(birth, file);
+                                directoryName += bitrate;
+                                information[3] = bitrate;
                                 a++;
                             } break;
                         case ('d'):
                             {
-                                directoryName += ExtractBitformat(birth, file);
+                                string bitformat = ExtractBitformat(birth, file);
+                                directoryName += bitformat;
+                                information[6] = bitformat;
                                 a++;
                             } break;
                         case ('p'):
                             {
-                                directoryName += ExtractPhysicalFormat(birth, file);
+                                string pformat = ExtractPhysicalFormat(birth, file);
+                                directoryName += pformat;
+                                information[5] = pformat;
                                 a++;
                             } break;
                         case ('t'):
                             {
-                                directoryName += ExtractAlbum(birth, file);
+                                string album = ExtractAlbum(birth, file);
+                                directoryName += album;
+                                information[1] = album;
                                 a++;
                             } break;
                         case ('z'):
                             {
                                 string format = (information[2] == null) ? ExtractAlbumFormat(birth, file, file.Contains("[CSL]--Temp")) : information[2];
-
-                                if (format == "Album")
-                                    directoryName += "Album";
-                                else if (format == "Live")
-                                    directoryName += "Live Album";
-                                else if (format == "Compilation")
-                                    directoryName += "Compilation";
-                                else if (format == "EP")
-                                    directoryName += "EP";
-                                else if (format == "Remix")
-                                    directoryName += "Remix";
-                                else if (format == "Interview")
-                                    directoryName += "Interview";
-                                else if (format == "Single")
-                                    directoryName += "Single";
-                                else if (format == "Bootleg")
-                                    directoryName += "Bootleg";
-                                else if (format == "Unknown")
-                                    directoryName += "Unknown";
-                                else if (format == "Soundtrack")
-                                    directoryName += "Soundtrack";
+                                directoryName += format;
+                                information[2] = format;
                                 a++;
                             } break;
                         case ('l'):
                             {
                                 string format = (information[2] == null) ? ExtractAlbumFormat(birth, file, file.Contains("[CSL]--Temp")) : information[2];
-
+                                information[2] = format;
                                 if (format == "Live")
                                 {
                                     directoryName += "Live Album";
+                                    information[2] = format;
                                 }
                                 a++;
                             } break;
@@ -162,6 +157,7 @@ namespace CSL_Test__1
                                 if (format == "Compilation")
                                 {
                                     directoryName += "Compilation";
+                                    information[2] = format;
                                 }
                                 a++;
                             } break;
@@ -172,6 +168,7 @@ namespace CSL_Test__1
                                 if (format == "EP")
                                 {
                                     directoryName += "EP";
+                                    information[2] = format;
                                 }
                                 a++;
                             } break;
@@ -182,6 +179,7 @@ namespace CSL_Test__1
                                 if (format == "Remix")
                                 {
                                     directoryName += "Remix";
+                                    information[2] = format;
                                 }
                                 a++;
                             } break;
@@ -192,6 +190,7 @@ namespace CSL_Test__1
                                 if (format == "Interview")
                                 {
                                     directoryName += "Interview";
+                                    information[2] = format;
                                 }
                                 a++;
                             } break;
@@ -202,6 +201,7 @@ namespace CSL_Test__1
                                 if (format == "Single")
                                 {
                                     directoryName += "Single";
+                                    information[2] = format;
                                 }
                                 a++;
                             } break;
@@ -212,6 +212,7 @@ namespace CSL_Test__1
                                 if (format == "Bootleg")
                                 {
                                     directoryName += "Bootleg";
+                                    information[2] = format;
                                 }
                                 a++;
                             } break;
@@ -222,6 +223,7 @@ namespace CSL_Test__1
                                 if (format == "Soundtrack")
                                 {
                                     directoryName += "Soundtrack";
+                                    information[2] = format;
                                 }
                                 a++;
                             } break;
@@ -232,6 +234,7 @@ namespace CSL_Test__1
                                 if (format == "Unknown")
                                 {
                                     directoryName += "Unknown";
+                                    information[2] = format;
                                 }
                                 a++;
                             } break;
@@ -242,6 +245,7 @@ namespace CSL_Test__1
                                 if (format == "Album")
                                 {
                                     directoryName += "Album";
+                                    information[2] = format;
                                 }
                                 a++;
                             } break;
@@ -268,6 +272,9 @@ namespace CSL_Test__1
             else if (settings.GetLowercaseAllFolderNames())
                 information[13] = information[13].ToLower();
 
+            information[10] = file;
+            information[11] = Path.GetFileName(file);
+            information[12] = birth;
             ReturnTorrent:
             return new Torrent(information);
         }
@@ -458,19 +465,16 @@ namespace CSL_Test__1
             StreamReader sr = new StreamReader(fs);
             string fileContents = sr.ReadToEnd();
 
-            while (!sr.EndOfStream)
-            {
-                if (fileContents.Contains("waffles"))
-                    return "waffles";
-                else if (fileContents.Contains("what"))
-                    return "what";
-                else
-                    fileContents = sr.ReadLine();
-            }
+            if (fileContents.Contains("waffles"))
+                return "waffles";
+            else if (fileContents.Contains("what"))
+                return "what";
+            else
+                fileContents = sr.ReadLine();
+
 
             return IssueError("Can't parse birth", file);
         }
-
         public string IssueError(string error, string file)
         {
             string returnString = null;
@@ -591,6 +595,7 @@ namespace CSL_Test__1
 
         public string ExtractArtist(string birth, string file)
         {
+            file = Path.GetFileName(file);
             switch (birth)
             {
                 case "waffles":
@@ -642,7 +647,10 @@ namespace CSL_Test__1
                                             if (file[dash + 2].Equals('2') || (file[dash + 2].Equals('1')))
                                                 break;
                                             else
-                                                return file.Substring(0, dash - 1); //return the artist
+                                            {
+                                                string artist = file.Substring(0, dash - 1);
+                                                return artist;
+                                            }
                                         }
 
                                         startingPosition = dash + 1;

@@ -23,6 +23,7 @@ namespace CSL_Test__1
             if (dataset == null && table == null)
                 Initialize();
         }
+
         public void Initialize()
         {
             if (File.Exists(xmlSchemaName))
@@ -32,22 +33,31 @@ namespace CSL_Test__1
                 dataset.ReadXmlSchema(xmlStream);
                 table = dataset.Tables[0];
                 xmlStream.Close();
-
-                xmlStream = new FileStream(xmlSchemaName, FileMode.Open);
-                dataset.ReadXml(xmlStream);
-                xmlStream.Close();
             }
             else
             {
                 dataset = new DataSet("TorrentSet");
                 table = new DataTable("Torrent");
+                DataColumn column;
 
                 table.Columns.Add("File", typeof(string));
                 table.Columns.Add("Artist", typeof(string));
                 table.Columns.Add("Album", typeof(string));
                 table.Columns.Add("Save Structure", typeof(string));
-                table.Columns.Add("Handled", typeof(bool));
-                table.Columns.Add("Error", typeof(bool));
+
+                //Handle Column
+                column = new DataColumn();
+                column.ReadOnly = false;
+                column.DataType = typeof(bool);
+                column.ColumnName = "Handled";
+                table.Columns.Add(column);
+
+                //Error Column
+                column = new DataColumn();
+                column.DataType = typeof(bool);
+                column.ColumnName = "Error";
+                table.Columns.Add(column);
+
                 table.Columns.Add("Release Format", typeof(string));
                 table.Columns.Add("Bitrate", typeof(string));
                 table.Columns.Add("Year", typeof(string));
@@ -62,16 +72,23 @@ namespace CSL_Test__1
                 dataset.WriteXmlSchema(xmlStream);
                 xmlStream.Close();
             }
+            if (File.Exists(xmlDataPath))
+            {
+                xmlStream = new FileStream(xmlDataPath, FileMode.Open);
+                table.ReadXml(xmlStream);
+                xmlStream.Close();
+            }
         }
         public void SaveAndClose()
         {
             if (xmlStream != null)
-            {
-                xmlStream = new FileStream(xmlDataName, FileMode.OpenOrCreate);
-                dataset.WriteXml(xmlStream);
                 xmlStream.Close();
-            }
+
+            xmlStream = new FileStream(xmlDataName, FileMode.OpenOrCreate);
+            dataset.WriteXml(xmlStream);
+            xmlStream.Close();
         }
+
         public void AddTorrents(Torrent[] torrents)
         {
             #region Information Contents
