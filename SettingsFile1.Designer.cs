@@ -169,7 +169,7 @@ namespace CSL_Test__1 {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Program Files\\uTorrent")]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Program Files (x86)\\utorrent")]
         public string TorrentClientFolder {
             get {
                 return ((string)(this["TorrentClientFolder"]));

@@ -47,13 +47,14 @@ namespace CSL_Test__1
 
                 //Handle Column
                 column = new DataColumn();
-                column.ReadOnly = false;
+                column.ReadOnly = true;
                 column.DataType = typeof(bool);
                 column.ColumnName = "Handled";
                 table.Columns.Add(column);
 
                 //Error Column
                 column = new DataColumn();
+                column.ReadOnly = true;
                 column.DataType = typeof(bool);
                 column.ColumnName = "Error";
                 table.Columns.Add(column);
@@ -81,6 +82,17 @@ namespace CSL_Test__1
         }
         public void SaveAndClose()
         {
+            if (xmlStream != null)
+                xmlStream.Close();
+
+            xmlStream = new FileStream(xmlDataName, FileMode.OpenOrCreate);
+            dataset.WriteXml(xmlStream);
+            xmlStream.Close();
+        }
+        public void Save()
+        {
+            dataset.AcceptChanges();
+
             if (xmlStream != null)
                 xmlStream.Close();
 

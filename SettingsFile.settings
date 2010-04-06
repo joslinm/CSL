@@ -1,5 +1,5 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="CSLWindowsApplication" GeneratedClassName="SettingsFile">
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="CSL_Test__1" GeneratedClassName="SettingsFile">
   <Profiles />
   <Settings>
     <Setting Name="ArtistFlip" Type="System.Boolean" Scope="User">
@@ -39,7 +39,7 @@
       <Value Profile="(Default)">uTorrent.exe</Value>
     </Setting>
     <Setting Name="TorrentClientFolder" Type="System.String" Scope="User">
-      <Value Profile="(Default)">C:\Program Files\uTorrent</Value>
+      <Value Profile="(Default)">C:\Program Files (x86)\utorrent</Value>
     </Setting>
     <Setting Name="TorrentSaveFolder" Type="System.String" Scope="User">
       <Value Profile="(Default)">C:\what.cd torrent files</Value>

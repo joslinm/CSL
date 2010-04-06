@@ -18,7 +18,7 @@ namespace CSL_Test__1
         uTorrentHandler utorrent = new uTorrentHandler();
         TorrentBuilder builder = new TorrentBuilder();
         Torrent[] torrents;
-
+        SettingsHandler settings = new SettingsHandler();
         public MainWindow()
         {
             data = new TorrentXMLHandler();
@@ -28,18 +28,27 @@ namespace CSL_Test__1
 
         private void MainWindow_FormClosing(object sender, FormClosingEventArgs e)
         {
-            data.table.AcceptChanges();
+            data.dataset.AcceptChanges();
             data.SaveAndClose();
         }
 
         private void dataGridView_DragDrop(object sender, DragEventArgs e)
         {
-            // transfer the filenames to a string array
-            // (yes, everything to the left of the "=" can be put in the 
-            // foreach loop in place of "files", but this is easier to understand.)
-
             string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
-            Torrent[] torrents = builder.Build(files);
+            BackgroundWorker bw = new BackgroundWorker();
+            bw.DoWork += new DoWorkEventHandler(bw_DoDragDrop);
+            bw.RunWorkerAsync(files);
+            bw.ProgressChanged += new ProgressChangedEventHandler(bw_DragDropProgress);
+        }
+
+        void bw_DragDropProgress(object sender, ProgressChangedEventArgs e)
+        {
+            dataGridViewProgressBar.Value = e.ProgressPercentage;
+        }
+
+        void bw_DoDragDrop(object sender, DoWorkEventArgs e)
+        {
+            torrents = builder.Build((string[])e.Argument);
             data.AddTorrents(torrents);
         }
 
@@ -54,8 +63,27 @@ namespace CSL_Test__1
 
         private void uTorrentSendAllButton_Click(object sender, EventArgs e)
         {
-            utorrent.SendTorrents();
+            utorrent.SendTorrents(data);
             dataGridView.Update();
+        }
+
+        private void DeleteButton_Click(object sender, EventArgs e)
+        {
+            DataGridViewSelectedRowCollection dr = dataGridView.SelectedRows;
+            if (dr.Count > 0)
+            {
+                foreach (DataGridViewRow r in dr)
+                {
+                    data.table.Rows[r.Index].Delete();
+                }
+            }
+            else
+            {
+                DataGridViewSelectedCellCollection dc = dataGridView.SelectedCells;
+                foreach (DataGridViewCell c in dc)
+                    c.Value = "";
+            }
+            data.Save();
         }
     }
 }

@@ -10,11 +10,11 @@ namespace CSL_Test__1
 {
     class uTorrentHandler
     {
-        TorrentXMLHandler xml = new TorrentXMLHandler();
         SettingsHandler settings = new SettingsHandler();
 
-        public void SendTorrents()
+        public void SendTorrents(TorrentXMLHandler xml)
         {
+            xml.table.Columns["Handled"].ReadOnly = false;
             foreach(DataRow row in xml.dataset.Tables[0].Rows)
             {
                 try
@@ -32,21 +32,24 @@ namespace CSL_Test__1
 
                     Thread.Sleep(100);
                     sendTorrentProcess.WaitForInputIdle();
-                    sendTorrentProcess.Dispose();
-                    sendTorrentProcess.Close();*/
+                    sendTorrentProcess.Dispose();*/
+                    sendTorrentProcess.Close();
+
+                    row.BeginEdit();
+                    row["Handled"] = true;
+                    row.EndEdit();
 
                 }
                 catch (Exception e)
                 {
                     Debug.Print(e.ToString());
                 }
-
-                row.BeginEdit();
-                row["Handled"] = true;
-                row.EndEdit();
             }
-            xml.dataset.AcceptChanges();
+            xml.table.Columns["Handled"].ReadOnly = true;
         }
+        
+
+
 
     }
 }

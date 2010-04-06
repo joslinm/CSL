@@ -45,7 +45,7 @@ namespace CSL_Test__1
                 string birth = GetTorrentBirth(files[a]);
 
                 torrent[a] = ProcessTorrent(files[a], birth);
-                if (information[14] == "true") 
+                if (information[14] != "true") 
                     VerifyTorrent(torrent[a]);
 
                 //Clear out information for this run to avoid misinformation on the next run
@@ -294,7 +294,7 @@ namespace CSL_Test__1
                             MusicBrainzXMLDocumentCreator createXML = new MusicBrainzXMLDocumentCreator("http://musicbrainz.org/ws/1/artist/?type=xml&name=" + information[0]);
                             MusicBrainzXMLDocumentArtist[] artists = createXML.ProcessArtist();
 
-                            if (!artists[0].name.Equals(information[0]) && !artists[1].name.Equals(information[0]))
+                            /*if (!artists[0].name.Equals(information[0]) && !artists[1].name.Equals(information[0]))
                             {
                                 string trimmedArtist = information[0].Trim();
 
@@ -302,7 +302,7 @@ namespace CSL_Test__1
                                 {
                                     information[0] = IssueWarning("Artist is not perfect match", information[10]);
                                 }
-                            }
+                            }*/
                         }
                         break;
                     case 1: //Album
@@ -310,13 +310,13 @@ namespace CSL_Test__1
                             if (information[a] == null)
                                 goto default;
 
-                            MusicBrainzXMLDocumentCreator createXML = new MusicBrainzXMLDocumentCreator("http://musicbrainz.org/ws/1/artist/?type=xml&name=" + information[0]);
+                            MusicBrainzXMLDocumentCreator createXML = new MusicBrainzXMLDocumentCreator("http://musicbrainz.org/ws/1/release/?type=xml&title=" + information[1]);
                             MusicBrainzXMLDocumentRelease[] releases = createXML.ProcessRelease();
 
-                            if (!releases[0].releaseTitle.Equals(information[1]) && releases[0].ext_score.Equals("100"))
+                            /*if (!releases[0].releaseTitle.Equals(information[1]) && releases[0].ext_score.Equals("100"))
                             {
                                 information[1] = IssueWarning("Album is not perfect match", information[10]);
-                            }
+                            }*/
                         }
                         break;
                     case 2: //Release Type
@@ -324,7 +324,7 @@ namespace CSL_Test__1
                             if (information[a] == null)
                                 goto default;
 
-                            MusicBrainzXMLDocumentCreator createXML = new MusicBrainzXMLDocumentCreator("http://musicbrainz.org/ws/1/artist/?type=xml&name=" + information[0]);
+                            /*MusicBrainzXMLDocumentCreator createXML = new MusicBrainzXMLDocumentCreator("http://musicbrainz.org/ws/1/artist/?type=xml&name=" + information[0]);
                             MusicBrainzXMLDocumentRelease[] releases = createXML.ProcessRelease();
 
                             if (!releases[0].releaseType.Equals(information[2]) && releases[0].ext_score.Equals("100"))
@@ -334,7 +334,7 @@ namespace CSL_Test__1
                             else if (!releases[1].releaseType.Equals(information[2]))
                             {
                                 information[2] = IssueWarning("Release type is not perfect match", information[10]);
-                            }
+                            }*/
                         }
                         break;
                     case 3:
@@ -388,11 +388,17 @@ namespace CSL_Test__1
                                 information[13] = information[13].Replace("  ", " ");
                             }
 
-                            Match match = Regex.Match(information[13], "<|>|:|/|[|]|[?]|*");
+                            try
+                            {
+                                Match match = Regex.Match(information[13], "[<]|[>]|[/]|[|]|[?]|[*]");
+                            
                             if (match.Success)
                             {
                                 information[13] = IssueError("Illegal characters", information[13]);
                             }
+                            }
+                            catch (Exception e)
+                            { }
 
                             if ((settings.GetTorrentSaveFolder() + @"\[CSL] -- Handled Torrents\" + information[11]).Length >= 255)
                             {
@@ -454,7 +460,6 @@ namespace CSL_Test__1
                             }
                         }
                         break;
-
                 }
             }
         }

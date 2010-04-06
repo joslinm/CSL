@@ -28,7 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.dataGridViewProgressBar = new System.Windows.Forms.ProgressBar();
             this.dataGridView = new System.Windows.Forms.DataGridView();
             this.TorrentDataSet = new System.Data.DataSet();
             this.MainMenu = new System.Windows.Forms.MenuStrip();
@@ -46,17 +48,33 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.dataGridViewProgressBar);
             this.panel1.Controls.Add(this.dataGridView);
             this.panel1.Location = new System.Drawing.Point(-2, 200);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(1111, 215);
             this.panel1.TabIndex = 0;
             // 
+            // dataGridViewProgressBar
+            // 
+            this.dataGridViewProgressBar.Location = new System.Drawing.Point(817, 201);
+            this.dataGridViewProgressBar.Name = "dataGridViewProgressBar";
+            this.dataGridViewProgressBar.Size = new System.Drawing.Size(294, 14);
+            this.dataGridViewProgressBar.TabIndex = 1;
+            this.dataGridViewProgressBar.Visible = false;
+            // 
             // dataGridView
             // 
             this.dataGridView.AllowDrop = true;
+            this.dataGridView.AllowUserToAddRows = false;
+            this.dataGridView.AllowUserToOrderColumns = true;
+            dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.Color.Black;
+            this.dataGridView.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+            this.dataGridView.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.dataGridView.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView.Location = new System.Drawing.Point(0, 0);
             this.dataGridView.Name = "dataGridView";
             this.dataGridView.Size = new System.Drawing.Size(1111, 215);
@@ -83,13 +101,13 @@
             this.optionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.optionsToolStripMenuItem1});
             this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
-            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(56, 20);
+            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
             this.optionsToolStripMenuItem.Text = "Options";
             // 
             // optionsToolStripMenuItem1
             // 
             this.optionsToolStripMenuItem1.Name = "optionsToolStripMenuItem1";
-            this.optionsToolStripMenuItem1.Size = new System.Drawing.Size(134, 22);
+            this.optionsToolStripMenuItem1.Size = new System.Drawing.Size(125, 22);
             this.optionsToolStripMenuItem1.Text = "Options...";
             // 
             // ProcessTorrentsButton
@@ -119,6 +137,7 @@
             this.DeleteButton.TabIndex = 4;
             this.DeleteButton.Text = "Delete";
             this.DeleteButton.UseVisualStyleBackColor = true;
+            this.DeleteButton.Click += new System.EventHandler(this.DeleteButton_Click);
             // 
             // uTorrentSendAllButton
             // 
@@ -158,7 +177,6 @@
         #endregion
 
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.MenuStrip MainMenu;
         private System.Windows.Forms.ToolStripMenuItem optionsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem optionsToolStripMenuItem1;
         private System.Data.DataSet TorrentDataSet;
@@ -167,6 +185,8 @@
         private System.Windows.Forms.CheckBox AutoProcessCheckBox;
         private System.Windows.Forms.Button DeleteButton;
         private System.Windows.Forms.Button uTorrentSendAllButton;
+        private System.Windows.Forms.MenuStrip MainMenu;
+        private System.Windows.Forms.ProgressBar dataGridViewProgressBar;
 
     }
 }

@@ -147,6 +147,7 @@ namespace MusicBrainzXML
                     }
                 } while (nav.MoveToNext());
 
+                int counter1 = 0;
                 while (!nav.Name.Equals("release"))
                 {
                     if (nav.Name.Equals("metadata") || nav.Name.Equals("release-list"))
@@ -155,6 +156,14 @@ namespace MusicBrainzXML
                     }
                     else
                         nav.MoveToParent();
+
+                    if (counter1 > 10)
+                    {
+                        a--;
+                        break;
+                    }
+
+                    counter1++;
                 }
 
                 if (!nav.MoveToNext()) //Move to next release, if it can't, break out of loop
@@ -165,22 +174,33 @@ namespace MusicBrainzXML
         public MusicBrainzXMLDocumentArtist[] ProcessArtist()
         {
             MusicBrainzXMLDocumentArtist[] results = new MusicBrainzXMLDocumentArtist[50];
+            for (int a = 0; a < 50; a++)
+                results[a] = new MusicBrainzXMLDocumentArtist();
+
 
             nav.MoveToChild(XPathNodeType.Element); //metadata
             nav.MoveToChild(XPathNodeType.Element); //artist-list
             nav.MoveToChild(XPathNodeType.Element); //artist
+            int counter = -1;
 
             do
             {
+                ++counter;
 
                 if (nav.HasAttributes)
                 {
                     nav.MoveToFirstAttribute();
-                    results[0].type = nav.Value;
+                    try
+                    {
+                        results[counter].type = nav.Value;
+                    }
+                    catch (Exception e)
+                    {
+                    }
                     if (nav.MoveToNextAttribute())
-                        results[0].artistId = nav.Value;
+                        results[counter].artistId = nav.Value;
                     if (nav.MoveToNextAttribute())
-                        results[0].ext_score = nav.Value;
+                        results[counter].ext_score = nav.Value;
 
                     nav.MoveToParent();
                 }
@@ -192,18 +212,18 @@ namespace MusicBrainzXML
                     switch (nav.Name)
                     {
                         case "name":
-                            results[0].name = nav.Value;
+                            results[counter].name = nav.Value;
                             break;
                         case "sort-name":
-                            results[0].sort_name = nav.Value;
+                            results[counter].sort_name = nav.Value;
                             break;
                         case "life-span":
                             if (nav.HasAttributes)
                             {
                                 nav.MoveToFirstAttribute();
-                                results[0].birth = nav.Value;
+                                results[counter].birth = nav.Value;
                                 if (nav.MoveToNextAttribute())
-                                results[0].death = nav.Value;
+                                results[counter].death = nav.Value;
                             }
                             break;
                     }
