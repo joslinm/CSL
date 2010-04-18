@@ -15,34 +15,37 @@ namespace CSL_Test__1
         public void SendTorrents(TorrentXMLHandler xml)
         {
             xml.table.Columns["Handled"].ReadOnly = false;
+            
             foreach(DataRow row in xml.dataset.Tables[0].Rows)
             {
-                try
+                if (!(bool)row["Error"] && !(bool)row["Handled"])
                 {
-                    Process sendTorrentProcess = new Process();
-                    //torrentClient.exe /directory "C:\Save Path" "D:\Some folder\your.torrent"
+                    try
+                    {
+                        Process sendTorrentProcess = new Process();
+                        //torrentClient.exe /directory "C:\Save Path" "D:\Some folder\your.torrent"
 
-                    string fullArgument = "/directory " + "\"" + row["Save Structure"] + "\" "
-                        + "\"" + row["File Path"] + "\"";
-                    sendTorrentProcess.StartInfo.WorkingDirectory = settings.GetTorrentClientFolder();
-                    sendTorrentProcess.StartInfo.Arguments = fullArgument;
-                    sendTorrentProcess.StartInfo.FileName = settings.GetTorrentClient();
+                        string fullArgument = "/directory " + "\"" + row["Save Structure"] + "\" "
+                            + "\"" + row["File Path"] + "\"";
+                        sendTorrentProcess.StartInfo.WorkingDirectory = settings.GetTorrentClientFolder();
+                        sendTorrentProcess.StartInfo.Arguments = fullArgument;
+                        sendTorrentProcess.StartInfo.FileName = settings.GetTorrentClient();
 
-                    /*sendTorrentProcess.Start();
+                        sendTorrentProcess.Start();
 
-                    Thread.Sleep(100);
-                    sendTorrentProcess.WaitForInputIdle();
-                    sendTorrentProcess.Dispose();*/
-                    sendTorrentProcess.Close();
+                        Thread.Sleep(100);
+                        sendTorrentProcess.Dispose();
+                        sendTorrentProcess.Close();
 
-                    row.BeginEdit();
-                    row["Handled"] = true;
-                    row.EndEdit();
+                        row.BeginEdit();
+                        row["Handled"] = true;
+                        row.EndEdit();
 
-                }
-                catch (Exception e)
-                {
-                    Debug.Print(e.ToString());
+                    }
+                    catch (Exception e)
+                    {
+                        Debug.Print(e.ToString());
+                    }
                 }
             }
             xml.table.Columns["Handled"].ReadOnly = true;

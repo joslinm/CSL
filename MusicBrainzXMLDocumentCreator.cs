@@ -12,15 +12,22 @@ namespace MusicBrainzXML
         XPathDocument document;
         XPathNavigator nav;
         MusicBrainzXMLDocumentRelease[] results = new MusicBrainzXMLDocumentRelease[50];
-
+        
         public MusicBrainzXMLDocumentCreator(string xmlurl)
         {
-            document = new XPathDocument(xmlurl);
-            nav = document.CreateNavigator();
+            try
+            {
+                document = new XPathDocument(xmlurl);
+                nav = document.CreateNavigator();
+            }
+            catch { }
         }
 
         public MusicBrainzXMLDocumentRelease[] ProcessRelease()
         {
+            if (nav == null)
+                return results;
+
             nav.MoveToChild(XPathNodeType.Element);//metadata
             nav.MoveToChild(XPathNodeType.Element);//release-list
             nav.MoveToChild(XPathNodeType.Element);//release
@@ -172,11 +179,13 @@ namespace MusicBrainzXML
             return results;
         }
         public MusicBrainzXMLDocumentArtist[] ProcessArtist()
-        {
+        {   
             MusicBrainzXMLDocumentArtist[] results = new MusicBrainzXMLDocumentArtist[50];
             for (int a = 0; a < 50; a++)
                 results[a] = new MusicBrainzXMLDocumentArtist();
 
+            if (nav == null)
+                return results;
 
             nav.MoveToChild(XPathNodeType.Element); //metadata
             nav.MoveToChild(XPathNodeType.Element); //artist-list
@@ -194,7 +203,7 @@ namespace MusicBrainzXML
                     {
                         results[counter].type = nav.Value;
                     }
-                    catch (Exception e)
+                    catch
                     {
                     }
                     if (nav.MoveToNextAttribute())
@@ -231,6 +240,7 @@ namespace MusicBrainzXML
                 while (nav.MoveToNext());
 
                 nav.MoveToParent(); //Artist
+                int counter1 = 0;
 
                 while (!nav.Name.Equals("artist"))
                 {
@@ -240,6 +250,14 @@ namespace MusicBrainzXML
                     }
                     else
                         nav.MoveToParent();
+
+                    if (counter1 > 10) //Stuck..
+                    {
+                        counter--; //Overwrite this array spot with next
+                        break; 
+                    }
+
+                    counter1++;
                 }
             }
             while (nav.MoveToNext());

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace CSL_Test__1
 {
-    class Torrent
+    public class Torrent
     {
         /*Main music information*/
         string artist = null;

@@ -61,7 +61,7 @@
             this.UserInputPanel.Controls.Add(this.SelectionTextBox);
             this.UserInputPanel.Location = new System.Drawing.Point(5, 152);
             this.UserInputPanel.Name = "UserInputPanel";
-            this.UserInputPanel.Size = new System.Drawing.Size(520, 108);
+            this.UserInputPanel.Size = new System.Drawing.Size(582, 108);
             this.UserInputPanel.TabIndex = 0;
             // 
             // BirthSelectionComboBox
@@ -81,7 +81,7 @@
             this.DiscardButton.BackColor = System.Drawing.Color.DarkRed;
             this.DiscardButton.Font = new System.Drawing.Font("Courier New", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.DiscardButton.ForeColor = System.Drawing.Color.Gainsboro;
-            this.DiscardButton.Location = new System.Drawing.Point(417, 3);
+            this.DiscardButton.Location = new System.Drawing.Point(480, 10);
             this.DiscardButton.Name = "DiscardButton";
             this.DiscardButton.Size = new System.Drawing.Size(88, 50);
             this.DiscardButton.TabIndex = 3;
@@ -112,7 +112,7 @@
             // 
             this.OkButton.BackColor = System.Drawing.SystemColors.Control;
             this.OkButton.Font = new System.Drawing.Font("Courier New", 12.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.OkButton.Location = new System.Drawing.Point(367, 55);
+            this.OkButton.Location = new System.Drawing.Point(430, 62);
             this.OkButton.Name = "OkButton";
             this.OkButton.Size = new System.Drawing.Size(138, 37);
             this.OkButton.TabIndex = 2;
@@ -211,7 +211,7 @@
             this.DescriptionPanel.Controls.Add(this.FileLabelLabel);
             this.DescriptionPanel.Location = new System.Drawing.Point(5, 3);
             this.DescriptionPanel.Name = "DescriptionPanel";
-            this.DescriptionPanel.Size = new System.Drawing.Size(520, 143);
+            this.DescriptionPanel.Size = new System.Drawing.Size(582, 143);
             this.DescriptionPanel.TabIndex = 1;
             // 
             // FilePathRichTextBox
@@ -219,7 +219,7 @@
             this.FilePathRichTextBox.Font = new System.Drawing.Font("Courier New", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FilePathRichTextBox.Location = new System.Drawing.Point(8, 76);
             this.FilePathRichTextBox.Name = "FilePathRichTextBox";
-            this.FilePathRichTextBox.Size = new System.Drawing.Size(488, 45);
+            this.FilePathRichTextBox.Size = new System.Drawing.Size(560, 45);
             this.FilePathRichTextBox.TabIndex = 5;
             this.FilePathRichTextBox.Text = "";
             // 
@@ -236,11 +236,11 @@
             // ErrorLabel
             // 
             this.ErrorLabel.AutoSize = true;
-            this.ErrorLabel.Font = new System.Drawing.Font("Courier New", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ErrorLabel.Font = new System.Drawing.Font("Courier New", 12.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ErrorLabel.ForeColor = System.Drawing.SystemColors.ControlText;
             this.ErrorLabel.Location = new System.Drawing.Point(7, 18);
             this.ErrorLabel.Name = "ErrorLabel";
-            this.ErrorLabel.Size = new System.Drawing.Size(310, 23);
+            this.ErrorLabel.Size = new System.Drawing.Size(259, 20);
             this.ErrorLabel.TabIndex = 0;
             this.ErrorLabel.Text = "This is the error message";
             this.ErrorLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -261,7 +261,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
-            this.ClientSize = new System.Drawing.Size(532, 263);
+            this.ClientSize = new System.Drawing.Size(599, 263);
             this.Controls.Add(this.DescriptionPanel);
             this.Controls.Add(this.UserInputPanel);
             this.Name = "ErrorWindow";

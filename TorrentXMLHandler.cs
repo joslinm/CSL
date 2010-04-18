@@ -7,7 +7,7 @@ using System.Data;
 
 namespace CSL_Test__1
 {
-    class TorrentXMLHandler
+    public class TorrentXMLHandler
     {
         static string xmlDataName = "torrents.xml";
         static string xmlSchemaName = "torrentschema.xml";
@@ -23,7 +23,6 @@ namespace CSL_Test__1
             if (dataset == null && table == null)
                 Initialize();
         }
-
         public void Initialize()
         {
             if (File.Exists(xmlSchemaName))
@@ -40,10 +39,15 @@ namespace CSL_Test__1
                 table = new DataTable("Torrent");
                 DataColumn column;
 
-                table.Columns.Add("File", typeof(string));
+                table.Columns.Add("Site Origin", typeof(string));
                 table.Columns.Add("Artist", typeof(string));
                 table.Columns.Add("Album", typeof(string));
                 table.Columns.Add("Save Structure", typeof(string));
+                table.Columns.Add("Year", typeof(string));
+                table.Columns.Add("Bitrate", typeof(string));
+                table.Columns.Add("Release Format", typeof(string));
+                table.Columns.Add("Physical Format", typeof(string));
+                table.Columns.Add("Bit Format", typeof(string));
 
                 //Handle Column
                 column = new DataColumn();
@@ -51,7 +55,6 @@ namespace CSL_Test__1
                 column.DataType = typeof(bool);
                 column.ColumnName = "Handled";
                 table.Columns.Add(column);
-
                 //Error Column
                 column = new DataColumn();
                 column.ReadOnly = true;
@@ -59,13 +62,8 @@ namespace CSL_Test__1
                 column.ColumnName = "Error";
                 table.Columns.Add(column);
 
-                table.Columns.Add("Release Format", typeof(string));
-                table.Columns.Add("Bitrate", typeof(string));
-                table.Columns.Add("Year", typeof(string));
-                table.Columns.Add("Physical Format", typeof(string));
-                table.Columns.Add("Bit Format", typeof(string));
+                table.Columns.Add("File", typeof(string));
                 table.Columns.Add("File Path", typeof(string));
-                table.Columns.Add("Site Origin", typeof(string));
 
                 dataset.Tables.Add(table);
 
@@ -73,21 +71,23 @@ namespace CSL_Test__1
                 dataset.WriteXmlSchema(xmlStream);
                 xmlStream.Close();
             }
+
             if (File.Exists(xmlDataPath))
             {
-                xmlStream = new FileStream(xmlDataPath, FileMode.Open);
-                table.ReadXml(xmlStream);
-                xmlStream.Close();
-            }
-        }
-        public void SaveAndClose()
-        {
-            if (xmlStream != null)
-                xmlStream.Close();
 
-            xmlStream = new FileStream(xmlDataName, FileMode.OpenOrCreate);
-            dataset.WriteXml(xmlStream);
-            xmlStream.Close();
+                xmlStream = new FileStream(xmlDataPath, FileMode.Open);
+                try
+                {
+                    table.ReadXml(xmlStream);
+                }
+                catch
+                {
+                    xmlStream.Close();
+                    xmlStream = new FileStream(xmlDataPath, FileMode.Create);
+                    xmlStream.Close();
+                }
+            }
+
         }
         public void Save()
         {
@@ -100,7 +100,6 @@ namespace CSL_Test__1
             dataset.WriteXml(xmlStream);
             xmlStream.Close();
         }
-
         public void AddTorrents(Torrent[] torrents)
         {
             #region Information Contents
@@ -126,10 +125,12 @@ namespace CSL_Test__1
 
             DataRow row;
             string[] information;
+            string filename;
+            string currentfilename;
 
-            for (int a = 0; a < torrents.Length; a++)
+            foreach(Torrent torrent in torrents)
             {
-                information = torrents[a].GetInformation();
+                information = torrent.GetInformation();
 
                 row = table.NewRow();
                 row["File"] = information[11];
@@ -145,8 +146,27 @@ namespace CSL_Test__1
                 row["Bit Format"] = information[6];
                 row["File Path"] = information[10];
                 row["Site Origin"] = information[12];
-                table.Rows.Add(row);
+
+                bool duplicate = false;
+                currentfilename = torrent.GetFileName();
+
+                    foreach (DataRow dr in table.Rows)
+                    {
+                        try
+                        {
+                            filename = Path.GetFileName((string)dr["File Path"]);
+
+                            if (filename.Equals(currentfilename))
+                                duplicate = true;
+                        }
+                        catch { }
+                    }
+
+                    if (!duplicate)
+                        table.Rows.Add(row);
+               
             }
+
         }
 
     }

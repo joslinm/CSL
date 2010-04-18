@@ -61,7 +61,10 @@ namespace CSL_Test__1
             this.Activate();
             this.ShowDialog();
 
-            return SelectionTextBox.Text;
+            if (discard)
+                return null;
+            else
+                return SelectionTextBox.Text;
         }
         public string IssueArtistError(string file)
         {
@@ -236,16 +239,51 @@ namespace CSL_Test__1
             this.Activate();
             this.ShowDialog();
 
-            return SelectionTextBox.Text;
+            if (discard)
+                return null;
+            else
+                return SelectionTextBox.Text;
+            
+        }
+        public void IssueFileMoveWarning(string file, bool handled)
+        {
+            InstructionalLabel.Text = "The file could not be moved";
+            if (handled)
+                ErrorLabel.Text = "This file has been handled, no further action is necessary";
+            else
+                ErrorLabel.Text = "This file was unhandled, please manually take care of it";
+
+            FilePathRichTextBox.Text = file;
+            FileNameLabel.Text = Path.GetFileName(file);
+
+            this.Text = "[CSL] -- Warning";
+            this.Activate();
+            this.ShowDialog();
+        }
+        public void IssueGeneralWarning(string message, string submessage, string file)
+        {
+            InstructionalLabel.Text = message;
+            ErrorLabel.Text = submessage;
+            if (file != null)
+            {
+                FilePathRichTextBox.Text = file;
+                FileNameLabel.Text = Path.GetFileName(file);
+            }
+            this.Text = "[CSL] -- Warning";
+            this.Activate();
+            this.ShowDialog();
         }
 
         private void DiscardButton_Click(object sender, EventArgs e)
         {
             discard = true;
+            SelectionTextBox.Text = null;
+            this.Dispose();
             this.Close();
         }
         private void OkButton_Click(object sender, EventArgs e)
         {
+            this.Dispose();
             this.Close();
         }
     }

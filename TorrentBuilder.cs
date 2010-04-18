@@ -5,11 +5,13 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.IO;
 using System.Xml;
+using System.ComponentModel;
+using System.Collections;
 using MusicBrainzXML;
 
 namespace CSL_Test__1
 {
-    class TorrentBuilder
+    class TorrentBuilder : BackgroundWorker
     {
         SettingsHandler settings = new SettingsHandler();
         string[] information = new string[20];
@@ -35,10 +37,27 @@ namespace CSL_Test__1
          * information[14] --> discard
          * */
 
+        public TorrentBuilder()
+        {
+            WorkerReportsProgress = true;
+            WorkerSupportsCancellation = true;
+        }
+        protected override void OnDoWork(DoWorkEventArgs e)
+        {
+            Type t = e.Argument.GetType();
+            string name = t.ToString();
+
+            if (name.Equals("System.Collections.ArrayList"))
+                e.Result = this.BuildFromArrayList((ArrayList)e.Argument);
+            else
+                e.Result = this.Build((string[])e.Argument);
+        }
+
         public Torrent[] Build(string[] files)
         {
             Torrent[] torrent = new Torrent[files.Length];
             information[14] = null;
+            int progress = 100 / files.Length;
 
             for (int a = 0; a < files.Length; a++)
             {
@@ -51,6 +70,32 @@ namespace CSL_Test__1
                 //Clear out information for this run to avoid misinformation on the next run
                 for (int b = 0; b < information.Length; b++)
                     information[b] = null;
+
+                this.ReportProgress((int)a * progress);
+            }
+            GC.Collect();
+            return torrent;
+        }
+        public Torrent[] BuildFromArrayList(ArrayList files)
+        {
+            Torrent[] torrent = new Torrent[files.Count];
+            information[14] = null;
+            double progress = 100 / files.Count;
+
+            for (int a = 0; a < files.Count; a++)
+            {
+                string birth = GetTorrentBirth((string)files[a]);
+
+                torrent[a] = ProcessTorrent((string)files[a], birth);
+                if (information[14] != "true")
+                    VerifyTorrent(torrent[a]);
+
+                //Clear out information for this run to avoid misinformation on the next run
+                for (int b = 0; b < information.Length; b++)
+                    information[b] = null;
+
+                int progress1 = (int)(a * progress);
+                this.ReportProgress(progress1);
             }
 
             return torrent;
@@ -272,10 +317,10 @@ namespace CSL_Test__1
             else if (settings.GetLowercaseAllFolderNames())
                 information[13] = information[13].ToLower();
 
+            ReturnTorrent:
             information[10] = file;
             information[11] = Path.GetFileName(file);
             information[12] = birth;
-            ReturnTorrent:
             return new Torrent(information);
         }
         public void VerifyTorrent(Torrent torrent)
@@ -291,7 +336,7 @@ namespace CSL_Test__1
                             if (information[a] == null)
                                 goto default;
 
-                            MusicBrainzXMLDocumentCreator createXML = new MusicBrainzXMLDocumentCreator("http://musicbrainz.org/ws/1/artist/?type=xml&name=" + information[0]);
+                            /*MusicBrainzXMLDocumentCreator createXML = new MusicBrainzXMLDocumentCreator("http://musicbrainz.org/ws/1/artist/?type=xml&name=" + information[0]);
                             MusicBrainzXMLDocumentArtist[] artists = createXML.ProcessArtist();
 
                             /*if (!artists[0].name.Equals(information[0]) && !artists[1].name.Equals(information[0]))
@@ -310,7 +355,7 @@ namespace CSL_Test__1
                             if (information[a] == null)
                                 goto default;
 
-                            MusicBrainzXMLDocumentCreator createXML = new MusicBrainzXMLDocumentCreator("http://musicbrainz.org/ws/1/release/?type=xml&title=" + information[1]);
+                            /*MusicBrainzXMLDocumentCreator createXML = new MusicBrainzXMLDocumentCreator("http://musicbrainz.org/ws/1/release/?type=xml&title=" + information[1]);
                             MusicBrainzXMLDocumentRelease[] releases = createXML.ProcessRelease();
 
                             /*if (!releases[0].releaseTitle.Equals(information[1]) && releases[0].ext_score.Equals("100"))
@@ -353,7 +398,7 @@ namespace CSL_Test__1
                         {
                             if (information[a] == null)
                                 goto default;
-
+                            
                             if (int.Parse(information[4]) < 1900 || int.Parse(information[4]) > DateTime.Today.Year + 1)
                             {
                                 information[4] = IssueWarning("Year is unrealistic", information[10]);
@@ -397,8 +442,7 @@ namespace CSL_Test__1
                                 information[13] = IssueError("Illegal characters", information[13]);
                             }
                             }
-                            catch (Exception e)
-                            { }
+                            catch{ }
 
                             if ((settings.GetTorrentSaveFolder() + @"\[CSL] -- Handled Torrents\" + information[11]).Length >= 255)
                             {
@@ -552,7 +596,7 @@ namespace CSL_Test__1
                     break;
             }
 
-            if (returnString.Equals("discard torrent") || returnString.Equals(null))
+            if (returnString == null)
             {
                 DiscardTorrent(file);
                 return null;
@@ -585,7 +629,7 @@ namespace CSL_Test__1
                     break;
             }
 
-            if (returnString.Equals("discard torrent") || returnString.Equals(null))
+            if (returnString == null || returnString.Equals("discard torrent"))
             {
                 DiscardTorrent(file);
                 return null;
@@ -600,11 +644,11 @@ namespace CSL_Test__1
 
         public string ExtractArtist(string birth, string file)
         {
-            file = Path.GetFileName(file);
             switch (birth)
             {
                 case "waffles":
                     {
+                        file = Path.GetFileName(file);
                         /*Look for a space on either side of the dash*/
                         int startingPosition = 0;
                         int dashes = file.Split('-').Length;
@@ -633,7 +677,7 @@ namespace CSL_Test__1
                                     file = Path.GetDirectoryName(file);
                                     //...\[CSL]--Temp\artist\[physicalformat]\[files]
                                     int firstSlash = file.IndexOf("[CSL]--Temp") - 1;
-                                    int secondSlash = file.IndexOf(@"\", firstSlash + 1);
+                                    int secondSlash = file.IndexOf(@"\", firstSlash + 1) + 1;
                                     int thirdSlash = file.IndexOf(@"\", secondSlash + 1);
 
                                     return file.Substring(secondSlash, thirdSlash - secondSlash);
@@ -643,6 +687,7 @@ namespace CSL_Test__1
                                     /*Look for a space on either side of the dash*/
                                     int startingPosition = 0;
                                     int dashes = file.Split('-').Length;
+                                    file = Path.GetFileName(file);
                                     for (int a = 0; a <= dashes; a++)
                                     {
                                         int dash = file.IndexOf('-', startingPosition);
@@ -674,6 +719,8 @@ namespace CSL_Test__1
         }
         public string ExtractAlbum(string birth, string file)
         {
+            file = Path.GetFileName(file);
+
             if (information[1] != null) //AlbumFormat may be called first which may grab the album name
                 return information[1];
 
@@ -710,10 +757,7 @@ namespace CSL_Test__1
 
                             if (file[dash - 1].Equals(' ') && file[dash + 1].Equals(' '))
                             {
-                                if (file[dash + 2].Equals('2') || (file[dash + 2].Equals('1')))
-                                    break;
-                                else
-                                    return file.Substring(dash + 2, (file.IndexOf('-', dash + 1) - (dash + 2))); //return the album
+                                return file.Substring(dash + 2, (file.IndexOf('-', dash + 1) - (dash + 2))); //return the album
                             }
 
                             startingPosition = dash + 1;
@@ -917,49 +961,26 @@ namespace CSL_Test__1
                     }
                 case "what":
                     {
-                        bool zipped = file.Contains("[CSL]--Temp");
+                        file = Path.GetFileName(file);
 
-                        switch (zipped) //Zipped or not zipped.. switch statement improves readability
-                        {
-                            case (true):
-                                {
-                                    file = Path.GetDirectoryName(file);
-                                    //...\[CSL]--Temp\artist\[physicalformat]\[files]
-                                    int firstSlash = file.IndexOf("[CSL]--Temp") - 1;
-                                    int secondSlash = file.IndexOf(@"\", firstSlash + 1);
-                                    int thirdSlash = file.IndexOf(@"\", secondSlash + 1);
-                                    int fourthSlash = file.IndexOf(@"\", thirdSlash + 1);
-
-                                    return file.Substring(secondSlash, thirdSlash - secondSlash);
-                                }
-                                
-                            case (false):
-                                {
-                                    file = Path.GetFileName(file);
-
-                                    if (file.Contains("(CD"))
-                                        return "CD";
-                                    else if (file.Contains("(Vinyl"))
-                                        return "Vinyl";
-                                    else if (file.Contains("(Cassette"))
-                                        return "Cassette";
-                                    else if (file.Contains("(DVD"))
-                                        return "DVD";
-                                    else if (file.Contains("(WEB"))
-                                        return "WEB";
-                                    else if (file.Contains("(SACD"))
-                                        return "SACD";
-                                    else if (file.Contains("(Soundboard"))
-                                        return "Soundboard";
-                                    else if (file.Contains("(DAT"))
-                                        return "DAT";
-                                    else
-                                        return IssueError("Can't parse physical format", file);
-                                }
-                                
-                            default:
-                                return IssueError("Can't parse physical format", file); 
-                        }
+                        if (file.Contains("(CD"))
+                            return "CD";
+                        else if (file.Contains("(Vinyl"))
+                            return "Vinyl";
+                        else if (file.Contains("(Cassette"))
+                            return "Cassette";
+                        else if (file.Contains("(DVD"))
+                            return "DVD";
+                        else if (file.Contains("(WEB"))
+                            return "WEB";
+                        else if (file.Contains("(SACD"))
+                            return "SACD";
+                        else if (file.Contains("(Soundboard"))
+                            return "Soundboard";
+                        else if (file.Contains("(DAT"))
+                            return "DAT";
+                        else
+                            return IssueError("Can't parse physical format", file);
                     }
                 default:
                     return IssueError("Can't parse physical format", file);
@@ -1000,14 +1021,14 @@ namespace CSL_Test__1
                     {
                         string album = (information[1] == null)? ExtractAlbum(birth, file) : information[1];
 
-                        MusicBrainzXML.MusicBrainzXMLDocumentCreator mb = new MusicBrainzXMLDocumentCreator("http://musicbrainz.org/ws/1/release/?type=xml&title=" + album);
+                        /*MusicBrainzXML.MusicBrainzXMLDocumentCreator mb = new MusicBrainzXMLDocumentCreator("http://musicbrainz.org/ws/1/release/?type=xml&title=" + album);
                         MusicBrainzXMLDocumentRelease[] results = mb.ProcessRelease();
-                        if (results[0].ext_score.Equals("100")) //Look into making this a variable amount, or keep it concrete at 100
+                        if (esults[0].ext_score.Equals("100")) //Look into making this a variable amount, or keep it concrete at 100
                             return results[0].releaseType;
                         else
-                        {
+                        {*/
                             return IssueError("Can't parse release format", file);
-                        }
+                        
                     }
                 default:
                     return IssueError("Can't parse release format", file);

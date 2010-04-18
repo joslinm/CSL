@@ -42,13 +42,13 @@
       <Value Profile="(Default)">C:\Program Files (x86)\utorrent</Value>
     </Setting>
     <Setting Name="TorrentSaveFolder" Type="System.String" Scope="User">
-      <Value Profile="(Default)">C:\what.cd torrent files</Value>
+      <Value Profile="(Default)">C:\test</Value>
     </Setting>
     <Setting Name="DownloadFolder" Type="System.String" Scope="User">
       <Value Profile="(Default)">C:\test</Value>
     </Setting>
     <Setting Name="CustomDirectory" Type="System.String" Scope="User">
-      <Value Profile="(Default)">%a\%y - %t</Value>
+      <Value Profile="(Default)">%a\%y - %t [%b %p %d %z]</Value>
     </Setting>
     <Setting Name="DownloadLive" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
@@ -60,7 +60,7 @@
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="AutoCheckTime" Type="System.Decimal" Scope="User">
-      <Value Profile="(Default)">1</Value>
+      <Value Profile="(Default)">10</Value>
     </Setting>
     <Setting Name="AutoCheck" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
@@ -76,6 +76,12 @@
     </Setting>
     <Setting Name="RemoveDoubleSpaces" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="TrackZipFiles" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="TrackTorrentFiles" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
     </Setting>
   </Settings>
 </SettingsFile>

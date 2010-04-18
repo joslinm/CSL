@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.IO;
 using System.Threading;
 
 namespace CSL_Test__1
@@ -11,16 +7,17 @@ namespace CSL_Test__1
     {
         SettingsHandler settings = new SettingsHandler();
         TorrentBuilder builder = new TorrentBuilder();
-        TorrentXMLHandler xml = new TorrentXMLHandler();
         DirectoryHandler directory = new DirectoryHandler();
+        TorrentXMLHandler xml;
         string saveFolder = null;
 
-        public TorrentWatch()
+        public TorrentWatch(TorrentXMLHandler data)
         {
+            xml = data;
             saveFolder = settings.GetTorrentSaveFolder();
         }
 
-        public void Start()
+        public void Watch()
         {
             Torrent[] torrents;
             string[] torrentFiles;
@@ -36,16 +33,31 @@ namespace CSL_Test__1
                 if (torrentFiles != null)
                 {
                     torrents = builder.Build(torrentFiles);
+                    builder.Dispose();
                     xml.AddTorrents(torrents);
+                    directory.MoveProcessedFiles(xml);
                 }
                 if (zipFiles != null)
                 {
-                    torrents = builder.Build(directory.UnzipFiles(zipFiles));
-                    xml.AddTorrents(torrents);
+                    try
+                    {
+                        object[] rawFiles = directory.UnzipFiles(zipFiles);
+                        string[] files = Array.ConvertAll<object, string>(rawFiles, Convert.ToString);
+                        if (files != null)
+                        {
+                            torrents = builder.Build(files);
+                            builder.Dispose();
+                            xml.AddTorrents(torrents);
+                            directory.MoveProcessedFiles(xml);
+                            directory.MoveProcessedZipFiles();
+                        }
+                    }
+                    catch (Exception e)
+                    { }
                 }
 
-                if (autocheck)
-                    Thread.Sleep((int)sleep * 1000);
+                int s = Decimal.ToInt32(sleep);
+                Thread.Sleep(s * 1000);
             }
         }
                     

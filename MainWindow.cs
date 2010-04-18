@@ -1,55 +1,76 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
-using System.Data.SqlServerCe;
 using System.IO;
-using System.Threading;
+using System.Collections;
 
 namespace CSL_Test__1
 {
     public partial class MainWindow : Form
     {
-        TorrentXMLHandler data = null;
+        TorrentXMLHandler data = new TorrentXMLHandler();
         uTorrentHandler utorrent = new uTorrentHandler();
         TorrentBuilder builder = new TorrentBuilder();
-        Torrent[] torrents;
         SettingsHandler settings = new SettingsHandler();
+        TorrentBuilder tb = new TorrentBuilder();
+        DirectoryHandler dh = new DirectoryHandler();
+        OptionsWindow ow;
+
         public MainWindow()
         {
-            data = new TorrentXMLHandler();
             InitializeComponent();
+            ow = new OptionsWindow(data);
             dataGridView.DataSource = data.table;
+            dataGridView.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            dataGridView.Columns[4].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            dataGridView.Columns[5].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            dataGridView.Columns[6].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            dataGridView.Columns[7].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            dataGridView.Columns[8].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            dataGridView.Columns[9].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
         }
 
         private void MainWindow_FormClosing(object sender, FormClosingEventArgs e)
         {
-            data.dataset.AcceptChanges();
-            data.SaveAndClose();
+            data.Save();
+            ow.StopTorrentWatch();
         }
 
         private void dataGridView_DragDrop(object sender, DragEventArgs e)
         {
+            ArrayList al = new ArrayList();
             string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
-            BackgroundWorker bw = new BackgroundWorker();
-            bw.DoWork += new DoWorkEventHandler(bw_DoDragDrop);
-            bw.RunWorkerAsync(files);
-            bw.ProgressChanged += new ProgressChangedEventHandler(bw_DragDropProgress);
+
+            foreach (string file in files)
+            {
+                string extension = Path.GetExtension(file);
+                if (Path.GetExtension(file).Equals(".zip") || Path.GetExtension(file).Equals(".rar"))
+                {
+                    foreach (string unzipped in dh.UnzipFile(file))
+                        al.Add(unzipped);
+                }
+                else
+                {
+                    al.Add(file);
+                }
+            }
+
+            dataGridViewProgressBar.Visible = true;
+            tb.RunWorkerCompleted += new RunWorkerCompletedEventHandler(tb_DragDropCompleted);
+            tb.ProgressChanged += new ProgressChangedEventHandler(tb_DragDropProgress);
+            tb.RunWorkerAsync(al);
         }
 
-        void bw_DragDropProgress(object sender, ProgressChangedEventArgs e)
+        void tb_DragDropProgress(object sender, ProgressChangedEventArgs e)
         {
             dataGridViewProgressBar.Value = e.ProgressPercentage;
         }
 
-        void bw_DoDragDrop(object sender, DoWorkEventArgs e)
+        void tb_DragDropCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            torrents = builder.Build((string[])e.Argument);
-            data.AddTorrents(torrents);
+            data.AddTorrents((Torrent[])e.Result);
+            builder.Dispose();
+            dataGridViewProgressBar.Visible = false;
         }
 
         private void dataGridView_DragEnter(object sender, DragEventArgs e)
@@ -65,25 +86,85 @@ namespace CSL_Test__1
         {
             utorrent.SendTorrents(data);
             dataGridView.Update();
+            dh.MoveProcessedFiles(data);
+            dh.DeleteTempFolder();
         }
 
         private void DeleteButton_Click(object sender, EventArgs e)
         {
-            DataGridViewSelectedRowCollection dr = dataGridView.SelectedRows;
-            if (dr.Count > 0)
+            if (settings.GetAutoHandleBool())
+                ow.StopThread();
+
+            lock (this)
             {
-                foreach (DataGridViewRow r in dr)
+                DataGridViewSelectedRowCollection dr = dataGridView.SelectedRows;
+                if (dr.Count > 0)
                 {
-                    data.table.Rows[r.Index].Delete();
+                    foreach (DataGridViewRow r in dr)
+                    {
+                        try
+                        {
+                            data.table.Rows[r.Index].Delete();
+                        }
+                        catch { }
+                    }
                 }
+                else
+                {
+                    DataGridViewSelectedCellCollection dc = dataGridView.SelectedCells;
+                    foreach (DataGridViewCell c in dc)
+                        c.Value = "";
+                }
+                data.Save();
             }
-            else
+
+            if (settings.GetAutoHandleBool())
+                ow.StartThread();
+        }
+
+        private void MainWindow_Resize(object sender, EventArgs e)
+        {
+          
+        }
+
+        private void optionsToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void optionsToolStripMenuItem2_Click(object sender, EventArgs e)
+        {
+            ow.Show();
+        }
+
+        private void ProcessTorrentsButton_Click(object sender, EventArgs e)
+        {
+            ArrayList al = new ArrayList();
+            string[] torrents = dh.GetTorrents();
+            string[] zips = dh.GetTorrentZips();
+
+            if (torrents != null)
             {
-                DataGridViewSelectedCellCollection dc = dataGridView.SelectedCells;
-                foreach (DataGridViewCell c in dc)
-                    c.Value = "";
+                foreach (string torrent in torrents)
+                    al.Add(torrent);
             }
-            data.Save();
+
+            if (zips != null)
+            {
+                string[] ziptorrents = (string[])dh.UnzipFiles(zips);
+                foreach (string ziptorrent in ziptorrents)
+                    al.Add(ziptorrent);
+            }
+
+            dataGridViewProgressBar.Visible = true;
+            tb.RunWorkerCompleted += new RunWorkerCompletedEventHandler(tb_DragDropCompleted);
+            tb.ProgressChanged += new ProgressChangedEventHandler(tb_DragDropProgress);
+            tb.RunWorkerAsync(al);
+        }
+
+        private void RefreshButton_Click(object sender, EventArgs e)
+        {
+            dataGridView.Refresh();
         }
     }
 }

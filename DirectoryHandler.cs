@@ -4,8 +4,11 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Diagnostics;
+using System.Data;
 using ICSharpCode.SharpZipLib.Zip;
 using System.Collections;
+using System.Threading;
+using System.ComponentModel;
 
 namespace CSL_Test__1
 {
@@ -55,38 +58,62 @@ namespace CSL_Test__1
 
         public string[] GetTorrentZips()
         {
-            string[] files = Directory.GetFiles(settings.GetTorrentSaveFolder(), "*.zip", SearchOption.TopDirectoryOnly);
-            return (files.Length == 0) ? null : files;
+            try
+            {
+                string[] files = Directory.GetFiles(settings.GetTorrentSaveFolder(), "*.zip", SearchOption.TopDirectoryOnly);
+                GC.Collect();
+                return (files.Length == 0) ? null : files;
+            }
+            catch { return null; }
         }
         public string[] GetTorrents()
         {
-            string[] files = Directory.GetFiles(settings.GetTorrentSaveFolder(), "*.torrent", SearchOption.TopDirectoryOnly);
-            return (files.Length == 0) ? null : files;
+            try
+            {
+                string[] files = Directory.GetFiles(settings.GetTorrentSaveFolder(), "*.torrent", SearchOption.TopDirectoryOnly);
+                GC.Collect();
+                return (files.Length == 0) ? null : files;
+            }
+            catch { return null; }
         }
-        public string[] UnzipFiles(string[] zipFiles)
+
+        public string[] UnzipFile(string zipFile)
+        {
+            string[] files;
+
+            try
+            {
+                string destination = settings.GetTorrentSaveFolder() + @"\[CSL]--Temp\" + Path.GetFileNameWithoutExtension(zipFile);
+                Directory.CreateDirectory(destination);
+                fz.ExtractZip(zipFile,destination,"*.torrent");
+
+                files = Directory.GetFiles(destination,"*.torrent",SearchOption.AllDirectories);
+                return files;
+            }
+
+            catch
+            {
+                return files = null;
+            }
+        }
+        public object[] UnzipFiles(string[] zipFiles)
         {
             ArrayList al = new ArrayList(); //not sure of proper array size, so using arraylist
             string[] files = null;
 
-            for (int a = 0; a < zipFiles.Length; a++)
+            foreach (string zipfile in zipFiles)
             {
-                try
-                {
-                    fz.ExtractZip(zipFiles[a], settings.GetTorrentSaveFolder() + @"\[CSL]--Temp\" + Path.GetFileNameWithoutExtension(zipFiles[a]), ".torrent");
+                string destination = settings.GetTorrentSaveFolder() + @"\[CSL]--Temp\" + Path.GetFileNameWithoutExtension(zipfile) + @"\";
 
-                    files = Directory.GetFiles(settings.GetTorrentSaveFolder() + @"\[CSL]--Temp\"
-                        + Path.GetFileNameWithoutExtension(zipFiles[a]), 
-                        ".torrent", SearchOption.AllDirectories);
+                fz.ExtractZip(zipfile, destination, ".torrent");
 
-                    for (int b = 0; b < files.Length; b++)
-                        al.Add(files[b]);
-                }
+                files = Directory.GetFiles(destination,
+                    "*.torrent", SearchOption.AllDirectories);
 
-                catch
-                {}
+                foreach (string file in files)
+                    al.Add(file);
             }
-
-            return (string[])al.ToArray(); //return all files of all zips
+            return al.ToArray(); //return all files of all zips
         }
 
         public string MoveTorrentFile(string file, string where)
@@ -114,12 +141,25 @@ namespace CSL_Test__1
 
             if (!File.Exists(cslSaveFolder + fileName))
             {
-                try
+                int counter = 10;
+                while (!File.Exists(cslSaveFolder + fileName) && counter > 0)
                 {
-                    File.Move(file, cslSaveFolder + fileName);
+                    try
+                    {
+                        File.Move(file, cslSaveFolder + fileName);
+                    }
+                    catch
+                    {
+                        Thread.Sleep(100);
+                    }
+                    counter--;
                 }
-
-                catch { }
+                if (!File.Exists(cslSaveFolder + fileName))
+                {
+                    bool torrenthandled = (where.Equals("handled")) ? true : false;
+                    ErrorWindow ew = new ErrorWindow();
+                    ew.IssueFileMoveWarning(file, torrenthandled);
+                }
             }
             else
                 File.Delete(file);
@@ -142,9 +182,32 @@ namespace CSL_Test__1
                 {
                     File.Move(zipFiles[a], settings.GetTorrentSaveFolder() + @"\[CSL] -- Processed Zips\" + zipFiles[a].Substring(zipFiles[a].LastIndexOf('\\') + 1));
                 }
-                catch
+                catch (Exception e)
                 {
-                    File.Delete(zipFiles[a]);
+                }
+            }
+        }
+        public void MoveProcessedFiles(TorrentXMLHandler data)
+        {
+            string filepath;
+
+            foreach (DataRow datarow in data.table.Rows)
+            {
+                filepath = (string)datarow["File Path"];
+                if (Path.GetDirectoryName(filepath).Equals(settings.GetTorrentSaveFolder()))
+                {
+                    switch ((bool)datarow["Error"])
+                    {
+                        case true:
+                            datarow["File Path"] = MoveTorrentFile((string)datarow["File Path"], "unhandled");
+                            break;
+                        case false:
+                            datarow["File Path"] = MoveTorrentFile((string)datarow["File Path"], "handled");
+                            break;
+                        default:
+                            datarow["File Path"] = MoveTorrentFile((string)datarow["File Path"], "unhandled");
+                            break;
+                    }
                 }
             }
         }

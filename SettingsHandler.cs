@@ -15,6 +15,16 @@ namespace CSL_Test__1
         }
 
         #region Set Options
+        public void SetTrackTorrents(bool value)
+        {
+            settings.TrackTorrentFiles = value;
+            settings.Save();
+        }
+        public void SetTrackZips(bool value)
+        {
+            settings.TrackZipFiles = value;
+            settings.Save();
+        }
         public void SetRemoveDoubleSpaces(bool value)
         {
             settings.RemoveDoubleSpaces = value;
@@ -145,6 +155,14 @@ namespace CSL_Test__1
         }
         #endregion
         #region Get Options
+        public bool GetTrackZips()
+        {
+            return settings.TrackZipFiles;
+        }
+        public bool GetTrackTorrents()
+        {
+            return settings.TrackTorrentFiles;
+        }
         public bool GetDoubleSpaceRemoval()
         {
             return settings.RemoveDoubleSpaces;

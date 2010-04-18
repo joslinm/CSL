@@ -181,7 +181,7 @@ namespace CSL_Test__1 {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\what.cd torrent files")]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\test")]
         public string TorrentSaveFolder {
             get {
                 return ((string)(this["TorrentSaveFolder"]));
@@ -205,7 +205,7 @@ namespace CSL_Test__1 {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("%a\\%y - %t")]
+        [global::System.Configuration.DefaultSettingValueAttribute("%a\\%y - %t [%b %p %d %z]")]
         public string CustomDirectory {
             get {
                 return ((string)(this["CustomDirectory"]));
@@ -253,7 +253,7 @@ namespace CSL_Test__1 {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        [global::System.Configuration.DefaultSettingValueAttribute("10")]
         public decimal AutoCheckTime {
             get {
                 return ((decimal)(this["AutoCheckTime"]));
@@ -320,6 +320,30 @@ namespace CSL_Test__1 {
             }
             set {
                 this["RemoveDoubleSpaces"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool TrackZipFiles {
+            get {
+                return ((bool)(this["TrackZipFiles"]));
+            }
+            set {
+                this["TrackZipFiles"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool TrackTorrentFiles {
+            get {
+                return ((bool)(this["TrackTorrentFiles"]));
+            }
+            set {
+                this["TrackTorrentFiles"] = value;
             }
         }
     }
