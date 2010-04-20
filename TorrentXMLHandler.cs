@@ -128,7 +128,7 @@ namespace CSL_Test__1
             string filename;
             string currentfilename;
 
-            foreach(Torrent torrent in torrents)
+            foreach (Torrent torrent in torrents)
             {
                 information = torrent.GetInformation();
 
@@ -150,21 +150,29 @@ namespace CSL_Test__1
                 bool duplicate = false;
                 currentfilename = torrent.GetFileName();
 
-                    foreach (DataRow dr in table.Rows)
-                    {
-                        try
-                        {
-                            filename = Path.GetFileName((string)dr["File Path"]);
+                foreach (DataRow dr in table.Rows)
+                {
+                    filename = Path.GetFileName((string)dr["File Path"]);
 
-                            if (filename.Equals(currentfilename))
-                                duplicate = true;
-                        }
-                        catch { }
+                    if (filename.Equals(currentfilename))
+                    {
+                        //Check if file still exists
+                        if (File.Exists((string)dr["File Path"]))
+                            duplicate = true;
+                        else
+                            dr.Delete();
                     }
 
-                    if (!duplicate)
-                        table.Rows.Add(row);
-               
+                }
+
+                table.AcceptChanges();
+
+                if (duplicate)
+                    File.Delete(information[10]);
+                else
+                    table.Rows.Add(row);
+
+
             }
 
         }

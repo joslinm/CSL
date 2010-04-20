@@ -84,7 +84,7 @@ namespace CSL_Test__1
 
         private void uTorrentSendAllButton_Click(object sender, EventArgs e)
         {
-            utorrent.SendTorrents(data);
+            utorrent.SendAllTorrents(data);
             dataGridView.Update();
             dh.MoveProcessedFiles(data);
             dh.DeleteTempFolder();
@@ -98,6 +98,7 @@ namespace CSL_Test__1
             lock (this)
             {
                 DataGridViewSelectedRowCollection dr = dataGridView.SelectedRows;
+                DataGridViewSelectedCellCollection dc = dataGridView.SelectedCells;
                 if (dr.Count > 0)
                 {
                     foreach (DataGridViewRow r in dr)
@@ -109,13 +110,18 @@ namespace CSL_Test__1
                         catch { }
                     }
                 }
-                else
+                else if(dc.Count > 0)
                 {
-                    DataGridViewSelectedCellCollection dc = dataGridView.SelectedCells;
                     foreach (DataGridViewCell c in dc)
-                        c.Value = "";
+                    {
+                        if (!(c.ReadOnly))
+                        {
+                            c.Value = "";
+                        }
+                    }
                 }
                 data.Save();
+
             }
 
             if (settings.GetAutoHandleBool())
@@ -165,6 +171,38 @@ namespace CSL_Test__1
         private void RefreshButton_Click(object sender, EventArgs e)
         {
             dataGridView.Refresh();
+            this.Refresh();
+        }
+
+        private void uTorrentSendIndividualButton_Click(object sender, EventArgs e)
+        {
+            DataGridViewSelectedRowCollection rc = dataGridView.SelectedRows;
+            DataGridViewSelectedCellCollection cc = dataGridView.SelectedCells;
+
+            if (rc.Count > 0)
+            {
+                foreach (DataGridViewRow r in rc)
+                    utorrent.SendTorrent(data, r.Index);
+                
+            }
+            if (cc.Count > 0)
+            {
+                foreach (DataGridViewCell c in cc)
+                    utorrent.SendTorrent(data, c.RowIndex);
+                
+            }
+        }
+
+        private void dataGridView_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyData.Equals(Keys.Delete))
+                DeleteButton_Click(sender, e);
+        }
+
+        private void dataGridView_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        {
+            dataGridView.EndEdit();
+            data.table.Rows[e.RowIndex][e.ColumnIndex] = dataGridView[e.ColumnIndex, e.RowIndex].Value;
         }
     }
 }

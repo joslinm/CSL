@@ -39,7 +39,8 @@ namespace CSL_Test__1
         }
         public bool DeleteTempFolder()
         {
-            Directory.Delete(settings.GetTorrentSaveFolder() + @"\[CSL]--Temp", true);
+            if (Directory.Exists(settings.GetTorrentSaveFolder() + @"\[CSL]--Temp"))
+                Directory.Delete(settings.GetTorrentSaveFolder() + @"\[CSL]--Temp", true);
 
             if (!Directory.Exists(settings.GetTorrentSaveFolder() + @"\[CSL]--Temp"))
                 return true;

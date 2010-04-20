@@ -26,21 +26,24 @@ namespace CSL_Test__1
         {
             InitializeComponent();
             ErrorProvider.DataSource = CustomFolderTextbox;
-            RestoreSelections();
             tw = new TorrentWatch(data);
             tw_thread = new Thread(new ThreadStart(tw.Watch));
             tw_thread.Start();
+
+            RestoreSelections();   
         }
 
         public void StopThread()
         {
             tw_thread.Abort();
         }
+
         public void StartThread()
         {
             tw_thread = new Thread(new ThreadStart(tw.Watch));
             tw_thread.Start();
         }
+
         private void RestoreSelections()
         {
             if (settings.GetDoubleSpaceRemoval())
@@ -241,9 +244,31 @@ namespace CSL_Test__1
         private void AutoCheckTimeCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             if (AutoCheckTimeCheckBox.Checked)
+            {
                 settings.SetAutoHandleBool(true);
+
+                if (tw_thread != null)
+                {
+                    if (!tw_thread.IsAlive)
+                    {
+                        tw_thread.Abort();
+                        Thread.Sleep(100);
+                        tw_thread = new Thread(new ThreadStart(tw.Watch));
+                        tw_thread.Start();
+                    }
+                }
+                else
+                {
+                    tw_thread = new Thread(new ThreadStart(tw.Watch));
+                    tw_thread.Start();
+                }  
+            }
             else
+            {
                 settings.SetAutoHandleBool(false);
+                if (tw_thread.IsAlive)
+                    tw_thread.Abort();
+            }
         }
 
         public void StopTorrentWatch()
