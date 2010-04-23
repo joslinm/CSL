@@ -24,6 +24,7 @@ namespace CSL_Test__1
             string[] zipFiles;
             bool autocheck = settings.GetAutoHandleBool();
             decimal sleep = settings.GetAutoHandleTime();
+            int s = Decimal.ToInt32(sleep);
 
             while (autocheck)
             {
@@ -39,24 +40,20 @@ namespace CSL_Test__1
                 }
                 if (zipFiles != null)
                 {
-                    try
+
+                    object[] rawFiles = directory.UnzipFiles(zipFiles);
+                    string[] files = Array.ConvertAll<object, string>(rawFiles, Convert.ToString);
+                    if (files != null)
                     {
-                        object[] rawFiles = directory.UnzipFiles(zipFiles);
-                        string[] files = Array.ConvertAll<object, string>(rawFiles, Convert.ToString);
-                        if (files != null)
-                        {
-                            torrents = builder.Build(files);
-                            builder.Dispose();
-                            xml.AddTorrents(torrents);
-                            directory.MoveProcessedFiles(xml);
-                            directory.MoveProcessedZipFiles();
-                        }
+                        torrents = builder.Build(files);
+                        builder.Dispose();
+                        xml.AddTorrents(torrents);
+                        directory.MoveProcessedFiles(xml);
+                        directory.MoveProcessedZipFiles();
                     }
-                    catch (Exception e)
-                    { }
+
                 }
 
-                int s = Decimal.ToInt32(sleep);
                 Thread.Sleep(s * 1000);
             }
         }

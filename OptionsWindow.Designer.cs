@@ -60,7 +60,6 @@
             this.AutoCheckTimeCheckBox = new System.Windows.Forms.CheckBox();
             this.ArtistFlipCheck = new System.Windows.Forms.CheckBox();
             this.TorrentProgramDirectoryTextbox = new System.Windows.Forms.TextBox();
-            this.DisableNotificationsCheckBox = new System.Windows.Forms.CheckBox();
             this.TorrentProgramDirectoryLabel = new System.Windows.Forms.Label();
             this.DownloadLocationLabel = new System.Windows.Forms.Label();
             this.OtherOptionsLabel = new System.Windows.Forms.Label();
@@ -119,11 +118,10 @@
             this.splitContainer1.Panel2.Controls.Add(this.AutoCheckTimeCheckBox);
             this.splitContainer1.Panel2.Controls.Add(this.ArtistFlipCheck);
             this.splitContainer1.Panel2.Controls.Add(this.TorrentProgramDirectoryTextbox);
-            this.splitContainer1.Panel2.Controls.Add(this.DisableNotificationsCheckBox);
             this.splitContainer1.Panel2.Controls.Add(this.TorrentProgramDirectoryLabel);
             this.splitContainer1.Panel2.Controls.Add(this.DownloadLocationLabel);
             this.splitContainer1.Panel2.Controls.Add(this.OtherOptionsLabel);
-            this.splitContainer1.Size = new System.Drawing.Size(593, 466);
+            this.splitContainer1.Size = new System.Drawing.Size(593, 474);
             this.splitContainer1.SplitterDistance = 178;
             this.splitContainer1.TabIndex = 1;
             // 
@@ -317,7 +315,7 @@
             this.checkBox1.Enabled = false;
             this.checkBox1.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.checkBox1.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.checkBox1.Location = new System.Drawing.Point(45, 408);
+            this.checkBox1.Location = new System.Drawing.Point(45, 385);
             this.checkBox1.Name = "checkBox1";
             this.checkBox1.Size = new System.Drawing.Size(54, 18);
             this.checkBox1.TabIndex = 36;
@@ -330,7 +328,7 @@
             this.checkBox4.Enabled = false;
             this.checkBox4.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.checkBox4.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.checkBox4.Location = new System.Drawing.Point(45, 384);
+            this.checkBox4.Location = new System.Drawing.Point(45, 361);
             this.checkBox4.Name = "checkBox4";
             this.checkBox4.Size = new System.Drawing.Size(61, 18);
             this.checkBox4.TabIndex = 35;
@@ -343,7 +341,7 @@
             this.checkBox3.Enabled = false;
             this.checkBox3.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.checkBox3.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.checkBox3.Location = new System.Drawing.Point(45, 360);
+            this.checkBox3.Location = new System.Drawing.Point(45, 337);
             this.checkBox3.Name = "checkBox3";
             this.checkBox3.Size = new System.Drawing.Size(68, 18);
             this.checkBox3.TabIndex = 34;
@@ -356,7 +354,7 @@
             this.checkBox2.Enabled = false;
             this.checkBox2.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.checkBox2.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.checkBox2.Location = new System.Drawing.Point(24, 336);
+            this.checkBox2.Location = new System.Drawing.Point(24, 313);
             this.checkBox2.Name = "checkBox2";
             this.checkBox2.Size = new System.Drawing.Size(222, 18);
             this.checkBox2.TabIndex = 33;
@@ -523,18 +521,6 @@
             this.TorrentProgramDirectoryTextbox.TextChanged += new System.EventHandler(this.TorrentProgramDirectoryTextbox_TextChanged);
             this.TorrentProgramDirectoryTextbox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.TorrentProgramDirectoryTextbox_MouseDown);
             // 
-            // DisableNotificationsCheckBox
-            // 
-            this.DisableNotificationsCheckBox.AutoSize = true;
-            this.DisableNotificationsCheckBox.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.DisableNotificationsCheckBox.Location = new System.Drawing.Point(24, 312);
-            this.DisableNotificationsCheckBox.Name = "DisableNotificationsCheckBox";
-            this.DisableNotificationsCheckBox.Size = new System.Drawing.Size(173, 18);
-            this.DisableNotificationsCheckBox.TabIndex = 14;
-            this.DisableNotificationsCheckBox.Text = "Disable notifications";
-            this.DisableNotificationsCheckBox.UseVisualStyleBackColor = true;
-            this.DisableNotificationsCheckBox.CheckedChanged += new System.EventHandler(this.DisableNotificationsCheckBox_CheckedChanged);
-            // 
             // TorrentProgramDirectoryLabel
             // 
             this.TorrentProgramDirectoryLabel.AutoSize = true;
@@ -577,7 +563,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(593, 466);
+            this.ClientSize = new System.Drawing.Size(593, 474);
             this.Controls.Add(this.splitContainer1);
             this.Name = "OptionsWindow";
             this.Text = "Options";
@@ -610,7 +596,6 @@
         private System.Windows.Forms.CheckBox LowercaseAllFolderNamesCheckBox;
         private System.Windows.Forms.CheckBox UppercaseFolderNamesCheckBox;
         private System.Windows.Forms.CheckBox AutoCheckTimeCheckBox;
-        private System.Windows.Forms.CheckBox DisableNotificationsCheckBox;
         private System.Windows.Forms.CheckBox ArtistFlipCheck;
         private System.Windows.Forms.Label OtherOptionsLabel;
         private System.Windows.Forms.TextBox TorrentProgramDirectoryTextbox;

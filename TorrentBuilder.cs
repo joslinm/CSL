@@ -7,7 +7,9 @@ using System.IO;
 using System.Xml;
 using System.ComponentModel;
 using System.Collections;
+using System.Data;
 using MusicBrainzXML;
+using System.Windows.Forms;
 
 namespace CSL_Test__1
 {
@@ -65,7 +67,7 @@ namespace CSL_Test__1
 
                 torrent[a] = ProcessTorrent(files[a], birth);
                 if (information[14] != "true") 
-                    VerifyTorrent(torrent[a]);
+                    torrent[a] = VerifyTorrent(torrent[a]);
 
                 //Clear out information for this run to avoid misinformation on the next run
                 for (int b = 0; b < information.Length; b++)
@@ -78,7 +80,7 @@ namespace CSL_Test__1
         }
         public Torrent[] BuildFromArrayList(ArrayList files)
         {
-            Torrent[] torrent = new Torrent[files.Count];
+            Torrent[] torrents = new Torrent[files.Count];
             information[14] = null;
             double progress = 100 / files.Count;
 
@@ -86,9 +88,9 @@ namespace CSL_Test__1
             {
                 string birth = GetTorrentBirth((string)files[a]);
 
-                torrent[a] = ProcessTorrent((string)files[a], birth);
+                torrents[a] = ProcessTorrent((string)files[a], birth);
                 if (information[14] != "true")
-                    VerifyTorrent(torrent[a]);
+                    torrents[a] = VerifyTorrent(torrents[a]);
 
                 //Clear out information for this run to avoid misinformation on the next run
                 for (int b = 0; b < information.Length; b++)
@@ -98,7 +100,7 @@ namespace CSL_Test__1
                 this.ReportProgress(progress1);
             }
 
-            return torrent;
+            return torrents;
         }
         public Torrent ProcessTorrent(string file, string birth)
         {
@@ -323,9 +325,10 @@ namespace CSL_Test__1
             information[12] = birth;
             return new Torrent(information);
         }
-        public void VerifyTorrent(Torrent torrent)
+        public Torrent VerifyTorrent(Torrent torrent)
         {
             string[] information = torrent.GetInformation();
+
             for (int a = 0; a < information.Length; a++)
             {
                 /*Switch statement soley to improve readability*/
@@ -335,6 +338,31 @@ namespace CSL_Test__1
                         {
                             if (information[a] == null)
                                 goto default;
+
+                            if (settings.GetArtistFlip())
+                            {
+                                if (information[0].StartsWith("The") || information[0].StartsWith("A "))
+                                {
+                                    string[] modifiedArtist = information[0].Split(' ');
+                                    string artist = "";
+                                    for (int b = 1; b < modifiedArtist.Length; b++)
+                                    {
+                                        artist += modifiedArtist[b];
+                                        if (!((b + 1) == modifiedArtist.Length))
+                                        {
+                                            artist += " ";
+                                        }
+                                    }
+                                    artist += ", " + modifiedArtist[0];
+                                    information[0] = artist;
+                                }
+                            }
+                            if (settings.GetDoubleSpaceRemoval())
+                            {
+                                while (information[0].Contains("  "))
+                                    information[0] = information[0].Replace("  ", " ");
+                            }
+                                
 
                             /*MusicBrainzXMLDocumentCreator createXML = new MusicBrainzXMLDocumentCreator("http://musicbrainz.org/ws/1/artist/?type=xml&name=" + information[0]);
                             MusicBrainzXMLDocumentArtist[] artists = createXML.ProcessArtist();
@@ -398,12 +426,23 @@ namespace CSL_Test__1
                         {
                             if (information[a] == null)
                                 goto default;
-                            
-                            if (int.Parse(information[4]) < 1900 || int.Parse(information[4]) > DateTime.Today.Year + 1)
-                            {
-                                information[4] = IssueWarning("Year is unrealistic", information[10]);
-                            }
 
+                            int year = 1899;
+
+                            try
+                            {
+                                year = int.Parse(information[4]);
+                            }
+                            catch (FormatException fe)
+                            {
+                                information[4] = IssueError("Can't parse year", information[10]);
+                                year = int.Parse(information[4]);
+                            }
+                            finally
+                            {
+                                if (year < 1900 || year > DateTime.Today.Year + 1)
+                                    information[4] = IssueWarning("Year is unrealistic", information[10]);
+                            }
                         }
                         break;
                     case 5:
@@ -480,25 +519,25 @@ namespace CSL_Test__1
                                 case 3:
                                     if (switches.Contains("%b"))
                                     {
-                                        information[2] = IssueError("Can't parse bitrate", information[10]);
+                                        information[3] = IssueError("Can't parse bitrate", information[10]);
                                     }
                                     break;
                                 case 4:
                                     if (switches.Contains("%y"))
                                     {
-                                        information[2] = IssueError("Can't parse year", information[10]);
+                                        information[4] = IssueError("Can't parse year", information[10]);
                                     }
                                     break;
                                 case 5:
                                     if (switches.Contains("%p"))
                                     {
-                                        information[2] = IssueError("Can't parse physical format", information[10]);
+                                        information[5] = IssueError("Can't parse physical format", information[10]);
                                     }
                                     break;
                                 case 6:
                                     if (switches.Contains("%d"))
                                     {
-                                        information[2] = IssueError("Can't parse bit format", information[10]);
+                                        information[6] = IssueError("Can't parse bit format", information[10]);
                                     }
                                     break;
                             }
@@ -506,6 +545,216 @@ namespace CSL_Test__1
                         break;
                 }
             }
+
+            return new Torrent(information);
+        }
+        public string RebuildCustomPath(string[] information)
+        {
+            string directoryName = null;
+            char[] directoryArray = settings.GetCustomDirectory().ToCharArray();
+
+            for (int a = 0; a < directoryArray.Length; a++)
+            {
+                if (directoryArray[a] == ('%'))
+                {
+                    switch (directoryArray[a + 1])
+                    {
+                        /* information
+                             * 0: artist
+                             * 1: album
+                             * 2: release format
+                             * 3: bitrate
+                             * 4: year
+                             * 5: physical format
+                             * 6: bit format
+                             * */
+
+                        case ('a'):
+                            {
+
+                                string artist = information[0];
+                                directoryName += artist;
+
+                                a++;
+                            } break;
+                        case ('y'):
+                            {
+
+                                string year = information[4];
+                                directoryName += year;
+
+                                a++;
+                            } break;
+                        case ('b'):
+                            {
+
+                                string bitrate = information[3];
+                                directoryName += bitrate;
+
+                                a++;
+                            } break;
+                        case ('d'):
+                            {
+
+                                string bitformat = information[6];
+                                directoryName += bitformat;
+
+                                a++;
+                            } break;
+                        case ('p'):
+                            {
+
+                                string pformat = information[5];
+                                directoryName += pformat;
+
+                                a++;
+                            } break;
+                        case ('t'):
+                            {
+                                string album = information[1];
+                                directoryName += album;
+
+                                a++;
+                            } break;
+                        case ('z'):
+                            {
+                                string format = information[2];
+                                directoryName += format;
+
+                                a++;
+                            } break;
+                        case ('l'):
+                            {
+
+                                string format = information[2];
+                                if (format.Equals("Live"))
+                                {
+                                    directoryName += "Live";
+                                }
+
+                                a++;
+                            } break;
+                        case ('c'):
+                            {
+
+                                string format = information[2];
+
+                                if (format.Equals("Compilation"))
+                                {
+                                    directoryName += "Compilation";
+                                }
+
+                                a++;
+                            } break;
+                        case ('e'):
+                            {
+
+                                string format = information[2];
+
+                                if (format.Equals("EP"))
+                                {
+                                    directoryName += "EP";
+                                }
+
+                                a++;
+                            } break;
+                        case ('r'):
+                            {
+
+                                string format = information[2];
+
+                                if (format.Equals("Remix"))
+                                {
+                                    directoryName += "Remix";
+                                }
+
+                                a++;
+                            } break;
+                        case ('v'):
+                            {
+
+                                string format = information[2];
+
+                                if (format.Equals("Interview"))
+                                {
+                                    directoryName += "Interview";
+                                }
+
+                                a++;
+                            } break;
+                        case ('n'):
+                            {
+
+                                string format = information[2];
+
+                                if (format.Equals("Single"))
+                                {
+                                    directoryName += "Single";
+                                }
+
+                                a++;
+                            } break;
+                        case ('x'):
+                            {
+
+                                string format = information[2];
+
+                                if (format.Equals("Bootleg"))
+                                {
+                                    directoryName += "Bootleg";
+                                }
+
+                                a++;
+                            } break;
+                        case ('s'):
+                            {
+                                string format = information[2];
+
+                                if (format.Equals("Soundtrack"))
+                                {
+                                    directoryName += "Soundtrack";
+                                }
+
+                                a++;
+                            } break;
+                        case ('u'):
+                            {
+
+                                string format = information[2];
+                                if (format.Equals("Unknown"))
+                                {
+                                    directoryName += "Unknown";
+                                }
+
+                                a++;
+                            } break;
+                        case ('f'):
+                            {
+
+                                string format = information[2];
+                                if (format.Equals("Album"))
+                                {
+                                    directoryName += "Album";
+                                }
+
+                                a++;
+                            } break;
+                        case ('i'):
+                            {
+
+                                directoryName += information[0][0];
+                                a++;
+
+                            } break;
+                    }
+                }
+                else
+                {
+                    directoryName += directoryArray[a];
+                }
+            }
+
+            return settings.GetDownloadDirectory() + directoryName.Trim();
         }
 
         public string GetTorrentBirth(string file)
@@ -534,48 +783,56 @@ namespace CSL_Test__1
                     {
                         ErrorWindow ew = new ErrorWindow();
                         returnString =  ew.IssueArtistError(file);
+                        ew.Dispose();
                     }
                     break;
                 case "Can't parse album":
                     {
                         ErrorWindow ew = new ErrorWindow();
                         returnString =  ew.IssueAlbumError(file);
+                        ew.Dispose();
                     }
                     break;
                 case "Can't parse year":
                     {
                         ErrorWindow ew = new ErrorWindow();
                         returnString =  ew.IssueYearError(file);
+                        ew.Dispose();
                     }
                     break;
                 case "Can't parse release format":
                     {
                         ErrorWindow ew = new ErrorWindow();
                         returnString =  ew.IssueReleaseFormatError(file);
+                        ew.Dispose();
                     }
                     break;
                 case "Can't parse bitrate":
                     {
                         ErrorWindow ew = new ErrorWindow();
                         returnString =  ew.IssueBitrateError(file);
+                        ew.Dispose();
                     }
                     break;
                 case "Can't parse physical format":
                     {
                         ErrorWindow ew = new ErrorWindow();
                         returnString =  ew.IssuePhysicalFormatError(file);
+                        ew.Dispose();
                     }
                     break;
                 case "Can't parse bit format":
                     {
                         ErrorWindow ew = new ErrorWindow();
                         returnString =  ew.IssueBitformatError(file);
+                        ew.Dispose();
                     }
                     break;
                 case "Can't parse birth":
                     {
                         ErrorWindow ew = new ErrorWindow();
                         returnString = ew.IssueBirthError(file);
+                        ew.Dispose();
                     }
                     break;
                 case "Illegal characters":
@@ -589,6 +846,8 @@ namespace CSL_Test__1
                             returnString = ew.IssueIllegalCharactersError(file, information[10]);
                             match = Regex.Match(returnString, "<|>|:|/|[|]|[?]|*");
                         }
+
+                        ew.Dispose();
                     }
                     break;
                 default:
@@ -613,18 +872,21 @@ namespace CSL_Test__1
                     {
                         ErrorWindow ew = new ErrorWindow();
                         returnString = ew.IssueArtistWarning(file, information[0]);
+                        ew.Dispose();
                     }
                     break;
                 case "Album is not a perfect match":
                     {
                         ErrorWindow ew = new ErrorWindow();
                         returnString = ew.IssueAlbumWarning(file, information[1]);
+                        ew.Dispose();
                     }
                     break;
                 case "Year is unrealistic":
                     {
                         ErrorWindow ew = new ErrorWindow();
                         returnString = ew.IssueYearWarning(file, information[4]);
+                        ew.Dispose();
                     }
                     break;
             }

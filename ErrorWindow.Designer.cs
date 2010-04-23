@@ -200,7 +200,7 @@
             this.SelectionTextBox.Size = new System.Drawing.Size(338, 20);
             this.SelectionTextBox.TabIndex = 0;
             this.SelectionTextBox.Visible = false;
-            this.SelectionTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.SelectionTextBox_KeyPress);
+            this.SelectionTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.SelectionTextBox_KeyDown);
             // 
             // DescriptionPanel
             // 
@@ -265,6 +265,7 @@
             this.Controls.Add(this.DescriptionPanel);
             this.Controls.Add(this.UserInputPanel);
             this.Name = "ErrorWindow";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "[CSL] -- Error";
             this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.ErrorWindow_KeyPress);
             this.UserInputPanel.ResumeLayout(false);

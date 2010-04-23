@@ -29,17 +29,7 @@ namespace CSL_Test__1
         {
             OkButton.BackColor = Control.DefaultBackColor;
         }
-        private void SelectionTextBox_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            if (e.KeyChar.Equals(Keys.Enter) || e.KeyChar.Equals(Keys.Return))
-            {
-                OkButton.PerformClick();
-            }
-            else
-            {
-                OkButton.Enabled = true;
-            }
-        }
+
         private void ErrorWindow_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar.Equals(Keys.Escape))
@@ -248,10 +238,8 @@ namespace CSL_Test__1
         public void IssueFileMoveWarning(string file, bool handled)
         {
             InstructionalLabel.Text = "The file could not be moved";
-            if (handled)
-                ErrorLabel.Text = "This file has been handled, no further action is necessary";
-            else
-                ErrorLabel.Text = "This file was unhandled, please manually take care of it";
+                ErrorLabel.Text = "Please manually delete or move it";
+
 
             FilePathRichTextBox.Text = file;
             FileNameLabel.Text = Path.GetFileName(file);
@@ -283,8 +271,15 @@ namespace CSL_Test__1
         }
         private void OkButton_Click(object sender, EventArgs e)
         {
-            this.Dispose();
-            this.Close();
+            this.Hide();
+        }
+
+        private void SelectionTextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyData == Keys.Enter || e.KeyData == Keys.Return)
+                OkButton.PerformClick();
+            else
+                OkButton.Enabled = true;
         }
     }
 }

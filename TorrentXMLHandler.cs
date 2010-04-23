@@ -22,6 +22,17 @@ namespace CSL_Test__1
         {
             if (dataset == null && table == null)
                 Initialize();
+            table.RowDeleting += new DataRowChangeEventHandler(table_RowDeleting);
+            table.RowDeleted += new DataRowChangeEventHandler(table_RowDeleted);
+        }
+
+        void table_RowDeleted(object sender, DataRowChangeEventArgs e)
+        {
+            
+        }
+
+        void table_RowDeleting(object sender, DataRowChangeEventArgs e)
+        {
         }
         public void Initialize()
         {
@@ -133,7 +144,7 @@ namespace CSL_Test__1
                 information = torrent.GetInformation();
 
                 row = table.NewRow();
-                row["File"] = information[11];
+                row["File"] = information[11]; 
                 row["Artist"] = information[0];
                 row["Album"] = information[1];
                 row["Save Structure"] = information[13];
@@ -152,15 +163,18 @@ namespace CSL_Test__1
 
                 foreach (DataRow dr in table.Rows)
                 {
-                    filename = Path.GetFileName((string)dr["File Path"]);
-
-                    if (filename.Equals(currentfilename))
+                    if (dr["File Path"] != DBNull.Value)
                     {
-                        //Check if file still exists
-                        if (File.Exists((string)dr["File Path"]))
-                            duplicate = true;
-                        else
-                            dr.Delete();
+                        filename = Path.GetFileName((string)dr["File Path"]);
+
+                        if (filename.Equals(currentfilename))
+                        {
+                            //Check if file still exists
+                            if (File.Exists((string)dr["File Path"]))
+                                duplicate = true;
+                            else
+                                dr.Delete();
+                        }
                     }
 
                 }
@@ -168,7 +182,13 @@ namespace CSL_Test__1
                 table.AcceptChanges();
 
                 if (duplicate)
-                    File.Delete(information[10]);
+                {
+                    try
+                    {
+                        File.Delete(information[10]);
+                    }
+                    catch { }
+                }
                 else
                     table.Rows.Add(row);
 
@@ -176,6 +196,5 @@ namespace CSL_Test__1
             }
 
         }
-
     }
 }

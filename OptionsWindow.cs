@@ -61,11 +61,6 @@ namespace CSL_Test__1
             else
                 AutoCheckTimeCheckBox.Checked = false;
 
-            if (settings.GetDisableNotifications())
-                DisableNotificationsCheckBox.Checked = true;
-            else
-                DisableNotificationsCheckBox.Checked = false;
-
             if (settings.GetDownloadAlbum())
                 DownloadAlbumCheck.Checked = true;
             else
@@ -149,14 +144,6 @@ namespace CSL_Test__1
             MusicFolderTextbox.Text = settings.GetDownloadFolder();
             CustomFolderTextbox.Text = settings.GetCustomDirectory();
             TorrentFolderTextbox.Text = settings.GetTorrentSaveFolder();
-        }
-
-        private void DisableNotificationsCheckBox_CheckedChanged(object sender, EventArgs e)
-        {
-            if (DisableNotificationsCheckBox.Checked)
-                settings.SetDisableNotifications(true);
-            else
-                settings.SetDisableNotifications(false);
         }
 
         private void DoubleSpaceRemoverCheckBox_CheckedChanged(object sender, EventArgs e)
