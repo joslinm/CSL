@@ -105,7 +105,6 @@ namespace CSL_Test__1
                 {
                     foreach (DataGridViewRow r in dr)
                     {
-
                         dataGridView.Rows.Remove(r);
                     }
 
@@ -261,7 +260,7 @@ namespace CSL_Test__1
                     DataGridViewCellCollection dc = dataGridView.CurrentCell.OwningRow.Cells;
                     foreach (DataGridViewCell c in dc)
                     {
-                        switch (c.ColumnIndex)
+                        switch (c.OwningColumn.Name)
                         {
                                 /* information
                                  * 0: artist
@@ -272,25 +271,25 @@ namespace CSL_Test__1
                                  * 5: physical format
                                  * 6: bit format
                                  * */
-                            case 1:
+                            case "Artist":
                                 information[0] = (c.Value.Equals(DBNull.Value))? "" : (string)c.Value;
                                 break;
-                            case 2:
+                            case "Album":
                                 information[1] = (c.Value.Equals(DBNull.Value)) ? "" : (string)c.Value;
                                 break;
-                            case 6:
+                            case "Release Format":
                                 information[2] = (c.Value.Equals(DBNull.Value)) ? "" : (string)c.Value;
                                 break;
-                            case 5:
+                            case "Bitrate":
                                 information[3] = (c.Value.Equals(DBNull.Value)) ? "" : (string)c.Value;
                                 break;
-                            case 4:
+                            case "Year":
                                 information[4] = (c.Value.Equals(DBNull.Value)) ? "" : (string)c.Value;
                                 break;
-                            case 7:
+                            case "Physical Format":
                                 information[5] = (c.Value.Equals(DBNull.Value)) ? "" : (string)c.Value;
                                 break;
-                            case 8:
+                            case "Bit Format":
                                 information[6] = (c.Value.Equals(DBNull.Value)) ? "" : (string)c.Value;
                                 break;
                             default:
