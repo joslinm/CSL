@@ -106,13 +106,27 @@ namespace CSL_Test__1
             {
                 string destination = settings.GetTorrentSaveFolder() + @"\[CSL]--Temp\" + Path.GetFileNameWithoutExtension(zipfile) + @"\";
 
-                fz.ExtractZip(zipfile, destination, ".torrent");
+                try
+                {
+                    fz.ExtractZip(zipfile, destination, ".torrent");
+                }
+                catch (Exception e) { }
 
-                files = Directory.GetFiles(destination,
-                    "*.torrent", SearchOption.AllDirectories);
-
-                foreach (string file in files)
-                    al.Add(file);
+                try
+                {
+                    files = Directory.GetFiles(destination,
+                        "*.torrent", SearchOption.AllDirectories);
+                }
+                catch (DirectoryNotFoundException e)
+                {
+                    //This most likely means that the zip file had nothing in it
+                    //Flagging a warning here would be wise
+                }
+                finally
+                {
+                    foreach (string file in files)
+                        al.Add(file);
+                }
             }
             return al.ToArray(); //return all files of all zips
         }
