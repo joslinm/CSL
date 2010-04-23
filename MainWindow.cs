@@ -22,13 +22,13 @@ namespace CSL_Test__1
             InitializeComponent();
             ow = new OptionsWindow(data);
             dataGridView.DataSource = data.table;
-            dataGridView.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-            dataGridView.Columns[4].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-            dataGridView.Columns[5].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-            dataGridView.Columns[6].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-            dataGridView.Columns[7].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-            dataGridView.Columns[8].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-            dataGridView.Columns[9].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            dataGridView.Columns["Site Origin"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            dataGridView.Columns["Year"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            dataGridView.Columns["Bitrate"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            dataGridView.Columns["Release Format"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            dataGridView.Columns["Bit Format"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            dataGridView.Columns["Handled"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            dataGridView.Columns["Error"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
             notifyIcon.Visible = false;
         }
 
@@ -203,15 +203,15 @@ namespace CSL_Test__1
                     bool success = utorrent.SendTorrent(save, path);
                     if (success)
                     {
-                        r.Cells[9].ReadOnly = false;
-                        r.Cells[9].Value = true;
-                        r.Cells[9].ReadOnly = true;
+                        data.table.Columns["Handled"].ReadOnly = false;
+                        r.Cells["Handled"].Value = true;
+                        data.table.Columns["Handled"].ReadOnly = true;
                     }
                     else
                     {
-                        r.Cells[10].ReadOnly = false;
-                        r.Cells[10].Value = true;
-                        r.Cells[10].ReadOnly = true;
+                        data.table.Columns["Error"].ReadOnly = false;
+                        r.Cells["Error"].Value = true;
+                        data.table.Columns["Error"].ReadOnly = false;
                     }
                 }
                 
@@ -227,13 +227,13 @@ namespace CSL_Test__1
                     if (success)
                     {
                         data.table.Columns["Handled"].ReadOnly = false;
-                        c.OwningRow.Cells[9].Value = true;
+                        c.OwningRow.Cells["Handled"].Value = true;
                         data.table.Columns["Handled"].ReadOnly = true;
                     }
                     else
                     {
                         data.table.Columns["Error"].ReadOnly = false;
-                        c.OwningRow.Cells[10].Value = true;
+                        c.OwningRow.Cells["Error"].Value = true;
                         data.table.Columns["Error"].ReadOnly = false;
                     }
                 }
