@@ -298,7 +298,7 @@ namespace CSL_Test__1
                     }
                         
                     string newSavePath = tb.RebuildCustomPath(information);
-                    dataGridView[3, dataGridView.CurrentCell.OwningRow.Index].Value = newSavePath;
+                    dataGridView["Save Structure", dataGridView.CurrentCell.OwningRow.Index].Value = newSavePath;
                 }
             }
         }
