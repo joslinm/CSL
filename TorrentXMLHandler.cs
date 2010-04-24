@@ -75,8 +75,8 @@ namespace CSL_Test__1
 
                 table.Columns.Add("File", typeof(string));
                 table.Columns.Add("File Path", typeof(string));
-
                 dataset.Tables.Add(table);
+                table.PrimaryKey = new DataColumn[] { table.Columns["File"] };
 
                 xmlStream = new FileStream(xmlSchemaName, FileMode.CreateNew);
                 dataset.WriteXmlSchema(xmlStream);
@@ -160,40 +160,15 @@ namespace CSL_Test__1
 
                 bool duplicate = false;
                 currentfilename = torrent.GetFileName();
-
-                foreach (DataRow dr in table.Rows)
+                DataRow dr = table.Rows.Find(currentfilename);
+                if (dr != null)
                 {
-                    if (dr["File Path"] != DBNull.Value)
-                    {
-                        filename = Path.GetFileName((string)dr["File Path"]);
-
-                        if (filename.Equals(currentfilename))
-                        {
-                            //Check if file still exists
-                            if (File.Exists((string)dr["File Path"]))
-                                duplicate = true;
-                            else
-                                dr.Delete();
-                        }
-                    }
-
+                    table.Rows[table.Rows.IndexOf(dr)].Delete();
                 }
-
-                table.AcceptChanges();
-
-                if (duplicate)
-                {
-                    try
-                    {
-                        File.Delete(information[10]);
-                    }
-                    catch { }
-                }
-                else
-                    table.Rows.Add(row);
-
-
+                table.Rows.Add(row);
             }
+
+            table.AcceptChanges();
 
         }
     }

@@ -157,7 +157,17 @@ namespace CSL_Test__1
             if (File.Exists(cslSaveFolder + fileName))
             {
                 if (!file.Equals(cslSaveFolder + fileName))
-                    File.Delete(file);
+                {
+                    try
+                    {
+                        File.Delete(file);
+                    }
+                    catch (Exception de)
+                    {
+                        ErrorWindow ew = new ErrorWindow();
+                        ew.IssueFileMoveWarning(file, true);
+                    }
+                }
             }
             else
             {

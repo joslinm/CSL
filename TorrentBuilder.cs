@@ -482,19 +482,36 @@ namespace CSL_Test__1
                             try
                             {
                                 Match match = Regex.Match(information[13], "[<]|[>]|[/]|[|]|[?]|[*]");
-                            
-                            if (match.Success)
-                            {
-                                information[13] = IssueError("Illegal characters", information[13]);
+
+                                if (match.Success)
+                                {
+                                    information[13] = IssueError("Illegal characters", information[13]);
+                                }
                             }
-                            }
-                            catch{ }
+                            catch { }
 
                             if ((settings.GetTorrentSaveFolder() + @"\[CSL] -- Handled Torrents\" + information[11]).Length >= 255)
                             {
                                 IssueError("Torrent save location is greater than 255", information[10]);
                             }
 
+                            try
+                            {
+                                string[] lines = File.ReadAllLines("HTML-Look-Up.txt");
+                                for (int c = 0; c < lines.Length; c++)
+                                {
+                                    while (information[13].Contains(lines[c]))
+                                    {
+                                        information[13].Replace(lines[c], lines[++c]);
+                                    }
+                                    if (c % 2 != 0)
+                                        c++;
+                                }
+                            }
+                            catch
+                            {
+                                //TODO: INSERT WARNING ABOUT NO HTML LOOK UP HERE
+                            }
                         }
                         break;
                     default:
