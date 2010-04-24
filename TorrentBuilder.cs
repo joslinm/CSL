@@ -76,6 +76,10 @@ namespace CSL_Test__1
                 this.ReportProgress((int)a * progress);
             }
             GC.Collect();
+
+            ErrorWindow ew = new ErrorWindow();
+            ew.ClearApplyToAll();
+
             return torrent;
         }
         public Torrent[] BuildFromArrayList(ArrayList files)
@@ -99,7 +103,10 @@ namespace CSL_Test__1
                 int progress1 = (int)(a * progress);
                 this.ReportProgress(progress1);
             }
+            ErrorWindow ew = new ErrorWindow();
+            ew.ClearApplyToAll();
 
+            GC.Collect();
             return torrents;
         }
         public Torrent ProcessTorrent(string file, string birth)

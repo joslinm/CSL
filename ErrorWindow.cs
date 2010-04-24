@@ -14,11 +14,19 @@ namespace CSL_Test__1
 {
     public partial class ErrorWindow : Form
     {
+        //TODO : CONFIGURE APPLY TO ALL
+
         bool discard = false;
+        static string applyToAll = "";
 
         public ErrorWindow()
         {
             InitializeComponent();
+        }
+
+        public void ClearApplyToAll()
+        {
+            applyToAll = "";
         }
 
         private void OkButton_MouseHover(object sender, EventArgs e)
@@ -40,6 +48,13 @@ namespace CSL_Test__1
 
         public string IssueYearError(string file)
         {
+            if (applyToAll.Contains("CSL::YEAR|"))
+            {
+                int s_index = applyToAll.IndexOf("CSL::YEAR|") + 10;
+                int e_index = applyToAll.IndexOf("***", s_index);
+                return applyToAll.Substring(s_index, e_index - s_index);
+            }
+
             InstructionalLabel.Text = "Please provide a year below";
             ErrorLabel.Text = "CSL was unable to parse out a year";
 
@@ -54,10 +69,22 @@ namespace CSL_Test__1
             if (discard)
                 return null;
             else
+            {
+                if (ApplyToAllCheck.Checked)
+                    applyToAll += "CSL::YEAR|" + SelectionTextBox.Text + "***";
+
                 return SelectionTextBox.Text;
+            }
         }
         public string IssueArtistError(string file)
         {
+            if (applyToAll.Contains("CSL::ARTIST|"))
+            {
+                int s_index = applyToAll.IndexOf("CSL::ARTIST|") + 12;
+                int e_index = applyToAll.IndexOf("***", s_index);
+                return applyToAll.Substring(s_index, e_index - s_index);
+            }
+
             InstructionalLabel.Text = "Please provide an artist below";
             ErrorLabel.Text = "CSL was unable to parse out an artist";
 
@@ -69,10 +96,25 @@ namespace CSL_Test__1
             this.Activate();
             this.ShowDialog();
 
-            return SelectionTextBox.Text;
+            if (discard)
+                return null;
+            else
+            {
+                if (ApplyToAllCheck.Checked)
+                    applyToAll += "CSL::ARTIST|" + SelectionTextBox.Text + "***";
+
+                return SelectionTextBox.Text;
+            }
         }
         public string IssueAlbumError(string file)
         {
+            if (applyToAll.Contains("CSL::ALBUM|"))
+            {
+                int s_index = applyToAll.IndexOf("CSL::ALBUM|") + 11;
+                int e_index = applyToAll.IndexOf("***", s_index);
+                return applyToAll.Substring(s_index, e_index - s_index);
+            }
+
             ErrorLabel.Text = "CSL was unable to parse out an album";
             InstructionalLabel.Text = "Please provide an album below";
 
@@ -84,10 +126,25 @@ namespace CSL_Test__1
             this.Activate();
             this.ShowDialog();
 
-            return SelectionTextBox.Text;
+            if (discard)
+                return null;
+            else
+            {
+                if (ApplyToAllCheck.Checked)
+                    applyToAll += "CSL::ALBUM|" + SelectionTextBox.Text + "***";
+
+                return SelectionTextBox.Text;
+            }
         }
         public string IssueReleaseFormatError(string file)
         {
+            if (applyToAll.Contains("CSL::RELEASEF|"))
+            {
+                int s_index = applyToAll.IndexOf("CSL::RELEASEF|") + 14;
+                int e_index = applyToAll.IndexOf("***", s_index);
+                return applyToAll.Substring(s_index, e_index - s_index);
+            }
+
             ErrorLabel.Text = "CSL was unable to parse out a release format";
             InstructionalLabel.Text = "Please select a release format below";
 
@@ -98,10 +155,26 @@ namespace CSL_Test__1
             this.Activate();
             this.ShowDialog();
 
-            return ReleaseSelectionComboBox.Text;
+            if (discard)
+                return null;
+            else
+            {
+                if (ApplyToAllCheck.Checked)
+                    applyToAll += "CSL::RELEASEF|" + ReleaseSelectionComboBox.Text + "***";
+
+                return ReleaseSelectionComboBox.Text;
+            }
+
         }
         public string IssuePhysicalFormatError(string file)
         {
+            if (applyToAll.Contains("CSL::PHYSICALF|"))
+            {
+                int s_index = applyToAll.IndexOf("CSL::PHYSICALF|") + 15;
+                int e_index = applyToAll.IndexOf("***", s_index);
+                return applyToAll.Substring(s_index, e_index - s_index);
+            }
+
             ErrorLabel.Text = "CSL was unable to parse out a physical format";
             InstructionalLabel.Text = "Please select a physical format below";
 
@@ -112,13 +185,25 @@ namespace CSL_Test__1
             this.Activate();
             this.ShowDialog();
 
-            if (!discard)
-                return PhysicalFormatSelectionComboBox.Text;
+            if (discard)
+                return null;
             else
-                return "discard torrent";
+            {
+                if (ApplyToAllCheck.Checked)
+                    applyToAll += "CSL::PHYSICALF|" + PhysicalFormatSelectionComboBox.Text + "***";
+
+                return PhysicalFormatSelectionComboBox.Text;
+            }
         }
         public string IssueBitformatError(string file)
         {
+            if (applyToAll.Contains("CSL::BITF|"))
+            {
+                int s_index = applyToAll.IndexOf("CSL::BITF|") + 10;
+                int e_index = applyToAll.IndexOf("***", s_index);
+                return applyToAll.Substring(s_index, e_index - s_index);
+            }
+
             ErrorLabel.Text = "CSL was unable to parse out a bit format";
             InstructionalLabel.Text = "Please select a bit format below";
 
@@ -129,13 +214,25 @@ namespace CSL_Test__1
             this.Activate();
             this.ShowDialog();
 
-            if (!discard)
-                return BitformatSelectionComboBox.Text;
+            if (discard)
+                return null;
             else
-                return "discard torrent";
+            {
+                if (ApplyToAllCheck.Checked)
+                    applyToAll += "CSL::BITF|" + BitformatSelectionComboBox.Text + "***";
+
+                return BitformatSelectionComboBox.Text;
+            }
         }
         public string IssueBitrateError(string file)
         {
+            if (applyToAll.Contains("CSL::BITR|"))
+            {
+                int s_index = applyToAll.IndexOf("CSL::BITR|") + 10;
+                int e_index = applyToAll.IndexOf("***", s_index);
+                return applyToAll.Substring(s_index, e_index - s_index);
+            }
+
             ErrorLabel.Text = "CSL was unable to parse out a bitrate";
             InstructionalLabel.Text = "Please select a bitrate below";
 
@@ -146,13 +243,25 @@ namespace CSL_Test__1
             this.Activate();
             this.ShowDialog();
 
-            if (!discard)
-                return BitrateSelectionComboBox.Text;
+            if (discard)
+                return null;
             else
-                return "discard torrent";
+            {
+                if (ApplyToAllCheck.Checked)
+                    applyToAll += "CSL::BITR|" + BitrateSelectionComboBox.Text + "***";
+
+                return BitrateSelectionComboBox.Text;
+            }
         }
         public string IssueBirthError(string file)
         {
+            if (applyToAll.Contains("CSL::BIRTH|"))
+            {
+                int s_index = applyToAll.IndexOf("CSL::BIRTH|") + 11;
+                int e_index = applyToAll.IndexOf("***", s_index);
+                return applyToAll.Substring(s_index, e_index - s_index);
+            }
+
             ErrorLabel.Text = "CSL doesn't know which site this torrent came from";
             InstructionalLabel.Text = "Please select a torrent site below";
             FileNameLabel.Text = Path.GetFileName(file);
@@ -162,10 +271,15 @@ namespace CSL_Test__1
             this.Activate();
             this.ShowDialog();
 
-            if (!discard)
-                return BitrateSelectionComboBox.Text;
+           if (discard)
+                return null;
             else
-                return "discard torrent";
+            {
+                if (ApplyToAllCheck.Checked)
+                    applyToAll += "CSL::BIRTH|" + BirthSelectionComboBox.Text + "***";
+
+                return BirthSelectionComboBox.Text;
+            }
         }
         public string IssueIllegalCharactersError(string file, string destPath)
         {
