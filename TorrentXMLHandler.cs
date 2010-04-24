@@ -76,8 +76,8 @@ namespace CSL_Test__1
 
                 table.Columns.Add("File", typeof(string));
                 table.Columns.Add("File Path", typeof(string));
-
                 dataset.Tables.Add(table);
+                table.PrimaryKey = new DataColumn[] { table.Columns["File"] };
 
                 xmlStream = new FileStream(xmlSchemaName, FileMode.CreateNew);
                 dataset.WriteXmlSchema(xmlStream);
@@ -161,6 +161,7 @@ namespace CSL_Test__1
 
                 bool duplicate = false;
                 currentfilename = torrent.GetFileName();
+<<<<<<< HEAD
 
                 foreach (DataRow dr in table.Rows)
                 {
@@ -186,7 +187,17 @@ namespace CSL_Test__1
                     dh.DeleteFile(information[10]);
                 else
                     table.Rows.Add(row);
+=======
+                DataRow dr = table.Rows.Find(currentfilename);
+                if (dr != null)
+                {
+                    table.Rows[table.Rows.IndexOf(dr)].Delete();
+                }
+                table.Rows.Add(row);
+>>>>>>> c6d8d3dce8c640d219663493643ad8bfec714b42
             }
+
+            table.AcceptChanges();
 
         }
     }

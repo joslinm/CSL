@@ -190,7 +190,21 @@ namespace CSL_Test__1
             if (File.Exists(cslSaveFolder + fileName))
             {
                 if (!file.Equals(cslSaveFolder + fileName))
+<<<<<<< HEAD
                     File.Delete(file); //If pulling in from a handled directory, don't delete
+=======
+                {
+                    try
+                    {
+                        File.Delete(file);
+                    }
+                    catch (Exception de)
+                    {
+                        ErrorWindow ew = new ErrorWindow();
+                        ew.IssueFileMoveWarning(file, true);
+                    }
+                }
+>>>>>>> c6d8d3dce8c640d219663493643ad8bfec714b42
             }
             else
             {
