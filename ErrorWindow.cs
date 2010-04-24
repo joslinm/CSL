@@ -14,10 +14,9 @@ namespace CSL_Test__1
 {
     public partial class ErrorWindow : Form
     {
-        //TODO : CONFIGURE APPLY TO ALL
-
         bool discard = false;
         static string applyToAll = "";
+        DirectoryHandler dh = new DirectoryHandler();
 
         public ErrorWindow()
         {
@@ -60,7 +59,7 @@ namespace CSL_Test__1
 
             SelectionTextBox.Show();
             OkButton.Enabled = false; //Will enable when key is pressed
-            FileNameLabel.Text = Path.GetFileName(file);
+            FileNameLabel.Text = dh.GetFileName(file, true);
             FilePathRichTextBox.Text = file;
 
             this.Activate();
@@ -90,7 +89,7 @@ namespace CSL_Test__1
 
             SelectionTextBox.Show();
             OkButton.Enabled = false; //Will enable when key is pressed
-            FileNameLabel.Text = Path.GetFileName(file);
+            FileNameLabel.Text = dh.GetFileName(file, true);
             FilePathRichTextBox.Text = file;
             
             this.Activate();
@@ -120,7 +119,7 @@ namespace CSL_Test__1
 
             SelectionTextBox.Show();
             OkButton.Enabled = false; //Will enable when key is pressed
-            FileNameLabel.Text = Path.GetFileName(file);
+            FileNameLabel.Text = dh.GetFileName(file, true);
             FilePathRichTextBox.Text = file;
             
             this.Activate();
@@ -149,7 +148,7 @@ namespace CSL_Test__1
             InstructionalLabel.Text = "Please select a release format below";
 
             ReleaseSelectionComboBox.Show();
-            FileNameLabel.Text = Path.GetFileName(file);
+            FileNameLabel.Text = dh.GetFileName(file, true);
             FilePathRichTextBox.Text = file;
             
             this.Activate();
@@ -179,7 +178,7 @@ namespace CSL_Test__1
             InstructionalLabel.Text = "Please select a physical format below";
 
             PhysicalFormatSelectionComboBox.Show();
-            FileNameLabel.Text = Path.GetFileName(file);
+            FileNameLabel.Text = dh.GetFileName(file, true);
             FilePathRichTextBox.Text = file;
 
             this.Activate();
@@ -208,7 +207,7 @@ namespace CSL_Test__1
             InstructionalLabel.Text = "Please select a bit format below";
 
             BitformatSelectionComboBox.Show();
-            FileNameLabel.Text = Path.GetFileName(file);
+            FileNameLabel.Text = dh.GetFileName(file, true);
             FilePathRichTextBox.Text = file;
 
             this.Activate();
@@ -237,7 +236,7 @@ namespace CSL_Test__1
             InstructionalLabel.Text = "Please select a bitrate below";
 
             BitrateSelectionComboBox.Show();
-            FileNameLabel.Text = Path.GetFileName(file);
+            FileNameLabel.Text = dh.GetFileName(file, true);
             FilePathRichTextBox.Text = file;
 
             this.Activate();
@@ -264,7 +263,7 @@ namespace CSL_Test__1
 
             ErrorLabel.Text = "CSL doesn't know which site this torrent came from";
             InstructionalLabel.Text = "Please select a torrent site below";
-            FileNameLabel.Text = Path.GetFileName(file);
+            FileNameLabel.Text = dh.GetFileName(file, true);
             FilePathRichTextBox.Text = file;
 
             BirthSelectionComboBox.Show();
@@ -289,7 +288,7 @@ namespace CSL_Test__1
             SelectionTextBox.Show();
             SelectionTextBox.Text = destPath;
             OkButton.Enabled = false; //Will enable when key is pressed
-            FileNameLabel.Text = Path.GetFileName(file);
+            FileNameLabel.Text = dh.GetFileName(file, true);
             FilePathRichTextBox.Text = file;
 
             this.Activate();
@@ -304,7 +303,7 @@ namespace CSL_Test__1
 
             SelectionTextBox.Show();
             SelectionTextBox.Text = artist;
-            FileNameLabel.Text = Path.GetFileName(file);
+            FileNameLabel.Text = dh.GetFileName(file, true);
             FilePathRichTextBox.Text = file;
 
             this.Text = "[CSL] -- Warning";
@@ -320,7 +319,7 @@ namespace CSL_Test__1
 
             SelectionTextBox.Show();
             SelectionTextBox.Text = album;
-            FileNameLabel.Text = Path.GetFileName(file);
+            FileNameLabel.Text = dh.GetFileName(file, true);
             FilePathRichTextBox.Text = file;
 
             this.Text = "[CSL] -- Warning";
@@ -336,7 +335,7 @@ namespace CSL_Test__1
 
             SelectionTextBox.Show();
             SelectionTextBox.Text = year;
-            FileNameLabel.Text = Path.GetFileName(file);
+            FileNameLabel.Text = dh.GetFileName(file, true);
             FilePathRichTextBox.Text = file;
 
             this.Text = "[CSL] -- Warning";
@@ -356,7 +355,7 @@ namespace CSL_Test__1
 
 
             FilePathRichTextBox.Text = file;
-            FileNameLabel.Text = Path.GetFileName(file);
+            FileNameLabel.Text = dh.GetFileName(file, true);
 
             this.Text = "[CSL] -- Warning";
             this.Activate();
@@ -369,7 +368,7 @@ namespace CSL_Test__1
             if (file != null)
             {
                 FilePathRichTextBox.Text = file;
-                FileNameLabel.Text = Path.GetFileName(file);
+                FileNameLabel.Text = dh.GetFileName(file, true);
             }
             this.Text = "[CSL] -- Warning";
             this.Activate();

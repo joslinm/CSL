@@ -16,6 +16,7 @@ namespace CSL_Test__1
     class TorrentBuilder : BackgroundWorker
     {
         SettingsHandler settings = new SettingsHandler();
+        DirectoryHandler dh = new DirectoryHandler();
         string[] information = new string[20];
 
         /*Information[] will hold all values that the user wishes to use for 
@@ -75,20 +76,20 @@ namespace CSL_Test__1
 
                 this.ReportProgress((int)a * progress);
             }
-            GC.Collect();
 
             ErrorWindow ew = new ErrorWindow();
             ew.ClearApplyToAll();
-
             return torrent;
         }
         public Torrent[] BuildFromArrayList(ArrayList files)
         {
             Torrent[] torrents = new Torrent[files.Count];
             information[14] = null;
-            double progress = 100 / files.Count;
+            int filescount = files.Count;
+            double progress;
+            double count = 0;
 
-            for (int a = 0; a < files.Count; a++)
+            for (int a = 0; a < filescount; a++)
             {
                 string birth = GetTorrentBirth((string)files[a]);
 
@@ -100,13 +101,11 @@ namespace CSL_Test__1
                 for (int b = 0; b < information.Length; b++)
                     information[b] = null;
 
-                int progress1 = (int)(a * progress);
-                this.ReportProgress(progress1);
+                progress = (++count / filescount) * 100;
+                this.ReportProgress((int)progress);
             }
             ErrorWindow ew = new ErrorWindow();
             ew.ClearApplyToAll();
-
-            GC.Collect();
             return torrents;
         }
         public Torrent ProcessTorrent(string file, string birth)
@@ -328,7 +327,7 @@ namespace CSL_Test__1
 
             ReturnTorrent:
             information[10] = file;
-            information[11] = Path.GetFileName(file);
+            information[11] = dh.GetFileName(file, true);
             information[12] = birth;
             return new Torrent(information);
         }
@@ -917,7 +916,7 @@ namespace CSL_Test__1
             {
                 case "waffles":
                     {
-                        file = Path.GetFileName(file);
+                        file = dh.GetFileName(file, true);
                         /*Look for a space on either side of the dash*/
                         int startingPosition = 0;
                         int dashes = file.Split('-').Length;
@@ -943,7 +942,7 @@ namespace CSL_Test__1
                         {
                             case (true):
                                 {
-                                    file = Path.GetDirectoryName(file);
+                                    file = dh.GetDirectoryName(file);
                                     //...\[CSL]--Temp\artist\[physicalformat]\[files]
                                     int firstSlash = file.IndexOf("[CSL]--Temp") - 1;
                                     int secondSlash = file.IndexOf(@"\", firstSlash + 1) + 1;
@@ -956,18 +955,18 @@ namespace CSL_Test__1
                                     /*Look for a space on either side of the dash*/
                                     int startingPosition = 0;
                                     int dashes = file.Split('-').Length;
-                                    file = Path.GetFileName(file);
+                                    string filename = dh.GetFileName(file, true);
                                     for (int a = 0; a <= dashes; a++)
                                     {
-                                        int dash = file.IndexOf('-', startingPosition);
+                                        int dash = filename.IndexOf('-', startingPosition);
 
-                                        if (file[dash - 1].Equals(' ') && file[dash + 1].Equals(' '))
+                                        if (filename[dash - 1].Equals(' ') && filename[dash + 1].Equals(' '))
                                         {
-                                            if (file[dash + 2].Equals('2') || (file[dash + 2].Equals('1')))
+                                            if (filename[dash + 2].Equals('2') || (filename[dash + 2].Equals('1')))
                                                 break;
                                             else
                                             {
-                                                string artist = file.Substring(0, dash - 1);
+                                                string artist = filename.Substring(0, dash - 1);
                                                 return artist;
                                             }
                                         }
@@ -988,7 +987,7 @@ namespace CSL_Test__1
         }
         public string ExtractAlbum(string birth, string file)
         {
-            file = Path.GetFileName(file);
+            file = dh.GetFileName(file, true);
 
             if (information[1] != null) //AlbumFormat may be called first which may grab the album name
                 return information[1];
@@ -1051,7 +1050,7 @@ namespace CSL_Test__1
             {
                 case "waffles":
                     {
-                        file = Path.GetFileName(file);
+                        file = dh.GetFileName(file, true);
                         Match match = Regex.Match(file, "[1-2]+[0-9]+[0-9]+[0-9]");
                         while (match.Success)
                         {
@@ -1064,7 +1063,7 @@ namespace CSL_Test__1
                     }
                 case "what":
                     {
-                        Match match = Regex.Match(Path.GetFileName(file), "[0-9]+[0-9]+[0-9]+[0-9]");
+                        Match match = Regex.Match(dh.GetFileName(file, true), "[0-9]+[0-9]+[0-9]+[0-9]");
                         while (match.Success)
                         {
                             if (file[file.IndexOf(match.Value) + 5] == '(' | file[file.IndexOf(match.Value) + 6] == '(')
@@ -1163,7 +1162,7 @@ namespace CSL_Test__1
             {
                 case "waffles":
                     {
-                        file = Path.GetFileName(file);
+                        file = dh.GetFileName(file, true);
 
                         int parenthesisIndex = file.IndexOf("[20") - 1;
                         if (parenthesisIndex < 0)
@@ -1189,7 +1188,7 @@ namespace CSL_Test__1
                     }
                 case "what":
                     {
-                        file = Path.GetFileName(file);
+                        file = dh.GetFileName(file, true);
                         if (file.Contains("MP3"))
                             return "MP3";
                         else if (file.Contains("AAC"))
@@ -1215,7 +1214,7 @@ namespace CSL_Test__1
             {
                 case "waffles":
                     {
-                        file = Path.GetFileName(file);
+                        file = dh.GetFileName(file, true);
 
                         if (file.Contains("-CD"))
                             return "CD";
@@ -1230,7 +1229,7 @@ namespace CSL_Test__1
                     }
                 case "what":
                     {
-                        file = Path.GetFileName(file);
+                        file = dh.GetFileName(file, true);
 
                         if (file.Contains("(CD"))
                             return "CD";

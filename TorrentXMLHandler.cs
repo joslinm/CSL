@@ -14,6 +14,7 @@ namespace CSL_Test__1
         static string xmlDataPath = Directory.GetCurrentDirectory() + @"\" + xmlDataName;
         static string xmlSchemaPath = Directory.GetCurrentDirectory() + @"\" + xmlSchemaName;
         static FileStream xmlStream;
+        DirectoryHandler dh = new DirectoryHandler();
 
         public DataSet dataset;
         public DataTable table;
@@ -165,7 +166,7 @@ namespace CSL_Test__1
                 {
                     if (dr["File Path"] != DBNull.Value)
                     {
-                        filename = Path.GetFileName((string)dr["File Path"]);
+                        filename = dh.GetFileName((string)dr["File Path"], true);
 
                         if (filename.Equals(currentfilename))
                         {
@@ -182,17 +183,9 @@ namespace CSL_Test__1
                 table.AcceptChanges();
 
                 if (duplicate)
-                {
-                    try
-                    {
-                        File.Delete(information[10]);
-                    }
-                    catch { }
-                }
+                    dh.DeleteFile(information[10]);
                 else
                     table.Rows.Add(row);
-
-
             }
 
         }

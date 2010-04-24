@@ -17,15 +17,14 @@ namespace CSL_Test__1
         SettingsHandler settings = new SettingsHandler();
         FastZip fz = new FastZip();
 
-        public bool DeleteFile(string file)
+        public void DeleteFile(string path)
         {
-            if (File.Exists(file))
-            {
-                File.Delete(file);
-                return true;
-            }
-            else
-                return false;
+            FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read);
+
+            if (File.Exists(fs.Name))
+                File.Delete(fs.Name);
+            
+            fs.Dispose();
         }
         public bool DeleteFolder(string folder)
         {
@@ -77,6 +76,39 @@ namespace CSL_Test__1
             }
             catch { return null; }
         }
+        public string GetFileName(string path, bool extension)
+        {
+            string filename;
+            FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read);
+
+            if (extension)
+                filename = Path.GetFileName(fs.Name);
+            else
+                filename = Path.GetFileNameWithoutExtension(fs.Name);
+
+            fs.Dispose();
+            return filename;
+        }
+        public string GetDirectoryName(string path)
+        {
+            string directoryname;
+            FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read);
+
+            directoryname = Path.GetDirectoryName(fs.Name);
+
+            fs.Dispose();
+            return directoryname;
+        }
+        public bool GetFileExists(string path)
+        {
+            bool value;
+            FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read);
+
+            value = File.Exists(fs.Name);
+
+            fs.Dispose();
+            return value;
+        }
 
         public string[] UnzipFile(string zipFile)
         {
@@ -84,7 +116,7 @@ namespace CSL_Test__1
 
             try
             {
-                string destination = settings.GetTorrentSaveFolder() + @"\[CSL]--Temp\" + Path.GetFileNameWithoutExtension(zipFile);
+                string destination = settings.GetTorrentSaveFolder() + @"\[CSL]--Temp\" + this.GetFileName(zipFile, false);
                 Directory.CreateDirectory(destination);
                 fz.ExtractZip(zipFile,destination,".torrent");
 
@@ -104,7 +136,7 @@ namespace CSL_Test__1
 
             foreach (string zipfile in zipFiles)
             {
-                string destination = settings.GetTorrentSaveFolder() + @"\[CSL]--Temp\" + Path.GetFileNameWithoutExtension(zipfile) + @"\";
+                string destination = settings.GetTorrentSaveFolder() + @"\[CSL]--Temp\" + this.GetFileName(zipfile, false) + @"\";
 
                 try
                 {
@@ -135,7 +167,8 @@ namespace CSL_Test__1
         {
             string cslSaveFolder = null;
             string fileName = null;
-            fileName = Path.GetFileName(file);
+
+            fileName = this.GetFileName(file, true);
 
             switch (where)
             {
@@ -157,7 +190,7 @@ namespace CSL_Test__1
             if (File.Exists(cslSaveFolder + fileName))
             {
                 if (!file.Equals(cslSaveFolder + fileName))
-                    File.Delete(file);
+                    File.Delete(file); //If pulling in from a handled directory, don't delete
             }
             else
             {
