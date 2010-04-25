@@ -55,68 +55,68 @@ namespace CSL_Test__1
                 ArtistFlipCheck.Checked = true;
             else
                 ArtistFlipCheck.Checked = false;
-
+            
             if (settings.GetAutoHandleBool())
                 AutoCheckTimeCheckBox.Checked = true;
             else
                 AutoCheckTimeCheckBox.Checked = false;
 
-            if (settings.GetDownloadAlbum())
+            if (settings.GetDownloadFormatExists("Album"))
                 DownloadAlbumCheck.Checked = true;
             else
                 DownloadAlbumCheck.Checked = false;
 
-            if (settings.GetDownloadBootleg())
+            if (settings.GetDownloadFormatExists("Bootleg"))
                 DownloadBootlegCheck.Checked = true;
             else
                 DownloadBootlegCheck.Checked = false;
 
-            if (settings.GetDownloadCompilation())
+            if (settings.GetDownloadFormatExists("Compilation"))
                 DownloadCompilationCheck.Checked = true;
             else
                 DownloadCompilationCheck.Checked = false;
 
-            if (settings.GetDownloadEP())
+            if (settings.GetDownloadFormatExists("EP"))
                 DownloadEPCheck.Checked = true;
             else
                 DownloadEPCheck.Checked = false;
 
-            if (settings.GetDownloadInterview())
+            if (settings.GetDownloadFormatExists("Interview"))
                 DownloadInterviewCheck.Checked = true;
             else
                 DownloadInterviewCheck.Checked = false;
 
-            if (settings.GetDownloadLive())
+            if (settings.GetDownloadFormatExists("Live"))
                 DownloadLiveCheck.Checked = true;
             else
                 DownloadLiveCheck.Checked = false;
 
-            if (settings.GetDownloadMixtape())
+            if (settings.GetDownloadFormatExists("Mixtape"))
                 DownloadMixtapeCheck.Checked = true;
             else
                 DownloadMixtapeCheck.Checked = false;
 
-            if (settings.GetDownloadRemix())
+            if (settings.GetDownloadFormatExists("Remix"))
                 DownloadRemixCheck.Checked = true;
             else
                 DownloadRemixCheck.Checked = false;
 
-            if (settings.GetDownloadSingle())
+            if (settings.GetDownloadFormatExists("Single"))
                 DownloadSingleCheck.Checked = true;
             else
                 DownloadSingleCheck.Checked = false;
 
-            if (settings.GetDownloadSingle())
+            if (settings.GetDownloadFormatExists("Single"))
                 DownloadSoundtrackCheck.Checked = true;
             else
                 DownloadSoundtrackCheck.Checked = false;
 
-            if (settings.GetDownloadSoundtrack())
+            if (settings.GetDownloadFormatExists("Soundtrack"))
                 DownloadSoundtrackCheck.Checked = true;
             else
                 DownloadSoundtrackCheck.Checked = false;
 
-            if (settings.GetDownloadUnknown())
+            if (settings.GetDownloadFormatExists("Unknown"))
                 DownloadUnknownCheck.Checked = true;
             else
                 DownloadUnknownCheck.Checked = false;
@@ -266,89 +266,89 @@ namespace CSL_Test__1
         private void DownloadAlbumCheck_CheckedChanged(object sender, EventArgs e)
         {
             if (DownloadAlbumCheck.Checked)
-                settings.SetDownloadAlbum(true);
+                settings.AddDownloadFormat("Album");
             else
-                settings.SetDownloadAlbum(false);
+                settings.RemoveDownloadFormat("Album");
         }
 
         private void DownloadEPCheck_CheckedChanged(object sender, EventArgs e)
         {
             if (DownloadEPCheck.Checked)
-                settings.SetDownloadEP(true);
+                settings.AddDownloadFormat("EP");
             else
-                settings.SetDownloadEP(false);
+                settings.RemoveDownloadFormat("EP");
         }
 
         private void DownloadSingleCheck_CheckedChanged(object sender, EventArgs e)
         {
             if (DownloadSingleCheck.Checked)
-                settings.SetDownloadSingle(true);
+                settings.AddDownloadFormat("Single");
             else
-                settings.SetDownloadSingle(false);
+                settings.RemoveDownloadFormat("Single");
         }
 
         private void DownloadLiveCheck_CheckedChanged(object sender, EventArgs e)
         {
             if (DownloadLiveCheck.Checked)
-                settings.SetDownloadLive(true);
+                settings.AddDownloadFormat("Live");
             else
-                settings.SetDownloadLive(false);
+                settings.RemoveDownloadFormat("Live");
         }
 
         private void DownloadRemixCheck_CheckedChanged(object sender, EventArgs e)
         {
             if (DownloadRemixCheck.Checked)
-                settings.SetDownloadRemix(true);
+                settings.AddDownloadFormat("Remix");
             else
-                settings.SetDownloadRemix(false);
+                settings.RemoveDownloadFormat("Remix");
         }
 
         private void DownloadCompilationCheck_CheckedChanged(object sender, EventArgs e)
         {
             if (DownloadCompilationCheck.Checked)
-                settings.SetDownloadCompilation(true);
+                settings.AddDownloadFormat("Compilation");
             else
-                settings.SetDownloadCompilation(false);
+                settings.RemoveDownloadFormat("Compilation");
         }
 
         private void DownloadSoundtrackCheck_CheckedChanged(object sender, EventArgs e)
         {
             if (DownloadSoundtrackCheck.Checked)
-                settings.SetDownloadSoundtrack(true);
+                settings.AddDownloadFormat("Soundtrack");
             else
-                settings.SetDownloadSoundtrack(false);
+                settings.RemoveDownloadFormat("Soundtrack");
         }
 
         private void DownloadBootlegCheck_CheckedChanged(object sender, EventArgs e)
         {
             if (DownloadBootlegCheck.Checked)
-                settings.SetDownloadBootleg(true);
+                settings.AddDownloadFormat("Bootleg");
             else
-                settings.SetDownloadBootleg(false);
+                settings.RemoveDownloadFormat("Bootleg");
         }
 
         private void DownloadInterviewCheck_CheckedChanged(object sender, EventArgs e)
         {
             if (DownloadInterviewCheck.Checked)
-                settings.SetDownloadInterview(true);
+                settings.AddDownloadFormat("Interview");
             else
-                settings.SetDownloadInterview(false);
+                settings.RemoveDownloadFormat("Interview");
         }
 
         private void DownloadMixtapeCheck_CheckedChanged(object sender, EventArgs e)
         {
             if (DownloadMixtapeCheck.Checked)
-                settings.SetDownloadMixtape(true);
+                settings.AddDownloadFormat("Mixtape");
             else
-                settings.SetDownloadMixtape(false);
+                settings.RemoveDownloadFormat("Mixtape");
         }
 
         private void DownloadUnknownCheck_CheckedChanged(object sender, EventArgs e)
         {
             if (DownloadUnknownCheck.Checked)
-                settings.SetDownloadUnknown(true);
+                settings.AddDownloadFormat("Unknown");
             else
-                settings.SetDownloadUnknown(false);
+                settings.RemoveDownloadFormat("Unknown");
         }
 
         private void TrackTorrentsCheck_CheckedChanged(object sender, EventArgs e)
@@ -365,6 +365,12 @@ namespace CSL_Test__1
                 settings.SetTrackZips(true);
             else
                 settings.SetTrackZips(false);
+        }
+
+        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            SwitchesWindow sw = new SwitchesWindow();
+            sw.Show();
         }
 
 

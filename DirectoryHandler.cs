@@ -22,7 +22,14 @@ namespace CSL_Test__1
             FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read);
 
             if (File.Exists(fs.Name))
-                File.Delete(fs.Name);
+            {
+                try
+                {
+                    File.Delete(fs.Name);
+                }
+                catch (Exception e)
+                { }
+            }
             
             fs.Dispose();
         }
@@ -78,16 +85,24 @@ namespace CSL_Test__1
         }
         public string GetFileName(string path, bool extension)
         {
-            string filename;
-            FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read);
+            try
+            {
+                string filename;
+                FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read);
 
-            if (extension)
-                filename = Path.GetFileName(fs.Name);
-            else
-                filename = Path.GetFileNameWithoutExtension(fs.Name);
+                if (extension)
+                    filename = Path.GetFileName(fs.Name);
+                else
+                    filename = Path.GetFileNameWithoutExtension(fs.Name);
 
-            fs.Dispose();
-            return filename;
+                fs.Dispose();
+                return filename;
+            }
+            catch
+            {
+                return null;
+            }
+
         }
         public string GetDirectoryName(string path)
         {
@@ -99,16 +114,84 @@ namespace CSL_Test__1
             fs.Dispose();
             return directoryname;
         }
+        public string GetHTMLLookUp(string value)
+        {
+            FileStream fs = null;
+            try
+            {
+                fs = new FileStream(Directory.GetCurrentDirectory() + @"\" + "HTML-Look-Up.txt", FileMode.Open, FileAccess.Read);
+                string[] lines = File.ReadAllLines(fs.Name);
+                for (int c = 0; c < lines.Length; c++)
+                {
+                    while (value.Contains(lines[c]))
+                    {
+                        string replace = lines[c + 1];
+                        value = value.Replace(lines[c], replace);
+                    }
+                    if (c % 2 == 0)
+                        c++;
+                }
+
+            }
+            catch (FileNotFoundException)
+            {
+                //TODO: INSERT NO HTML LOOK UP HERE
+            }
+            finally
+            {
+                if (fs != null)
+                    fs.Dispose();
+            }
+            
+            return value;
+        }
         public bool GetFileExists(string path)
         {
             bool value;
-            FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read);
+            FileStream fs = null;
 
-            value = File.Exists(fs.Name);
+            try
+            {
+                fs = new FileStream(path, FileMode.Open, FileAccess.Read);
+                value = true;
+            }
+            catch (FileNotFoundException)
+            {
+                value = false;
+            }
+            finally
+            {
+                if(fs != null)
+                fs.Dispose();
+            }
 
-            fs.Dispose();
             return value;
         }
+        public bool MoveFile(string origin, string dest)
+        {
+            try
+            {
+                FileStream fs = new FileStream(origin, FileMode.Open, FileAccess.Read);
+                FileStream ds = null;
+                try
+                {
+                    ds = new FileStream(dest + Path.GetFileName(origin), FileMode.Open, FileAccess.Read);
+                    fs.Close();
+                    File.Delete(origin);
+                    return true;
+                }
+                catch(Exception e)
+                {
+                    string o = fs.Name;
+                    string d = dest + Path.GetFileName(fs.Name);
+                    fs.Close();
+                    File.Move(fs.Name, dest + Path.GetFileName(fs.Name));
+                    return true;
+                }
+            }
+            catch { return false; }
+        }
+
 
         public string[] UnzipFile(string zipFile)
         {
@@ -182,84 +265,31 @@ namespace CSL_Test__1
                     cslSaveFolder = settings.GetTorrentSaveFolder() + '\\' + where + '\\';
                     break;
             }
-                    
-
             if (!Directory.Exists(cslSaveFolder))
-                Directory.CreateDirectory(cslSaveFolder);
+                Directory.CreateDirectory(cslSaveFolder);    
 
-            if (File.Exists(cslSaveFolder + fileName))
-            {
-                if (!file.Equals(cslSaveFolder + fileName))
-<<<<<<< HEAD
-                    File.Delete(file); //If pulling in from a handled directory, don't delete
-=======
-                {
-                    try
-                    {
-                        File.Delete(file);
-                    }
-                    catch (Exception de)
-                    {
-                        ErrorWindow ew = new ErrorWindow();
-                        ew.IssueFileMoveWarning(file, true);
-                    }
-                }
->>>>>>> c6d8d3dce8c640d219663493643ad8bfec714b42
-            }
-            else
-            {
-                try
-                {
-                    File.Move(file, cslSaveFolder + fileName);
-                }
-                catch(Exception eee)
-                {
-                    GC.Collect();
-                    try
-                    {
-                        File.Move(file, cslSaveFolder + fileName);
-                    }
-                    catch(Exception e)
-                    {
-                        ErrorWindow ew = new ErrorWindow();
-                        ew.IssueFileMoveWarning(file, true);
-                    }
-                }
-            }
-            if (File.Exists(cslSaveFolder + fileName))
+            bool success = this.MoveFile(file, cslSaveFolder);
+
+            if (success)
                 return cslSaveFolder + fileName;
             else
                 return null;     
         }
-        public void MoveProcessedZipFiles()
-        {
-            string[] zipFiles = Directory.GetFiles(settings.GetTorrentSaveFolder(), "*.zip", SearchOption.TopDirectoryOnly);
-
-            if (!Directory.Exists(settings.GetTorrentSaveFolder() + @"\[CSL] -- Processed Zips"))
-                Directory.CreateDirectory(settings.GetTorrentSaveFolder() + @"\[CSL] -- Processed Zips");
-
-            for (int a = 0; a < zipFiles.Length; a++)
-            {
-                File.Move(zipFiles[a], settings.GetTorrentSaveFolder() + @"\[CSL] -- Processed Zips\" + zipFiles[a].Substring(zipFiles[a].LastIndexOf('\\') + 1));
-            }
-        }
         public void MoveProcessedFiles(TorrentXMLHandler data)
         {
             string filepath;
-            int index;
             bool skip = false;
-
+            int count = data.table.Rows.Count;
+            
             foreach (DataRow datarow in data.table.Rows)
             {
                 if (!datarow["File Path"].Equals(DBNull.Value))
                 {
                     filepath = (string)datarow["File Path"];
 
-                    index = data.table.Rows.IndexOf(datarow);
-
                     if (filepath.Contains("[CSL] -- Unhandled Torrents") && !(bool)datarow["Error"])
                         skip = false;
-                    else if (!filepath.Contains("[CSL] -- Handled Torrents") && !(bool)datarow["Error"] && !(bool)datarow["Handled"])
+                    else if (!filepath.Contains("[CSL] -- Handled Torrents") && !(bool)datarow["Handled"])
                         skip = false;
                     else
                         skip = true;
@@ -269,21 +299,18 @@ namespace CSL_Test__1
                         switch ((bool)datarow["Error"])
                         {
                             case true:
-                                data.table.Rows[index]["File Path"] = MoveTorrentFile((string)datarow["File Path"], "unhandled");
+                                datarow["File Path"] = MoveTorrentFile((string)datarow["File Path"], "unhandled");
                                 break;
                             case false:
-                                data.table.Rows[index]["File Path"] = MoveTorrentFile((string)datarow["File Path"], "handled");
+                                datarow["File Path"] = MoveTorrentFile((string)datarow["File Path"], "handled");
                                 break;
                             default:
-                                data.table.Rows[index]["File Path"] = MoveTorrentFile((string)datarow["File Path"], "unhandled");
+                                datarow["File Path"] = MoveTorrentFile((string)datarow["File Path"], "unhandled");
                                 break;
                         }
                     }
                 }
             }
-
-            
-            data.table.AcceptChanges();
             data.Save();
 
             string[] zipFiles = Directory.GetFiles(settings.GetTorrentSaveFolder(), "*.zip", SearchOption.TopDirectoryOnly);

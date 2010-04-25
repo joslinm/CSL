@@ -7,7 +7,7 @@ namespace CSL_Test__1
     {
         SettingsHandler settings = new SettingsHandler();
         TorrentBuilder builder = new TorrentBuilder();
-        DirectoryHandler directory = new DirectoryHandler();
+        DirectoryHandler dh = new DirectoryHandler();
         TorrentXMLHandler xml;
         string saveFolder = null;
 
@@ -15,11 +15,19 @@ namespace CSL_Test__1
         {
             xml = data;
             saveFolder = settings.GetTorrentSaveFolder();
+            builder.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(builder_RunWorkerCompleted);
+        }
+
+        void builder_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
+        {
+            xml.AddTorrents((Torrent[])e.Result);
+            builder.Dispose();
+            dh.MoveProcessedFiles(xml);
+            xml.Save();
         }
 
         public void Watch()
         {
-            Torrent[] torrents;
             string[] torrentFiles;
             string[] zipFiles;
             bool autocheck = settings.GetAutoHandleBool();
@@ -28,30 +36,24 @@ namespace CSL_Test__1
 
             while (autocheck)
             {
-                torrentFiles = directory.GetTorrents();
-                zipFiles = directory.GetTorrentZips();
+                torrentFiles = dh.GetTorrents();
+                zipFiles = dh.GetTorrentZips();
 
                 if (torrentFiles != null)
                 {
-                    torrents = builder.Build(torrentFiles);
-                    builder.Dispose();
-                    xml.AddTorrents(torrents);
-                    directory.MoveProcessedFiles(xml);
+                    builder.RunWorkerAsync(torrentFiles);
+                    while (builder.IsBusy)
+                        Thread.Sleep(500);
                 }
                 if (zipFiles != null)
                 {
+                    object[] rawFiles = dh.UnzipFiles(zipFiles);
+                    torrentFiles = Array.ConvertAll<object, string>(rawFiles, Convert.ToString);
 
-                    object[] rawFiles = directory.UnzipFiles(zipFiles);
-                    string[] files = Array.ConvertAll<object, string>(rawFiles, Convert.ToString);
-                    if (files != null)
-                    {
-                        torrents = builder.Build(files);
-                        builder.Dispose();
-                        xml.AddTorrents(torrents);
-                        directory.MoveProcessedFiles(xml);
-                        directory.MoveProcessedZipFiles();
-                    }
+                    builder.RunWorkerAsync(torrentFiles);
 
+                    while (builder.IsBusy)
+                        Thread.Sleep(500);
                 }
 
                 Thread.Sleep(s * 1000);

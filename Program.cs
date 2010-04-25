@@ -15,7 +15,8 @@ namespace CSL_Test__1
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MainWindow());
+            MainWindow mw = new MainWindow();
+            Application.Run(mw);
         }
     }
 }

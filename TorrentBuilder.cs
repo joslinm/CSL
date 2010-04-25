@@ -58,55 +58,102 @@ namespace CSL_Test__1
 
         public Torrent[] Build(string[] files)
         {
-            Torrent[] torrent = new Torrent[files.Length];
+            ArrayList torrents = new ArrayList();
+            Torrent torrent;
             information[14] = null;
-            int progress = 100 / files.Length;
-
-            for (int a = 0; a < files.Length; a++)
-            {
-                string birth = GetTorrentBirth(files[a]);
-
-                torrent[a] = ProcessTorrent(files[a], birth);
-                if (information[14] != "true") 
-                    torrent[a] = VerifyTorrent(torrent[a]);
-
-                //Clear out information for this run to avoid misinformation on the next run
-                for (int b = 0; b < information.Length; b++)
-                    information[b] = null;
-
-                this.ReportProgress((int)a * progress);
-            }
-
-            ErrorWindow ew = new ErrorWindow();
-            ew.ClearApplyToAll();
-            return torrent;
-        }
-        public Torrent[] BuildFromArrayList(ArrayList files)
-        {
-            Torrent[] torrents = new Torrent[files.Count];
-            information[14] = null;
-            int filescount = files.Count;
-            double progress;
+            int filescount = files.Length;
+            double progress = 0;
             double count = 0;
 
             for (int a = 0; a < filescount; a++)
             {
-                string birth = GetTorrentBirth((string)files[a]);
+                string birth = GetTorrentBirth(files[a]);
+                torrent = ProcessTorrent(files[a], birth);
 
-                torrents[a] = ProcessTorrent((string)files[a], birth);
                 if (information[14] != "true")
-                    torrents[a] = VerifyTorrent(torrents[a]);
+                {
+                    if (information[2] != null)
+                    {
+                        if (settings.GetDownloadFormatExists(information[2]))
+                        {
+                            torrent = VerifyTorrent(torrent);
+                            torrents.Add(torrent);
+                        }
+                    }
+                    else
+                    {
+                        torrent = VerifyTorrent(torrent);
+                        torrents.Add(torrent);
+                    }
+                }
 
                 //Clear out information for this run to avoid misinformation on the next run
                 for (int b = 0; b < information.Length; b++)
                     information[b] = null;
 
                 progress = (++count / filescount) * 100;
-                this.ReportProgress((int)progress);
+
+                if (progress < 100 && progress > 0)
+                    this.ReportProgress((int)progress);
+
             }
             ErrorWindow ew = new ErrorWindow();
             ew.ClearApplyToAll();
-            return torrents;
+            object[] raw = torrents.ToArray();
+            Torrent[] tarray = Array.ConvertAll(raw, new Converter<object, Torrent>(Converter));
+            return tarray;
+        }
+        public Torrent[] BuildFromArrayList(ArrayList files)
+        {
+            ArrayList torrents = new ArrayList();
+            Torrent torrent;
+            information[14] = null;
+            int filescount = files.Count;
+            double progress = 0;
+            double count = 0;
+
+            for (int a = 0; a < filescount; a++)
+            {
+                string birth = GetTorrentBirth((string)files[a]);
+                torrent = ProcessTorrent((string)files[a], birth);
+
+                if (information[14] != "true")
+                {
+                    if (information[2] != null)
+                    {
+                        if (settings.GetDownloadFormatExists(information[2]))
+                        {
+                            torrent = VerifyTorrent(torrent);
+                            torrents.Add(torrent);
+                        }
+                    }
+                    else
+                    {
+                        torrent = VerifyTorrent(torrent);
+                        torrents.Add(torrent);
+                    }
+                }
+
+                //Clear out information for this run to avoid misinformation on the next run
+                for (int b = 0; b < information.Length; b++)
+                    information[b] = null;
+
+                progress = (++count / filescount) * 100;
+
+                if(progress < 100 && progress > 0)
+                    this.ReportProgress((int)progress);
+                
+            }
+            ErrorWindow ew = new ErrorWindow();
+            ew.ClearApplyToAll();
+            object[] raw = torrents.ToArray();
+            Torrent[] tarray = Array.ConvertAll(raw, new Converter<object,Torrent>(Converter));
+            return tarray;
+        }
+
+        public static Torrent Converter(object raw)
+        {
+            return (Torrent)raw;
         }
         public Torrent ProcessTorrent(string file, string birth)
         {
@@ -146,6 +193,7 @@ namespace CSL_Test__1
                         case ('a'):
                             {
                                 string artist = ExtractArtist(birth, file);
+                                artist = dh.GetHTMLLookUp(artist);
                                 directoryName += artist;
                                 information[0] = artist;
                                 a++;
@@ -181,6 +229,7 @@ namespace CSL_Test__1
                         case ('t'):
                             {
                                 string album = ExtractAlbum(birth, file);
+                                album = dh.GetHTMLLookUp(album);
                                 directoryName += album;
                                 information[1] = album;
                                 a++;
@@ -198,7 +247,7 @@ namespace CSL_Test__1
                                 information[2] = format;
                                 if (format == "Live")
                                 {
-                                    directoryName += "Live Album";
+                                    directoryName += "Live";
                                     information[2] = format;
                                 }
                                 a++;
@@ -368,7 +417,6 @@ namespace CSL_Test__1
                                 while (information[0].Contains("  "))
                                     information[0] = information[0].Replace("  ", " ");
                             }
-                                
 
                             /*MusicBrainzXMLDocumentCreator createXML = new MusicBrainzXMLDocumentCreator("http://musicbrainz.org/ws/1/artist/?type=xml&name=" + information[0]);
                             MusicBrainzXMLDocumentArtist[] artists = createXML.ProcessArtist();
@@ -424,8 +472,10 @@ namespace CSL_Test__1
                             Match match = (Regex.Match(information[3], "(([0-2][0-9][0-9]|V0|V1|V2|APS|APX|V8)+[(]?(VBR)?[)]?)|Lossless"));
                             if (!match.Success)
                             {
-                                information[3] = IssueWarning("Bitrate is not perfect match", information[10]);
+                                information[3] = IssueWarning("Bitrate is not perfect match", information[10], null);
                             }
+
+
                         }
                         break;
                     case 4:
@@ -435,19 +485,36 @@ namespace CSL_Test__1
 
                             int year = 1899;
 
+                        ParseYear:
                             try
                             {
                                 year = int.Parse(information[4]);
-                            }
-                            catch (FormatException fe)
-                            {
-                                information[4] = IssueError("Can't parse year", information[10]);
-                                year = int.Parse(information[4]);
-                            }
-                            finally
-                            {
                                 if (year < 1900 || year > DateTime.Today.Year + 1)
-                                    information[4] = IssueWarning("Year is unrealistic", information[10]);
+                                {
+                                    information[4] = IssueWarning("Year is unrealistic", information[10], information[4]);
+                                    if (information[4] == null)
+                                    {
+                                        information[14] = "true";
+                                        break;
+                                    }
+                                    else
+                                    {
+                                        goto ParseYear;
+                                    }
+                                }
+                            }
+                            catch (FormatException)
+                            {
+                                information[4] = IssueWarning("Year is unrealistic", information[10], information[4]);
+                                if (information[4] == null)
+                                {
+                                    information[14] = "true";
+                                    break;
+                                }
+                                else
+                                {
+                                    goto ParseYear;
+                                }
                             }
                         }
                         break;
@@ -492,24 +559,6 @@ namespace CSL_Test__1
                             if ((settings.GetTorrentSaveFolder() + @"\[CSL] -- Handled Torrents\" + information[11]).Length >= 255)
                             {
                                 IssueError("Torrent save location is greater than 255", information[10]);
-                            }
-
-                            try
-                            {
-                                string[] lines = File.ReadAllLines("HTML-Look-Up.txt");
-                                for (int c = 0; c < lines.Length; c++)
-                                {
-                                    while (information[13].Contains(lines[c]))
-                                    {
-                                        information[13].Replace(lines[c], lines[++c]);
-                                    }
-                                    if (c % 2 != 0)
-                                        c++;
-                                }
-                            }
-                            catch
-                            {
-                                //TODO: INSERT WARNING ABOUT NO HTML LOOK UP HERE
                             }
                         }
                         break;
@@ -785,16 +834,20 @@ namespace CSL_Test__1
             FileStream fs = new FileStream(file, FileMode.Open, FileAccess.Read);
             StreamReader sr = new StreamReader(fs);
             string fileContents = sr.ReadToEnd();
+            string value = null;
 
             if (fileContents.Contains("waffles"))
-                return "waffles";
+                value = "waffles";
             else if (fileContents.Contains("what"))
-                return "what";
+                value = "what";
+
+            fs.Dispose();
+            sr.Dispose();
+
+            if (value == null)
+                return IssueError("Can't parse birth", file);
             else
-                fileContents = sr.ReadLine();
-
-
-            return IssueError("Can't parse birth", file);
+                return value;
         }
         public string IssueError(string error, string file)
         {
@@ -886,7 +939,7 @@ namespace CSL_Test__1
             else
                 return returnString;
         }
-        public string IssueWarning(string warning, string file)
+        public string IssueWarning(string warning, string file, string value)
         {
             string returnString = null;
             switch (warning)
@@ -894,21 +947,21 @@ namespace CSL_Test__1
                 case "Artist is not a perfect match":
                     {
                         ErrorWindow ew = new ErrorWindow();
-                        returnString = ew.IssueArtistWarning(file, information[0]);
+                        returnString = ew.IssueArtistWarning(file, (value == null) ? information[0] : value);
                         ew.Dispose();
                     }
                     break;
                 case "Album is not a perfect match":
                     {
                         ErrorWindow ew = new ErrorWindow();
-                        returnString = ew.IssueAlbumWarning(file, information[1]);
+                        returnString = ew.IssueAlbumWarning(file, (value == null)? information[1] : value);
                         ew.Dispose();
                     }
                     break;
                 case "Year is unrealistic":
                     {
                         ErrorWindow ew = new ErrorWindow();
-                        returnString = ew.IssueYearWarning(file, information[4]);
+                        returnString = ew.IssueYearWarning(file, (value == null) ? information[4] : value);
                         ew.Dispose();
                     }
                     break;
@@ -979,13 +1032,8 @@ namespace CSL_Test__1
 
                                         if (filename[dash - 1].Equals(' ') && filename[dash + 1].Equals(' '))
                                         {
-                                            if (filename[dash + 2].Equals('2') || (filename[dash + 2].Equals('1')))
-                                                break;
-                                            else
-                                            {
-                                                string artist = filename.Substring(0, dash - 1);
-                                                return artist;
-                                            }
+                                            string artist = filename.Substring(0, dash - 1);
+                                            return artist;
                                         }
 
                                         startingPosition = dash + 1;
@@ -1067,29 +1115,50 @@ namespace CSL_Test__1
             {
                 case "waffles":
                     {
-                        file = dh.GetFileName(file, true);
-                        Match match = Regex.Match(file, "[1-2]+[0-9]+[0-9]+[0-9]");
-                        while (match.Success)
+                        string filename = dh.GetFileName(file, true);
+                        Match match = Regex.Match(dh.GetFileName(file, true), "[1-2]{1}[09][0-9][0-9]");
+                        if (match.Success)
                         {
-                            if (file[file.IndexOf(match.Value) - 1] == '[')
+                            int year = Int32.Parse(match.Value);
+                            int year2 = year;
+
+                            if (match.Captures.Count > 1)
+                            {
+                                match.NextMatch();
+                                year2 = Int32.Parse(match.Value);
+                            }
+
+                            if (year == year2)
                                 return match.Value;
                             else
-                                match = match.NextMatch();
+                                return IssueError("Can't parse year", filename);
                         }
-                        return IssueError("Can't parse year", file);
+                        else
+                        {
+                            return IssueError("Can't parse year", filename);
+                        }
                     }
                 case "what":
                     {
-                        Match match = Regex.Match(dh.GetFileName(file, true), "[0-9]+[0-9]+[0-9]+[0-9]");
-                        while (match.Success)
+                        Match match = Regex.Match(dh.GetFileName(file, true), "[1-2]{1}[09][0-9][0-9]");
+                        if(match.Success)
                         {
-                            if (file[file.IndexOf(match.Value) + 5] == '(' | file[file.IndexOf(match.Value) + 6] == '(')
+                            int year = Int32.Parse(match.Value);
+                            int year2 = year;
+
+                            if (match.Captures.Count > 1)
+                            {
+                                match.NextMatch();
+                                year2 = Int32.Parse(match.Value);
+                            }
+
+                            if (year == year2)
                                 return match.Value;
                             else
-                                match = match.NextMatch();
+                                return IssueError("Can't parse year", file);
                         }
-
-                        return IssueError("Can't parse year", file);
+                        else
+                            return IssueError("Can't parse year", file);
                     }
                 default:
                     return IssueError("Can't parse year", file);
@@ -1282,7 +1351,7 @@ namespace CSL_Test__1
                         else if (file.Contains("\\Bootleg\\"))
                             return "Bootleg";
                         else if (file.Contains("\\Live album\\"))
-                            return "Live Album";
+                            return "Live";
                         else if (file.Contains("\\Mixtape\\"))
                             return "Mixtape";
                         else if (file.Contains("\\EP\\"))

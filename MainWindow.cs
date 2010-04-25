@@ -16,6 +16,7 @@ namespace CSL_Test__1
         TorrentBuilder tb = new TorrentBuilder();
         DirectoryHandler dh = new DirectoryHandler();
         OptionsWindow ow;
+        public bool restart = false;
 
         public MainWindow()
         {
@@ -29,6 +30,7 @@ namespace CSL_Test__1
             dataGridView.Columns["Bit Format"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
             dataGridView.Columns["Handled"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
             dataGridView.Columns["Error"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            dataGridView.Columns["File Path"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
             notifyIcon.Visible = false;
         }
 
@@ -65,6 +67,7 @@ namespace CSL_Test__1
 
         void tb_DragDropProgress(object sender, ProgressChangedEventArgs e)
         {
+            if (!(e.ProgressPercentage > 100 || e.ProgressPercentage < 0))
             dataGridViewProgressBar.Value = e.ProgressPercentage;
         }
 
@@ -139,6 +142,16 @@ namespace CSL_Test__1
                 Hide();
                 notifyIcon.Visible = true;
             }
+            //DATAGRIDVIEW
+            dataGridView.Location = new System.Drawing.Point(0, 187);
+            dataGridView.Size = new System.Drawing.Size(this.Width - 15, this.Height - 225);
+            dataGridView.ScrollBars = ScrollBars.Both;
+            //DELETE BUTTON
+            DeleteButton.Location = new System.Drawing.Point(this.Width - 105, 113);
+            //uTORRENT SEND BUTTON
+            uTorrentSendIndividualButton.Location = new System.Drawing.Point(this.Width - 145, 150);
+            //REFRESH BUTTON
+            RefreshButton.Location = new System.Drawing.Point(0, 151);
         }
 
         private void optionsToolStripMenuItem1_Click(object sender, EventArgs e)
@@ -182,9 +195,9 @@ namespace CSL_Test__1
 
         private void RefreshButton_Click(object sender, EventArgs e)
         {
+            this.Refresh();
             dataGridView.Refresh();
             dataGridView.ScrollBars = ScrollBars.Both;
-            this.Refresh();
         }
 
         private void uTorrentSendIndividualButton_Click(object sender, EventArgs e)
@@ -196,21 +209,26 @@ namespace CSL_Test__1
             {
                 foreach (DataGridViewRow r in rc)
                 {
-                    string save = (string)r.Cells[3].Value;
-                    string path = (string)r.Cells[12].Value;
+                    if (!(bool)r.Cells["Error"].Value && !(bool)r.Cells["Handled"].Value)
+                    {
+                        string save = (string)r.Cells["Save Structure"].Value;
+                        string path = (string)r.Cells["File Path"].Value;
 
-                    bool success = utorrent.SendTorrent(save, path);
-                    if (success)
-                    {
-                        data.table.Columns["Handled"].ReadOnly = false;
-                        r.Cells["Handled"].Value = true;
-                        data.table.Columns["Handled"].ReadOnly = true;
-                    }
-                    else
-                    {
-                        data.table.Columns["Error"].ReadOnly = false;
-                        r.Cells["Error"].Value = true;
-                        data.table.Columns["Error"].ReadOnly = false;
+                        string success = utorrent.SendTorrent(save, path);
+
+                        if (success.Equals("SUCCESS"))
+                        {
+                            data.table.Columns["Handled"].ReadOnly = false;
+                            r.Cells["Handled"].Value = true;
+                            data.table.Columns["Handled"].ReadOnly = true;
+                        }
+                        else
+                        {
+                            data.table.Columns["Error"].ReadOnly = false;
+                            r.Cells["Error"].Value = true;
+                            r.Cells["File"].Value = success;
+                            data.table.Columns["Error"].ReadOnly = false;
+                        }
                     }
                 }
                 
@@ -219,21 +237,25 @@ namespace CSL_Test__1
             {
                 foreach (DataGridViewCell c in cc)
                 {
-                    string save = (string)c.OwningRow.Cells[3].Value;
-                    string path = (string)c.OwningRow.Cells[12].Value;
+                    if (!(bool)c.OwningRow.Cells["Error"].Value && !(bool)c.OwningRow.Cells["Handled"].Value)
+                    {
+                        string save = (string)c.OwningRow.Cells[3].Value;
+                        string path = (string)c.OwningRow.Cells[12].Value;
 
-                    bool success = utorrent.SendTorrent(save, path);
-                    if (success)
-                    {
-                        data.table.Columns["Handled"].ReadOnly = false;
-                        c.OwningRow.Cells["Handled"].Value = true;
-                        data.table.Columns["Handled"].ReadOnly = true;
-                    }
-                    else
-                    {
-                        data.table.Columns["Error"].ReadOnly = false;
-                        c.OwningRow.Cells["Error"].Value = true;
-                        data.table.Columns["Error"].ReadOnly = false;
+                        string success = utorrent.SendTorrent(save, path);
+                        if (success.Equals("SUCCESS"))
+                        {
+                            data.table.Columns["Handled"].ReadOnly = false;
+                            c.OwningRow.Cells["Handled"].Value = true;
+                            data.table.Columns["Handled"].ReadOnly = true;
+                        }
+                        else
+                        {
+                            data.table.Columns["Error"].ReadOnly = false;
+                            c.OwningRow.Cells["Error"].Value = true;
+                            c.OwningRow.Cells["File"].Value = success;
+                            data.table.Columns["Error"].ReadOnly = false;
+                        }
                     }
                 }
                 

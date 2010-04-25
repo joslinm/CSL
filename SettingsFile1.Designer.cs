@@ -49,114 +49,6 @@ namespace CSL_Test__1 {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool DownloadAlbum {
-            get {
-                return ((bool)(this["DownloadAlbum"]));
-            }
-            set {
-                this["DownloadAlbum"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool DownloadEP {
-            get {
-                return ((bool)(this["DownloadEP"]));
-            }
-            set {
-                this["DownloadEP"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool DownloadRemix {
-            get {
-                return ((bool)(this["DownloadRemix"]));
-            }
-            set {
-                this["DownloadRemix"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool DownloadSingle {
-            get {
-                return ((bool)(this["DownloadSingle"]));
-            }
-            set {
-                this["DownloadSingle"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool DownloadSoundtrack {
-            get {
-                return ((bool)(this["DownloadSoundtrack"]));
-            }
-            set {
-                this["DownloadSoundtrack"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool DownloadUnknown {
-            get {
-                return ((bool)(this["DownloadUnknown"]));
-            }
-            set {
-                this["DownloadUnknown"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool DownloadCompilation {
-            get {
-                return ((bool)(this["DownloadCompilation"]));
-            }
-            set {
-                this["DownloadCompilation"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool DownloadBootleg {
-            get {
-                return ((bool)(this["DownloadBootleg"]));
-            }
-            set {
-                this["DownloadBootleg"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool DownloadInterview {
-            get {
-                return ((bool)(this["DownloadInterview"]));
-            }
-            set {
-                this["DownloadInterview"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("uTorrent.exe")]
         public string TorrentClient {
             get {
@@ -212,30 +104,6 @@ namespace CSL_Test__1 {
             }
             set {
                 this["CustomDirectory"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool DownloadLive {
-            get {
-                return ((bool)(this["DownloadLive"]));
-            }
-            set {
-                this["DownloadLive"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool DownloadMixtape {
-            get {
-                return ((bool)(this["DownloadMixtape"]));
-            }
-            set {
-                this["DownloadMixtape"] = value;
             }
         }
         
@@ -301,18 +169,6 @@ namespace CSL_Test__1 {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string FormatApplyAll {
-            get {
-                return ((string)(this["FormatApplyAll"]));
-            }
-            set {
-                this["FormatApplyAll"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool RemoveDoubleSpaces {
             get {
@@ -344,6 +200,18 @@ namespace CSL_Test__1 {
             }
             set {
                 this["TrackTorrentFiles"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string DownloadFormats {
+            get {
+                return ((string)(this["DownloadFormats"]));
+            }
+            set {
+                this["DownloadFormats"] = value;
             }
         }
     }

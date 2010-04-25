@@ -23,17 +23,6 @@ namespace CSL_Test__1
         {
             if (dataset == null && table == null)
                 Initialize();
-            table.RowDeleting += new DataRowChangeEventHandler(table_RowDeleting);
-            table.RowDeleted += new DataRowChangeEventHandler(table_RowDeleted);
-        }
-
-        void table_RowDeleted(object sender, DataRowChangeEventArgs e)
-        {
-            
-        }
-
-        void table_RowDeleting(object sender, DataRowChangeEventArgs e)
-        {
         }
         public void Initialize()
         {
@@ -157,44 +146,16 @@ namespace CSL_Test__1
                 row["Physical Format"] = information[5];
                 row["Bit Format"] = information[6];
                 row["File Path"] = information[10];
-                row["Site Origin"] = information[12];
+                row["Site Origin"] = (information[14] == "true") ? "Discarded" : information[12];
 
-                bool duplicate = false;
                 currentfilename = torrent.GetFileName();
-<<<<<<< HEAD
 
-                foreach (DataRow dr in table.Rows)
-                {
-                    if (dr["File Path"] != DBNull.Value)
-                    {
-                        filename = dh.GetFileName((string)dr["File Path"], true);
-
-                        if (filename.Equals(currentfilename))
-                        {
-                            //Check if file still exists
-                            if (File.Exists((string)dr["File Path"]))
-                                duplicate = true;
-                            else
-                                dr.Delete();
-                        }
-                    }
-
-                }
-
-                table.AcceptChanges();
-
-                if (duplicate)
-                    dh.DeleteFile(information[10]);
-                else
-                    table.Rows.Add(row);
-=======
                 DataRow dr = table.Rows.Find(currentfilename);
                 if (dr != null)
                 {
                     table.Rows[table.Rows.IndexOf(dr)].Delete();
                 }
                 table.Rows.Add(row);
->>>>>>> c6d8d3dce8c640d219663493643ad8bfec714b42
             }
 
             table.AcceptChanges();

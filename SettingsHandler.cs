@@ -57,59 +57,18 @@ namespace CSL_Test__1
             settings.DeleteZipFiles = value;
             settings.Save();
         }
-        public void SetDownloadAlbum(bool value)
+        public void AddDownloadFormat(string value)
         {
-            settings.DownloadAlbum = value;
+            if (!settings.DownloadFormats.Contains(value))
+                settings.DownloadFormats += " " + value;
+
             settings.Save();
         }
-        public void SetDownloadEP(bool value)
+        public void RemoveDownloadFormat(string value)
         {
-            settings.DownloadEP = value;
-            settings.Save();
-        }
-        public void SetDownloadRemix(bool value)
-        {
-            settings.DownloadRemix = value;
-            settings.Save();
-        }
-        public void SetDownloadSingle(bool value)
-        {
-            settings.DownloadSingle = value;
-            settings.Save();
-        }
-        public void SetDownloadSoundtrack(bool value)
-        {
-            settings.DownloadSoundtrack = value;
-            settings.Save();
-        }
-        public void SetDownloadUnknown(bool value)
-        {
-            settings.DownloadUnknown = value;
-            settings.Save();
-        }
-        public void SetDownloadCompilation(bool value)
-        {
-            settings.DownloadCompilation = value;
-            settings.Save();
-        }
-        public void SetDownloadBootleg(bool value)
-        {
-            settings.DownloadBootleg = value;
-            settings.Save();
-        }
-        public void SetDownloadInterview(bool value)
-        {
-            settings.DownloadInterview = value;
-            settings.Save();
-        }
-        public void SetDownloadLive(bool value)
-        {
-            settings.DownloadLive = value;
-            settings.Save();
-        }
-        public void SetDownloadMixtape(bool value)
-        {
-            settings.DownloadMixtape = value;
+            if (settings.DownloadFormats.Contains(value))
+                settings.DownloadFormats = settings.DownloadFormats.Replace(value, "");
+
             settings.Save();
         }
         public void SetUppercaseAllFolderNames(bool value)
@@ -148,11 +107,6 @@ namespace CSL_Test__1
             settings.CustomDirectory = value;
             settings.Save();
         }
-        public void SetFormatApplyAllName(string value)
-        {
-            settings.FormatApplyAll = value;
-            settings.Save();
-        }
         #endregion
         #region Get Options
         public bool GetTrackZips()
@@ -179,49 +133,12 @@ namespace CSL_Test__1
         {
             return settings.DisableNotifications;
         }
-        public bool GetDownloadAlbum()
+        public bool GetDownloadFormatExists(string format)
         {
-            return settings.DownloadAlbum;
-        }
-        public bool GetDownloadEP()
-        {
-            return settings.DownloadEP;
-        }
-        public bool GetDownloadRemix()
-        {
-            return settings.DownloadRemix;
-        }
-        public bool GetDownloadSingle()
-        {
-            return settings.DownloadSingle;
-        }
-        public bool GetDownloadSoundtrack()
-        {
-            return settings.DownloadSoundtrack;
-        }
-        public bool GetDownloadUnknown()
-        {
-            return settings.DownloadUnknown;
-        }
-        public bool GetDownloadCompilation()
-        {
-            return settings.DownloadCompilation;
-        }
-        public bool GetDownloadBootleg()
-        {
-            return settings.DownloadBootleg;
-        }
-        public bool GetDownloadInterview()
-        {
-            return settings.DownloadInterview;
-        }
-        public bool GetDownloadLive()
-        {
-            return settings.DownloadLive;
-        }
-        public bool GetDownloadMixtape()
-        {
-            return settings.DownloadMixtape;
+            if (settings.DownloadFormats.Contains(format))
+                return true;
+            else
+                return false;
         }
         public bool GetUppercaseAllFolderNames()
         {
@@ -231,10 +148,6 @@ namespace CSL_Test__1
         {
             return settings.LowercaseAllFolderNames;
         }
-        public string GetFormatApplyAllName()
-        {
-            return settings.FormatApplyAll;
-        }  
         public string GetTorrentClient()
         {
             return settings.TorrentClient;

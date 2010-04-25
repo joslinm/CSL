@@ -11,72 +11,113 @@ namespace CSL_Test__1
     class uTorrentHandler
     {
         SettingsHandler settings = new SettingsHandler();
+        DirectoryHandler dh = new DirectoryHandler();
 
         public void SendAllTorrents(TorrentXMLHandler xml)
         {
             xml.table.Columns["Handled"].ReadOnly = false;
+            xml.table.Columns["Error"].ReadOnly = false;
             
             foreach(DataRow row in xml.dataset.Tables[0].Rows)
             {
-                if (!(bool)row["Error"] && !(bool)row["Handled"])
+                try
                 {
-                    try
+                    if (!(bool)row["Error"] && !(bool)row["Handled"] && row["File Path"].Equals(DBNull.Value))
                     {
-                        Process sendTorrentProcess = new Process();
-                        //torrentClient.exe /directory "C:\Save Path" "D:\Some folder\your.torrent"
+                        if (dh.GetFileExists((string)row["File Path"]))
+                        {
+                            try
+                            {
+                                Process sendTorrentProcess = new Process();
+                                //torrentClient.exe /directory "C:\Save Path" "D:\Some folder\your.torrent"
 
-                        string fullArgument = "/directory " + "\"" + row["Save Structure"] + "\" "
-                            + "\"" + row["File Path"] + "\"";
-                        sendTorrentProcess.StartInfo.WorkingDirectory = settings.GetTorrentClientFolder();
-                        sendTorrentProcess.StartInfo.Arguments = fullArgument;
-                        sendTorrentProcess.StartInfo.FileName = settings.GetTorrentClient();
+                                string fullArgument = "/directory " + "\"" + row["Save Structure"] + "\" "
+                                    + "\"" + row["File Path"] + "\"";
+                                sendTorrentProcess.StartInfo.WorkingDirectory = settings.GetTorrentClientFolder();
+                                sendTorrentProcess.StartInfo.Arguments = fullArgument;
+                                sendTorrentProcess.StartInfo.FileName = settings.GetTorrentClient();
 
-                        sendTorrentProcess.Start();
+                                sendTorrentProcess.Start();
 
-                        Thread.Sleep(100);
-                        sendTorrentProcess.Dispose();
-                        sendTorrentProcess.Close();
+                                Thread.Sleep(100);
+                                sendTorrentProcess.Dispose();
+                                sendTorrentProcess.Close();
 
+                                row.BeginEdit();
+                                row["Handled"] = true;
+                                row.EndEdit();
+
+                            }
+                            catch (Exception e)
+                            {
+                                Debug.Print(e.ToString());
+                            }
+                        }
+                        else
+                        {
+                            row.BeginEdit();
+                            row["Error"] = true;
+                            row["File"] = "File does not exist";
+                            row.EndEdit();
+                        }
+                    }
+                    else if (row["File Path"].Equals(DBNull.Value))
+                    {
                         row.BeginEdit();
-                        row["Handled"] = true;
+                        row["Error"] = true;
+                        row["File"] = "No file path";
                         row.EndEdit();
-
                     }
-                    catch (Exception e)
-                    {
-                        Debug.Print(e.ToString());
-                    }
+                }
+                catch (Exception e)
+                {
+                    row.BeginEdit();
+                    row["Error"] = true;
+                    row["File"] = e.Message;
+                    row.EndEdit();
                 }
             }
             xml.table.Columns["Handled"].ReadOnly = true;
+            xml.table.Columns["Error"].ReadOnly = true;
         }
-        public bool SendTorrent(string save, string path)
+        public string SendTorrent(string save, string path)
         {
             try
             {
                 Process sendTorrentProcess = new Process();
                 //torrentClient.exe /directory "C:\Save Path" "D:\Some folder\your.torrent"
+                if (dh.GetFileExists(path))
+                {
+                    string fullArgument = "/directory " + "\"" + save + "\" "
+                        + "\"" + path + "\"";
+                    sendTorrentProcess.StartInfo.WorkingDirectory = settings.GetTorrentClientFolder();
+                    sendTorrentProcess.StartInfo.Arguments = fullArgument;
+                    sendTorrentProcess.StartInfo.FileName = settings.GetTorrentClient();
 
-                string fullArgument = "/directory " + "\"" + save + "\" "
-                    + "\"" + path + "\"";
-                sendTorrentProcess.StartInfo.WorkingDirectory = settings.GetTorrentClientFolder();
-                sendTorrentProcess.StartInfo.Arguments = fullArgument;
-                sendTorrentProcess.StartInfo.FileName = settings.GetTorrentClient();
+                    sendTorrentProcess.Start();
 
-                sendTorrentProcess.Start();
-
-                Thread.Sleep(100);
-                sendTorrentProcess.Dispose();
-                sendTorrentProcess.Close();
-
+                    Thread.Sleep(100);
+                    sendTorrentProcess.Dispose();
+                    sendTorrentProcess.Close();
+                }
+                else
+                {
+                    return "File does not exist";
+                }
             }
             catch (Exception e)
             {
-                Debug.Print(e.ToString());
-                return false;
+                if (path == null || path == "")
+                {
+                    return "Empty file path";
+                }
+                else
+                {
+                    return e.Message;
+                }
             }
 
-            return true;
+            return "SUCCESS";
         }
     }
 }

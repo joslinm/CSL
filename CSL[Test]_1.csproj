@@ -120,6 +120,12 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="SettingsHandler.cs" />
+    <Compile Include="SwitchesWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SwitchesWindow.Designer.cs">
+      <DependentUpon>SwitchesWindow.cs</DependentUpon>
+    </Compile>
     <Compile Include="Torrent.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -138,6 +144,10 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SwitchesWindow.resx">
+      <DependentUpon>SwitchesWindow.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <Compile Include="Properties\Resources.Designer.cs">

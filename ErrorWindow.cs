@@ -282,7 +282,7 @@ namespace CSL_Test__1
         }
         public string IssueIllegalCharactersError(string file, string destPath)
         {
-            ErrorLabel.Text = "There's illegal characters in destination path";
+            ErrorLabel.Text = "There's illegal characters in destination path: \"" + destPath + "\"";
             InstructionalLabel.Text = "Please correct the path below";
 
             SelectionTextBox.Show();
@@ -299,7 +299,7 @@ namespace CSL_Test__1
         public string IssueArtistWarning(string file, string artist)
         {
             InstructionalLabel.Text = "Validate and change if necessary";
-            ErrorLabel.Text = "MusicBrainz doesn't recognize this artist";
+            ErrorLabel.Text = "MusicBrainz doesn't recognize this artist: \"" + artist + "\"";
 
             SelectionTextBox.Show();
             SelectionTextBox.Text = artist;
@@ -310,12 +310,15 @@ namespace CSL_Test__1
             this.Activate();
             this.ShowDialog();
 
-            return SelectionTextBox.Text;
+            if (discard)
+                return null;
+            else
+                return SelectionTextBox.Text;
         }
         public string IssueAlbumWarning(string file, string album)
         {
             InstructionalLabel.Text = "Validate and change if necessary";
-            ErrorLabel.Text = "MusicBrainz doesn't recognize this album";
+            ErrorLabel.Text = "MusicBrainz doesn't recognize this album: \"" + album + "\"";
 
             SelectionTextBox.Show();
             SelectionTextBox.Text = album;
@@ -326,12 +329,15 @@ namespace CSL_Test__1
             this.Activate();
             this.ShowDialog();
 
-            return SelectionTextBox.Text;
+            if (discard)
+                return null;
+            else
+                return SelectionTextBox.Text;
         }
         public string IssueYearWarning(string file, string year)
         {
             InstructionalLabel.Text = "Please provide the correct year";
-            ErrorLabel.Text = "This year is unrealistic";
+            ErrorLabel.Text = "This year is unrealistic: \"" + year + "\"";
 
             SelectionTextBox.Show();
             SelectionTextBox.Text = year;
@@ -378,9 +384,7 @@ namespace CSL_Test__1
         private void DiscardButton_Click(object sender, EventArgs e)
         {
             discard = true;
-            SelectionTextBox.Text = null;
-            this.Dispose();
-            this.Close();
+            this.Hide();
         }
         private void OkButton_Click(object sender, EventArgs e)
         {
