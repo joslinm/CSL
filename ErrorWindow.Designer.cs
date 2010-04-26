@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.UserInputPanel = new System.Windows.Forms.Panel();
+            this.ApplyToAllCheck = new System.Windows.Forms.CheckBox();
             this.BirthSelectionComboBox = new System.Windows.Forms.ComboBox();
             this.DiscardButton = new System.Windows.Forms.Button();
             this.PhysicalFormatSelectionComboBox = new System.Windows.Forms.ComboBox();
@@ -43,7 +44,6 @@
             this.FileNameLabel = new System.Windows.Forms.Label();
             this.ErrorLabel = new System.Windows.Forms.Label();
             this.FileLabelLabel = new System.Windows.Forms.Label();
-            this.ApplyToAllCheck = new System.Windows.Forms.CheckBox();
             this.UserInputPanel.SuspendLayout();
             this.DescriptionPanel.SuspendLayout();
             this.SuspendLayout();
@@ -65,6 +65,17 @@
             this.UserInputPanel.Name = "UserInputPanel";
             this.UserInputPanel.Size = new System.Drawing.Size(582, 108);
             this.UserInputPanel.TabIndex = 0;
+            // 
+            // ApplyToAllCheck
+            // 
+            this.ApplyToAllCheck.AutoSize = true;
+            this.ApplyToAllCheck.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ApplyToAllCheck.Location = new System.Drawing.Point(11, 43);
+            this.ApplyToAllCheck.Name = "ApplyToAllCheck";
+            this.ApplyToAllCheck.Size = new System.Drawing.Size(110, 18);
+            this.ApplyToAllCheck.TabIndex = 7;
+            this.ApplyToAllCheck.Text = "Apply to all";
+            this.ApplyToAllCheck.UseVisualStyleBackColor = true;
             // 
             // BirthSelectionComboBox
             // 
@@ -170,7 +181,7 @@
             this.ReleaseSelectionComboBox.Items.AddRange(new object[] {
             "Album",
             "Bootleg",
-            "Live Album",
+            "Live",
             "Mixtape",
             "EP",
             "Compilation",
@@ -256,17 +267,6 @@
             this.FileLabelLabel.Size = new System.Drawing.Size(53, 17);
             this.FileLabelLabel.TabIndex = 4;
             this.FileLabelLabel.Text = "File:";
-            // 
-            // ApplyToAllCheck
-            // 
-            this.ApplyToAllCheck.AutoSize = true;
-            this.ApplyToAllCheck.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ApplyToAllCheck.Location = new System.Drawing.Point(11, 43);
-            this.ApplyToAllCheck.Name = "ApplyToAllCheck";
-            this.ApplyToAllCheck.Size = new System.Drawing.Size(110, 18);
-            this.ApplyToAllCheck.TabIndex = 7;
-            this.ApplyToAllCheck.Text = "Apply to all";
-            this.ApplyToAllCheck.UseVisualStyleBackColor = true;
             // 
             // ErrorWindow
             // 

@@ -73,10 +73,13 @@ namespace CSL_Test__1
 
         void tb_DragDropCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            data.AddTorrents((Torrent[])e.Result);
-            builder.Dispose();
-            dh.MoveProcessedFiles(data);
-            dataGridViewProgressBar.Visible = false; 
+            if (e.Result != null)
+            {
+                data.AddTorrents((Torrent[])e.Result);
+                builder.Dispose();
+                dh.MoveProcessedFiles(data);
+                dataGridViewProgressBar.Visible = false;
+            }
         }
 
         private void dataGridView_DragEnter(object sender, DragEventArgs e)
@@ -139,8 +142,11 @@ namespace CSL_Test__1
         {
             if(this.WindowState == FormWindowState.Minimized)
             {
-                Hide();
-                notifyIcon.Visible = true;
+                if (settings.GetMinimizeToTray())
+                {
+                    Hide();
+                    notifyIcon.Visible = true;
+                }
             }
             //DATAGRIDVIEW
             dataGridView.Location = new System.Drawing.Point(0, 187);
@@ -226,6 +232,7 @@ namespace CSL_Test__1
                         {
                             data.table.Columns["Error"].ReadOnly = false;
                             r.Cells["Error"].Value = true;
+                            if (!success.Equals("uTorrent.exe does not exist"))
                             r.Cells["File"].Value = success;
                             data.table.Columns["Error"].ReadOnly = false;
                         }
@@ -239,8 +246,8 @@ namespace CSL_Test__1
                 {
                     if (!(bool)c.OwningRow.Cells["Error"].Value && !(bool)c.OwningRow.Cells["Handled"].Value)
                     {
-                        string save = (string)c.OwningRow.Cells[3].Value;
-                        string path = (string)c.OwningRow.Cells[12].Value;
+                        string save = (string)c.OwningRow.Cells["Save Structure"].Value;
+                        string path = (string)c.OwningRow.Cells["File Path"].Value;
 
                         string success = utorrent.SendTorrent(save, path);
                         if (success.Equals("SUCCESS"))

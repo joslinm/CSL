@@ -20,10 +20,13 @@ namespace CSL_Test__1
 
         void builder_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
         {
-            xml.AddTorrents((Torrent[])e.Result);
-            builder.Dispose();
-            dh.MoveProcessedFiles(xml);
-            xml.Save();
+            if (e.Result != null)
+            {
+                xml.AddTorrents((Torrent[])e.Result);
+                builder.Dispose();
+                dh.MoveProcessedFiles(xml);
+                xml.Save();
+            }
         }
 
         public void Watch()
@@ -31,11 +34,12 @@ namespace CSL_Test__1
             string[] torrentFiles;
             string[] zipFiles;
             bool autocheck = settings.GetAutoHandleBool();
-            decimal sleep = settings.GetAutoHandleTime();
-            int s = Decimal.ToInt32(sleep);
 
             while (autocheck)
             {
+                decimal sleep = settings.GetAutoHandleTime();
+                int s = Decimal.ToInt32(sleep);
+
                 torrentFiles = dh.GetTorrents();
                 zipFiles = dh.GetTorrentZips();
 

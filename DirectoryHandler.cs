@@ -117,6 +117,8 @@ namespace CSL_Test__1
         public string GetHTMLLookUp(string value)
         {
             FileStream fs = null;
+            if (value == null)
+                return value;
             try
             {
                 fs = new FileStream(Directory.GetCurrentDirectory() + @"\" + "HTML-Look-Up.txt", FileMode.Open, FileAccess.Read);
@@ -155,7 +157,15 @@ namespace CSL_Test__1
                 fs = new FileStream(path, FileMode.Open, FileAccess.Read);
                 value = true;
             }
+            catch (DirectoryNotFoundException)
+            {
+                value = false;
+            }
             catch (FileNotFoundException)
+            {
+                value = false;
+            }
+            catch (Exception e)
             {
                 value = false;
             }
@@ -285,6 +295,8 @@ namespace CSL_Test__1
             {
                 if (!datarow["File Path"].Equals(DBNull.Value))
                 {
+                    int index = data.table.Rows.IndexOf(datarow);
+
                     filepath = (string)datarow["File Path"];
 
                     if (filepath.Contains("[CSL] -- Unhandled Torrents") && !(bool)datarow["Error"])
@@ -299,13 +311,13 @@ namespace CSL_Test__1
                         switch ((bool)datarow["Error"])
                         {
                             case true:
-                                datarow["File Path"] = MoveTorrentFile((string)datarow["File Path"], "unhandled");
+                                data.table.Rows[index]["File Path"] = MoveTorrentFile((string)datarow["File Path"], "unhandled");
                                 break;
                             case false:
-                                datarow["File Path"] = MoveTorrentFile((string)datarow["File Path"], "handled");
+                                data.table.Rows[index]["File Path"] = MoveTorrentFile((string)datarow["File Path"], "handled");
                                 break;
                             default:
-                                datarow["File Path"] = MoveTorrentFile((string)datarow["File Path"], "unhandled");
+                                data.table.Rows[index]["File Path"] = MoveTorrentFile((string)datarow["File Path"], "unhandled");
                                 break;
                         }
                     }
@@ -315,14 +327,17 @@ namespace CSL_Test__1
 
             string[] zipFiles = Directory.GetFiles(settings.GetTorrentSaveFolder(), "*.zip", SearchOption.TopDirectoryOnly);
 
-            if (zipFiles != null || zipFiles.Length > 0)
+            if (zipFiles != null && zipFiles.Length > 0)
             {
                 if (!Directory.Exists(settings.GetTorrentSaveFolder() + @"\[CSL] -- Processed Zips"))
                     Directory.CreateDirectory(settings.GetTorrentSaveFolder() + @"\[CSL] -- Processed Zips");
 
                 for (int a = 0; a < zipFiles.Length; a++)
                 {
+                    if(!File.Exists(settings.GetTorrentSaveFolder() + @"\[CSL] -- Processed Zips\" + zipFiles[a].Substring(zipFiles[a].LastIndexOf('\\') + 1)))
                     File.Move(zipFiles[a], settings.GetTorrentSaveFolder() + @"\[CSL] -- Processed Zips\" + zipFiles[a].Substring(zipFiles[a].LastIndexOf('\\') + 1));
+                    else
+                    File.Delete(zipFiles[a]);
                 }
             }
 

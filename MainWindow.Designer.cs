@@ -163,9 +163,9 @@
             // 
             // dataGridViewProgressBar
             // 
-            this.dataGridViewProgressBar.Location = new System.Drawing.Point(0, 387);
+            this.dataGridViewProgressBar.Location = new System.Drawing.Point(0, 393);
             this.dataGridViewProgressBar.Name = "dataGridViewProgressBar";
-            this.dataGridViewProgressBar.Size = new System.Drawing.Size(607, 33);
+            this.dataGridViewProgressBar.Size = new System.Drawing.Size(1077, 27);
             this.dataGridViewProgressBar.TabIndex = 1;
             this.dataGridViewProgressBar.Visible = false;
             // 

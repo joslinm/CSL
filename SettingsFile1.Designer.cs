@@ -61,7 +61,7 @@ namespace CSL_Test__1 {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Program Files (x86)\\utorrent")]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Program Files\\uTorrent")]
         public string TorrentClientFolder {
             get {
                 return ((string)(this["TorrentClientFolder"]));
@@ -73,7 +73,7 @@ namespace CSL_Test__1 {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\test")]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string TorrentSaveFolder {
             get {
                 return ((string)(this["TorrentSaveFolder"]));
@@ -85,7 +85,7 @@ namespace CSL_Test__1 {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\test")]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string DownloadFolder {
             get {
                 return ((string)(this["DownloadFolder"]));
@@ -97,7 +97,7 @@ namespace CSL_Test__1 {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("%a\\%y - %t [%b %p %d %z]")]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string CustomDirectory {
             get {
                 return ((string)(this["CustomDirectory"]));
@@ -205,13 +205,71 @@ namespace CSL_Test__1 {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.DefaultSettingValueAttribute("%a\\%y - %t")]
         public string DownloadFormats {
             get {
                 return ((string)(this["DownloadFormats"]));
             }
             set {
                 this["DownloadFormats"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
+<ArrayOfString xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">
+  <string>Album:Album</string>
+  <string>EP:EP</string>
+  <string>Live:Live</string>
+  <string>Single:Single</string>
+  <string>Mixtape:Mixtape</string>
+  <string>Remix:Remix</string>
+  <string>Soundboard:Soundboard</string>
+  <string>Compilation:Compilation</string>
+  <string>Bootleg:Bootleg</string>
+  <string>Interview:Interview</string>
+  <string>Unknown:Unknown</string>
+</ArrayOfString>")]
+        public global::System.Collections.Specialized.StringCollection ReleaseFormatNames {
+            get {
+                return ((global::System.Collections.Specialized.StringCollection)(this["ReleaseFormatNames"]));
+            }
+            set {
+                this["ReleaseFormatNames"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
+<ArrayOfString xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">
+  <string>VBR:V# (VBR)</string>
+  <string>CBR:### (CBR)</string>
+  <string>APX:APX (VBR)</string>
+  <string>APS:APS (VBR)</string>
+  <string>q8.x:q8.x(VBR)</string>
+  <string>Lossless:Lossless</string>
+  <string>24bitLossless:24bit Lossless</string>
+</ArrayOfString>")]
+        public global::System.Collections.Specialized.StringCollection BitrateNames {
+            get {
+                return ((global::System.Collections.Specialized.StringCollection)(this["BitrateNames"]));
+            }
+            set {
+                this["BitrateNames"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool MinimizeToTray {
+            get {
+                return ((bool)(this["MinimizeToTray"]));
+            }
+            set {
+                this["MinimizeToTray"] = value;
             }
         }
     }

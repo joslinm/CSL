@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Data;
+using System.Xml;
 
 namespace CSL_Test__1
 {
@@ -11,8 +12,10 @@ namespace CSL_Test__1
     {
         static string xmlDataName = "torrents.xml";
         static string xmlSchemaName = "torrentschema.xml";
+        static string xmlUpdateURL = "csl_update.xml";
         static string xmlDataPath = Directory.GetCurrentDirectory() + @"\" + xmlDataName;
         static string xmlSchemaPath = Directory.GetCurrentDirectory() + @"\" + xmlSchemaName;
+
         static FileStream xmlStream;
         DirectoryHandler dh = new DirectoryHandler();
 
@@ -75,7 +78,6 @@ namespace CSL_Test__1
 
             if (File.Exists(xmlDataPath))
             {
-
                 xmlStream = new FileStream(xmlDataPath, FileMode.Open);
                 try
                 {
@@ -88,6 +90,60 @@ namespace CSL_Test__1
                     xmlStream.Close();
                 }
             }
+            //CHECK FOR PROGRAM UPDATE
+            Version newVersion = null;
+            string url = "";
+            XmlTextReader reader = null;
+            try
+            {
+                reader = new XmlTextReader(xmlUpdateURL);
+                reader.MoveToContent();
+                string elementName = "";
+                if ((reader.NodeType == XmlNodeType.Element) && (reader.Name == "CSL_UPDATE"))
+                {
+                    while (reader.Read())
+                    {
+                        // when we find an element node,  
+                        // we remember its name  
+                        if (reader.NodeType == XmlNodeType.Element)
+                            elementName = reader.Name;
+                        else
+                        { 
+                            if ((reader.NodeType == XmlNodeType.Text) &&
+                                (reader.HasValue))
+                            { 
+                                switch (elementName)
+                                {
+                                    case "version":
+                                        // thats why we keep the version info  
+                                        // in xxx.xxx.xxx.xxx format  
+                                        // the Version class does the  
+                                        // parsing for us  
+                                        newVersion = new Version(reader.Value);
+                                        break;
+                                    case "url":
+                                        url = reader.Value;
+                                        break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch{ }
+            finally
+            {
+                if (reader != null) reader.Close();
+            }
+
+            // get the running version  
+            Version curVersion =
+             System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+            // compare the versions  
+            if (curVersion.CompareTo(newVersion) < 0)
+            {
+                //ASK USER TO UPDATE
+            }  
 
         }
         public void Save()

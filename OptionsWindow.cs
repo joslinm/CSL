@@ -46,6 +46,30 @@ namespace CSL_Test__1
 
         private void RestoreSelections()
         {
+            ReleaseAlbumTextBox.Text = settings.GetReleaseFormat("Album");
+            ReleaseBootlegTextbox.Text = settings.GetReleaseFormat("Bootleg");
+            ReleaseCompilationTextBox.Text = settings.GetReleaseFormat("Compilation");
+            ReleaseEPTextBox.Text = settings.GetReleaseFormat("EP");
+            ReleaseInterviewTextBox.Text = settings.GetReleaseFormat("Interview");
+            ReleaseLiveTextBox.Text = settings.GetReleaseFormat("Live");
+            ReleaseMixtapeTextBox.Text = settings.GetReleaseFormat("Mixtape");
+            ReleaseRemixTextBox.Text = settings.GetReleaseFormat("Remix");
+            ReleaseSingleTextBox.Text = settings.GetReleaseFormat("Single");
+            ReleaseSoundboardTextBox.Text = settings.GetReleaseFormat("Soundboard");
+            ReleaseUnknownTextBox.Text = settings.GetReleaseFormat("Unknown");
+            Bitrate24bitTextBox.Text = settings.GetBitrate("24bitLossless");
+            BitrateAPSTextBox.Text = settings.GetBitrate("APS");
+            BitrateAPXTextBox.Text = settings.GetBitrate("APX");
+            BitrateCBRTextBox.Text = settings.GetBitrate("CBR");
+            BitrateLosslessTextBox.Text = settings.GetBitrate("Lossless");
+            BitrateQ8xTextBox.Text = settings.GetBitrate("q8x.");
+            BitrateVBRTextBox.Text = settings.GetBitrate("VBR");
+            AutoCheckTime.Value = settings.GetAutoHandleTime();
+
+            if (settings.GetMinimizeToTray())
+                MinimizeToTrayCheckbox.Checked = true;
+            else
+                MinimizeToTrayCheckbox.Checked = false;
             if (settings.GetDoubleSpaceRemoval())
                 DoubleSpaceRemoverCheckBox.Checked = true;
             else
@@ -55,11 +79,14 @@ namespace CSL_Test__1
                 ArtistFlipCheck.Checked = true;
             else
                 ArtistFlipCheck.Checked = false;
-            
+
             if (settings.GetAutoHandleBool())
-                AutoCheckTimeCheckBox.Checked = true;
+                AutoProcessCheckbox.Checked = true;
             else
-                AutoCheckTimeCheckBox.Checked = false;
+            {
+                AutoProcessCheckbox.Checked = false;
+                AutoCheckTime.Enabled = false;
+            }
 
             if (settings.GetDownloadFormatExists("Album"))
                 DownloadAlbumCheck.Checked = true;
@@ -228,10 +255,11 @@ namespace CSL_Test__1
                 ErrorProvider.Clear();
         }
 
-        private void AutoCheckTimeCheckBox_CheckedChanged(object sender, EventArgs e)
+        private void AutoProcessCheckbox_CheckedChanged(object sender, EventArgs e)
         {
-            if (AutoCheckTimeCheckBox.Checked)
+            if (AutoProcessCheckbox.Checked)
             {
+                AutoCheckTime.Enabled = true;
                 settings.SetAutoHandleBool(true);
 
                 if (tw_thread != null)
@@ -252,6 +280,7 @@ namespace CSL_Test__1
             }
             else
             {
+                AutoCheckTime.Enabled = false;
                 settings.SetAutoHandleBool(false);
                 if (tw_thread.IsAlive)
                     tw_thread.Abort();
@@ -372,6 +401,141 @@ namespace CSL_Test__1
             SwitchesWindow sw = new SwitchesWindow();
             sw.Show();
         }
+
+        private void label19_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBox5_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void OptionsWindow_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void LowercaseAllFolderNamesCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (LowercaseAllFolderNamesCheckBox.Checked)
+                settings.SetLowercaseAllFolderNames(true);
+            else
+                settings.SetLowercaseAllFolderNames(false);
+        }
+
+        private void UppercaseFolderNamesCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (UppercaseFolderNamesCheckBox.Checked)
+                settings.SetUppercaseAllFolderNames(true);
+            else
+                settings.SetUppercaseAllFolderNames(false);
+        }
+
+        private void AutoCheckTime_ValueChanged(object sender, EventArgs e)
+        {
+            settings.SetAutoHandleTime(AutoCheckTime.Value);
+        }
+
+        private void ReleaseAlbumTextBox_TextChanged(object sender, EventArgs e)
+        {
+            settings.SetReleaseFormatName("Album", ReleaseAlbumTextBox.Text);
+        }
+
+        private void ReleaseEPTextBox_TextChanged(object sender, EventArgs e)
+        {
+            settings.SetReleaseFormatName("EP", ReleaseEPTextBox.Text);
+        }
+
+        private void ReleaseLiveTextBox_TextChanged(object sender, EventArgs e)
+        {
+            settings.SetReleaseFormatName("Live", ReleaseLiveTextBox.Text);
+        }
+
+        private void ReleaseSingleTextBox_TextChanged(object sender, EventArgs e)
+        {
+            settings.SetReleaseFormatName("Single", ReleaseSingleTextBox.Text);
+        }
+
+        private void ReleaseMixtapeTextBox_TextChanged(object sender, EventArgs e)
+        {
+            settings.SetReleaseFormatName("Mixtape", ReleaseMixtapeTextBox.Text);
+        }
+
+        private void ReleaseRemixTextBox_TextChanged(object sender, EventArgs e)
+        {
+            settings.SetReleaseFormatName("Remix", ReleaseRemixTextBox.Text);
+        }
+
+        private void ReleaseSoundboardTextBox_TextChanged(object sender, EventArgs e)
+        {
+            settings.SetReleaseFormatName("Soundboard", ReleaseSoundboardTextBox.Text);
+        }
+
+        private void ReleaseCompilationTextBox_TextChanged(object sender, EventArgs e)
+        {
+            settings.SetReleaseFormatName("Compilation", ReleaseCompilationTextBox.Text);
+        }
+
+        private void ReleaseBootlegTextbox_TextChanged(object sender, EventArgs e)
+        {
+            settings.SetReleaseFormatName("Bootleg", ReleaseBootlegTextbox.Text);
+        }
+
+        private void ReleaseInterviewTextBox_TextChanged(object sender, EventArgs e)
+        {
+            settings.SetReleaseFormatName("Interview", ReleaseInterviewTextBox.Text);
+        }
+
+        private void ReleaseUnknownTextBox_TextChanged(object sender, EventArgs e)
+        {
+            settings.SetReleaseFormatName("Unknown", ReleaseUnknownTextBox.Text);
+        }
+
+        private void BitrateVBRTextBox_TextChanged(object sender, EventArgs e)
+        {
+            settings.SetBitrateName("VBR", BitrateVBRTextBox.Text);
+        }
+
+        private void BitrateCBRTextBox_TextChanged(object sender, EventArgs e)
+        {
+            settings.SetBitrateName("CBR", BitrateCBRTextBox.Text);
+        }
+
+        private void BitrateAPXTextBox_TextChanged(object sender, EventArgs e)
+        {
+            settings.SetBitrateName("APX", BitrateAPXTextBox.Text);
+        }
+
+        private void BitrateAPSTextBox_TextChanged(object sender, EventArgs e)
+        {
+            settings.SetBitrateName("APS", BitrateAPSTextBox.Text);
+        }
+
+        private void BitrateQ8xTextBox_TextChanged(object sender, EventArgs e)
+        {
+            settings.SetBitrateName("q8.x", BitrateQ8xTextBox.Text);
+        }
+
+        private void BitrateLosslessTextBox_TextChanged(object sender, EventArgs e)
+        {
+            settings.SetBitrateName("Lossless", BitrateLosslessTextBox.Text);
+        }
+
+        private void Bitrate24bitTextBox_TextChanged(object sender, EventArgs e)
+        {
+            settings.SetBitrateName("24bitLossless", Bitrate24bitTextBox.Text);
+        }
+
+        private void MinimizeToTrayCheckbox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (MinimizeToTrayCheckbox.Checked)
+                settings.SetMinimizeToTray(true);
+            else
+                settings.SetMinimizeToTray(false);
+        }
+
 
 
     }

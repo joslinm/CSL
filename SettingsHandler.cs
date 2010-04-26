@@ -15,6 +15,34 @@ namespace CSL_Test__1
         }
 
         #region Set Options
+        public void SetReleaseFormatName(string format, string name)
+        {
+            for (int a = 0; a < settings.ReleaseFormatNames.Count; a++)
+            {
+                if (settings.ReleaseFormatNames[a].Contains(format + ":"))
+                {
+                    int index = settings.ReleaseFormatNames[a].IndexOf(':');
+                    string substring = settings.ReleaseFormatNames[a].Substring(index);
+                    settings.ReleaseFormatNames[a] = settings.ReleaseFormatNames[a].Replace(substring, ":" + name);
+                }
+            }
+
+            settings.Save();
+        }
+        public void SetBitrateName(string bitrate, string name)
+        {
+            for (int a = 0; a < settings.BitrateNames.Count; a++)
+            {
+                if (settings.BitrateNames[a].Contains(bitrate + ":"))
+                {
+                    int index = settings.BitrateNames[a].IndexOf(':');
+                    string substring = settings.BitrateNames[a].Substring(index);
+                    settings.BitrateNames[a] = settings.BitrateNames[a].Replace(substring, ":" + name);
+                }
+            }
+
+            settings.Save();
+        }
         public void SetTrackTorrents(bool value)
         {
             settings.TrackTorrentFiles = value;
@@ -107,6 +135,11 @@ namespace CSL_Test__1
             settings.CustomDirectory = value;
             settings.Save();
         }
+        public void SetMinimizeToTray(bool value)
+        {
+            settings.MinimizeToTray = value;
+            settings.Save();
+        }
         #endregion
         #region Get Options
         public bool GetTrackZips()
@@ -117,6 +150,35 @@ namespace CSL_Test__1
         {
             return settings.TrackTorrentFiles;
         }
+        public string GetReleaseFormat(string format)
+        {
+            for (int a = 0; a < settings.ReleaseFormatNames.Count; a++)
+            {
+                if (settings.ReleaseFormatNames[a].Contains(format + ":"))
+                {
+                    int index = settings.ReleaseFormatNames[a].IndexOf(':');
+                    string substring = settings.ReleaseFormatNames[a].Substring(++index);
+                    return substring;
+                }
+            }
+
+            return format;
+        }
+        public string GetBitrate(string bitrate)
+        {
+            for (int a = 0; a < settings.BitrateNames.Count; a++)
+            {
+                if (settings.BitrateNames[a].Contains(bitrate + ":"))
+                {
+                    int index = settings.BitrateNames[a].IndexOf(':');
+                    string substring = settings.BitrateNames[a].Substring(++index);
+                    return substring;
+                }
+            }
+
+            return bitrate;
+        }
+
         public bool GetDoubleSpaceRemoval()
         {
             return settings.RemoveDoubleSpaces;
@@ -132,6 +194,10 @@ namespace CSL_Test__1
         public bool GetDisableNotifications()
         {
             return settings.DisableNotifications;
+        }
+        public bool GetMinimizeToTray()
+        {
+            return settings.MinimizeToTray;
         }
         public bool GetDownloadFormatExists(string format)
         {
