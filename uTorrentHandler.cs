@@ -15,7 +15,7 @@ namespace CSL_Test__1
 
         public void SendAllTorrents(TorrentXMLHandler xml)
         {
-            if (dh.GetFileExists(settings.GetTorrentClientFolder() + "\\uTorrent.exe"))
+            if (!dh.GetFileExists(settings.GetTorrentClientFolder() + "\\uTorrent.exe"))
             {
                 ErrorWindow ew = new ErrorWindow();
                 ew.IssueGeneralWarning("Be sure uTorrent folder is correct", "uTorrent.exe does not exist", null);
@@ -64,7 +64,7 @@ namespace CSL_Test__1
                             {
                                 row.BeginEdit();
                                 row["Error"] = true;
-                                row["File"] = "File does not exist";
+                                row["Birth"] = "File does not exist";
                                 row.EndEdit();
                             }
                         }
@@ -72,7 +72,7 @@ namespace CSL_Test__1
                         {
                             row.BeginEdit();
                             row["Error"] = true;
-                            row["File"] = "No file path";
+                            row["Site Origin"] = "No file path";
                             row.EndEdit();
                         }
                     }
@@ -80,7 +80,7 @@ namespace CSL_Test__1
                     {
                         row.BeginEdit();
                         row["Error"] = true;
-                        row["File"] = e.Message;
+                        row["Birth"] = e.Message;
                         row.EndEdit();
                     }
                 }
@@ -90,7 +90,7 @@ namespace CSL_Test__1
         }
         public string SendTorrent(string save, string path)
         {
-            if (dh.GetFileExists(settings.GetTorrentClientFolder() + "\\uTorrent.exe"))
+            if (!dh.GetFileExists(settings.GetTorrentClientFolder() + "\\uTorrent.exe"))
             {
                 ErrorWindow ew = new ErrorWindow();
                 ew.IssueGeneralWarning("Be sure uTorrent folder is correct", "uTorrent.exe does not exist", null);

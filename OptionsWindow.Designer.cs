@@ -663,7 +663,6 @@
             this.TorrentProgramDirectoryTextbox.Name = "TorrentProgramDirectoryTextbox";
             this.TorrentProgramDirectoryTextbox.Size = new System.Drawing.Size(297, 20);
             this.TorrentProgramDirectoryTextbox.TabIndex = 2;
-            this.TorrentProgramDirectoryTextbox.Text = "C:\\Program Files\\uTorrent";
             this.TorrentProgramDirectoryTextbox.TextChanged += new System.EventHandler(this.TorrentProgramDirectoryTextbox_TextChanged);
             this.TorrentProgramDirectoryTextbox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.TorrentProgramDirectoryTextbox_MouseDown);
             // 

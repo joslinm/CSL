@@ -215,7 +215,7 @@ namespace CSL_Test__1
             {
                 foreach (DataGridViewRow r in rc)
                 {
-                    if (!(bool)r.Cells["Error"].Value && !(bool)r.Cells["Handled"].Value)
+                    if (!(bool)r.Cells["Error"].Value && !(bool)r.Cells["Handled"].Value && !r.Cells["Save Structure"].Equals(DBNull.Value) && !r.Cells["File Path"].Equals(DBNull.Value))
                     {
                         string save = (string)r.Cells["Save Structure"].Value;
                         string path = (string)r.Cells["File Path"].Value;
@@ -233,7 +233,7 @@ namespace CSL_Test__1
                             data.table.Columns["Error"].ReadOnly = false;
                             r.Cells["Error"].Value = true;
                             if (!success.Equals("uTorrent.exe does not exist"))
-                            r.Cells["File"].Value = success;
+                                r.Cells["Site Origin"].Value = success;
                             data.table.Columns["Error"].ReadOnly = false;
                         }
                     }
@@ -244,7 +244,7 @@ namespace CSL_Test__1
             {
                 foreach (DataGridViewCell c in cc)
                 {
-                    if (!(bool)c.OwningRow.Cells["Error"].Value && !(bool)c.OwningRow.Cells["Handled"].Value)
+                    if (!(bool)c.OwningRow.Cells["Error"].Value && !(bool)c.OwningRow.Cells["Handled"].Value && !c.OwningRow.Cells["Save Structure"].Value.Equals(DBNull.Value) && !c.OwningRow.Cells["File Path"].Value.Equals(DBNull.Value))
                     {
                         string save = (string)c.OwningRow.Cells["Save Structure"].Value;
                         string path = (string)c.OwningRow.Cells["File Path"].Value;
@@ -261,6 +261,23 @@ namespace CSL_Test__1
                             data.table.Columns["Error"].ReadOnly = false;
                             c.OwningRow.Cells["Error"].Value = true;
                             c.OwningRow.Cells["File"].Value = success;
+                            data.table.Columns["Error"].ReadOnly = false;
+                        }
+                    }
+                    else
+                    {
+                        if (c.OwningRow.Cells["Save Structure"].Value.Equals(DBNull.Value))
+                        {
+                            c.OwningRow.Cells["Site Origin"].Value = "No save structure..";
+                            data.table.Columns["Error"].ReadOnly = false;
+                            c.OwningRow.Cells["Error"].Value = true;
+                            data.table.Columns["Error"].ReadOnly = false;
+                        }
+                        if (c.OwningRow.Cells["File Path"].Value.Equals(DBNull.Value))
+                        {
+                            c.OwningRow.Cells["Site Origin"].Value = "No file path..";
+                            data.table.Columns["Error"].ReadOnly = false;
+                            c.OwningRow.Cells["Error"].Value = true;
                             data.table.Columns["Error"].ReadOnly = false;
                         }
                     }

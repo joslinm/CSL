@@ -68,7 +68,6 @@ namespace CSL_Test__1
             try
             {
                 string[] files = Directory.GetFiles(settings.GetTorrentSaveFolder(), "*.zip", SearchOption.TopDirectoryOnly);
-                GC.Collect();
                 return (files.Length == 0) ? null : files;
             }
             catch { return null; }
@@ -78,7 +77,6 @@ namespace CSL_Test__1
             try
             {
                 string[] files = Directory.GetFiles(settings.GetTorrentSaveFolder(), "*.torrent", SearchOption.TopDirectoryOnly);
-                GC.Collect();
                 return (files.Length == 0) ? null : files;
             }
             catch { return null; }
@@ -119,25 +117,48 @@ namespace CSL_Test__1
             FileStream fs = null;
             if (value == null)
                 return value;
+            string[] ab = new string[2];
+            int c = 0;
+            string[] lines = null;
             try
             {
-                fs = new FileStream(Directory.GetCurrentDirectory() + @"\" + "HTML-Look-Up.txt", FileMode.Open, FileAccess.Read);
-                string[] lines = File.ReadAllLines(fs.Name);
-                for (int c = 0; c < lines.Length; c++)
+                StreamReader sr = new StreamReader(System.Windows.Forms.Application.StartupPath + @"\HTML-Look-Up.txt");
+               
+                while(!sr.EndOfStream)
                 {
-                    while (value.Contains(lines[c]))
+                    ab = sr.ReadLine().Split(' ');
+                    string a = ab[0];
+                    string b = ab[1];
+
+                    if (value.Contains(a) || value.Contains(b))
                     {
-                        string replace = lines[c + 1];
-                        value = value.Replace(lines[c], replace);
+                        while (value.Contains(a))
+                        {
+                            string replace = sr.ReadLine();
+                            value = value.Replace(a, replace);
+                        }
+                        while (value.Contains(b))
+                        {
+                            string replace = sr.ReadLine();
+                            value = value.Replace(b, replace);
+                        }
                     }
-                    if (c % 2 == 0)
-                        c++;
+                    else
+                    {
+                        sr.ReadLine();
+                    }
                 }
 
             }
             catch (FileNotFoundException)
             {
-                //TODO: INSERT NO HTML LOOK UP HERE
+                ErrorWindow ew = new ErrorWindow();
+                ew.IssueGeneralWarning("HTML replacing will not occur", "Could not find HTML-Look-Up.txt...", null);
+            }
+            catch (Exception e)
+            {
+                ErrorWindow ew = new ErrorWindow();
+                ew.IssueGeneralWarning("Error..", lines[c], e.Message);
             }
             finally
             {
@@ -299,12 +320,12 @@ namespace CSL_Test__1
 
                     filepath = (string)datarow["File Path"];
 
-                    if (filepath.Contains("[CSL] -- Unhandled Torrents") && !(bool)datarow["Error"])
-                        skip = false;
-                    else if (!filepath.Contains("[CSL] -- Handled Torrents") && !(bool)datarow["Handled"])
-                        skip = false;
-                    else
+                    if (filepath.Contains("[CSL] -- Unhandled Torrents") && (bool)datarow["Error"])
                         skip = true;
+                    else if ((bool)datarow["Handled"])
+                        skip = true;
+                    else
+                        skip = false;
 
                     if (!skip)
                     {

@@ -64,6 +64,10 @@ namespace CSL_Test__1
             BitrateLosslessTextBox.Text = settings.GetBitrate("Lossless");
             BitrateQ8xTextBox.Text = settings.GetBitrate("q8x.");
             BitrateVBRTextBox.Text = settings.GetBitrate("VBR");
+            MusicFolderTextbox.Text = settings.GetDownloadFolder();
+            CustomFolderTextbox.Text = settings.GetCustomDirectory();
+            TorrentFolderTextbox.Text = settings.GetTorrentSaveFolder();
+            TorrentProgramDirectoryTextbox.Text = settings.GetTorrentClientFolder();
             AutoCheckTime.Value = settings.GetAutoHandleTime();
 
             if (settings.GetMinimizeToTray())
@@ -167,10 +171,6 @@ namespace CSL_Test__1
                 TrackZipsCheck.Checked = true;
             else
                 TrackZipsCheck.Checked = false;
-
-            MusicFolderTextbox.Text = settings.GetDownloadFolder();
-            CustomFolderTextbox.Text = settings.GetCustomDirectory();
-            TorrentFolderTextbox.Text = settings.GetTorrentSaveFolder();
         }
 
         private void DoubleSpaceRemoverCheckBox_CheckedChanged(object sender, EventArgs e)
@@ -237,20 +237,25 @@ namespace CSL_Test__1
             char[] chararray = CustomFolderTextbox.Text.ToCharArray();
             string letter;
 
-            for(int a = 0; a < chararray.Length; a++)
-            {
-                if (chararray[a] == '%')
+                for (int a = 0; a < chararray.Length; a++)
                 {
-                    letter = chararray[++a].ToString();
-
-                    m = Regex.Match(letter, "a|l|s|c|e|r|v|n|x|u|y|t|i|b|p|d|z");
-                    if (!m.Success)
+                    if (chararray[a] == '%')
                     {
-                        ErrorProvider.SetError(this.CustomFolderTextbox, "Invalid letter after switch");
-                        error = true;
+                        try
+                        {
+                            letter = chararray[++a].ToString();
+
+                            m = Regex.Match(letter, "a|l|s|c|e|r|v|n|x|u|y|t|i|b|p|d|z");
+                            if (!m.Success)
+                            {
+                                ErrorProvider.SetError(this.CustomFolderTextbox, "Invalid letter after switch");
+                                error = true;
+                            }
+                        }
+                        catch { }
                     }
                 }
-            }
+         
             if (!error)
                 ErrorProvider.Clear();
         }
