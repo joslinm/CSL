@@ -11,80 +11,68 @@ using System.Threading;
 
 namespace CSL_Test__1
 {
-    public partial class OptionsWindow : Form
+    partial class OptionsWindow : Form
     {
-        SettingsHandler settings = new SettingsHandler();
         Thread tw_thread;
-        TorrentWatch tw;
 
         public OptionsWindow()
         {
             InitializeComponent();
-        }
-
-        public OptionsWindow(TorrentXMLHandler data)
-        {
-            InitializeComponent();
             ErrorProvider.DataSource = CustomFolderTextbox;
-            tw = new TorrentWatch(data);
-            tw_thread = new Thread(new ThreadStart(tw.Watch));
-            tw_thread.Start();
-
             RestoreSelections();   
         }
-
-        public void StopThread()
-        {
-            tw_thread.Abort();
-        }
-
-        public void StartThread()
-        {
-            tw_thread = new Thread(new ThreadStart(tw.Watch));
-            tw_thread.Start();
-        }
-
         private void RestoreSelections()
         {
-            ReleaseAlbumTextBox.Text = settings.GetReleaseFormat("Album");
-            ReleaseBootlegTextbox.Text = settings.GetReleaseFormat("Bootleg");
-            ReleaseCompilationTextBox.Text = settings.GetReleaseFormat("Compilation");
-            ReleaseEPTextBox.Text = settings.GetReleaseFormat("EP");
-            ReleaseInterviewTextBox.Text = settings.GetReleaseFormat("Interview");
-            ReleaseLiveTextBox.Text = settings.GetReleaseFormat("Live");
-            ReleaseMixtapeTextBox.Text = settings.GetReleaseFormat("Mixtape");
-            ReleaseRemixTextBox.Text = settings.GetReleaseFormat("Remix");
-            ReleaseSingleTextBox.Text = settings.GetReleaseFormat("Single");
-            ReleaseSoundboardTextBox.Text = settings.GetReleaseFormat("Soundboard");
-            ReleaseUnknownTextBox.Text = settings.GetReleaseFormat("Unknown");
-            Bitrate24bitTextBox.Text = settings.GetBitrate("24bitLossless");
-            BitrateAPSTextBox.Text = settings.GetBitrate("APS");
-            BitrateAPXTextBox.Text = settings.GetBitrate("APX");
-            BitrateCBRTextBox.Text = settings.GetBitrate("CBR");
-            BitrateLosslessTextBox.Text = settings.GetBitrate("Lossless");
-            BitrateQ8xTextBox.Text = settings.GetBitrate("q8x.");
-            BitrateVBRTextBox.Text = settings.GetBitrate("VBR");
-            MusicFolderTextbox.Text = settings.GetDownloadFolder();
-            CustomFolderTextbox.Text = settings.GetCustomDirectory();
-            TorrentFolderTextbox.Text = settings.GetTorrentSaveFolder();
-            TorrentProgramDirectoryTextbox.Text = settings.GetTorrentClientFolder();
-            AutoCheckTime.Value = settings.GetAutoHandleTime();
+            ReleaseAlbumTextBox.Text = SettingsHandler.GetReleaseFormat("Album");
+            ReleaseBootlegTextbox.Text = SettingsHandler.GetReleaseFormat("Bootleg");
+            ReleaseCompilationTextBox.Text = SettingsHandler.GetReleaseFormat("Compilation");
+            ReleaseEPTextBox.Text = SettingsHandler.GetReleaseFormat("EP");
+            ReleaseInterviewTextBox.Text = SettingsHandler.GetReleaseFormat("Interview");
+            ReleaseLiveTextBox.Text = SettingsHandler.GetReleaseFormat("Live");
+            ReleaseMixtapeTextBox.Text = SettingsHandler.GetReleaseFormat("Mixtape");
+            ReleaseRemixTextBox.Text = SettingsHandler.GetReleaseFormat("Remix");
+            ReleaseSingleTextBox.Text = SettingsHandler.GetReleaseFormat("Single");
+            ReleaseSoundboardTextBox.Text = SettingsHandler.GetReleaseFormat("Soundboard");
+            ReleaseUnknownTextBox.Text = SettingsHandler.GetReleaseFormat("Unknown");
+            Bitrate24bitTextBox.Text = SettingsHandler.GetBitrate("24bitLossless");
+            BitrateAPSTextBox.Text = SettingsHandler.GetBitrate("APS");
+            BitrateAPXTextBox.Text = SettingsHandler.GetBitrate("APX");
+            BitrateCBRTextBox.Text = SettingsHandler.GetBitrate("CBR");
+            BitrateLosslessTextBox.Text = SettingsHandler.GetBitrate("Lossless");
+            BitrateQ8xTextBox.Text = SettingsHandler.GetBitrate("q8x.");
+            BitrateVBRTextBox.Text = SettingsHandler.GetBitrate("VBR");
+            MusicFolderTextbox.Text = SettingsHandler.GetDownloadFolder();
+            CustomFolderTextbox.Text = SettingsHandler.GetCustomDirectory();
+            TorrentFolderTextbox.Text = SettingsHandler.GetTorrentSaveFolder();
+            TorrentProgramDirectoryTextbox.Text = SettingsHandler.GetTorrentClientFolder();
+            AutoCheckTime.Value = SettingsHandler.GetRawHandleTime();
 
-            if (settings.GetMinimizeToTray())
+
+            if (SettingsHandler.GetDeleteThe())
+                DeleteTheCheckBox.Checked = true;
+            else
+                DeleteTheCheckBox.Checked = false;
+
+            if (SettingsHandler.GetHandleLoneTAsAlbum())
+                LoneTorrentAsAlbumCheck.Checked = true;
+            else
+                LoneTorrentAsAlbumCheck.Checked = false;
+
+            if (SettingsHandler.GetMinimizeToTray())
                 MinimizeToTrayCheckbox.Checked = true;
             else
                 MinimizeToTrayCheckbox.Checked = false;
-            if (settings.GetDoubleSpaceRemoval())
+            if (SettingsHandler.GetDoubleSpaceRemoval())
                 DoubleSpaceRemoverCheckBox.Checked = true;
             else
                 DoubleSpaceRemoverCheckBox.Checked = false;
 
-            if (settings.GetArtistFlip())
+            if (SettingsHandler.GetArtistFlip())
                 ArtistFlipCheck.Checked = true;
             else
                 ArtistFlipCheck.Checked = false;
 
-            if (settings.GetAutoHandleBool())
+            if (SettingsHandler.GetAutoHandleBool())
                 AutoProcessCheckbox.Checked = true;
             else
             {
@@ -92,82 +80,82 @@ namespace CSL_Test__1
                 AutoCheckTime.Enabled = false;
             }
 
-            if (settings.GetDownloadFormatExists("Album"))
+            if (SettingsHandler.GetDownloadFormatExists("Album"))
                 DownloadAlbumCheck.Checked = true;
             else
                 DownloadAlbumCheck.Checked = false;
 
-            if (settings.GetDownloadFormatExists("Bootleg"))
+            if (SettingsHandler.GetDownloadFormatExists("Bootleg"))
                 DownloadBootlegCheck.Checked = true;
             else
                 DownloadBootlegCheck.Checked = false;
 
-            if (settings.GetDownloadFormatExists("Compilation"))
+            if (SettingsHandler.GetDownloadFormatExists("Compilation"))
                 DownloadCompilationCheck.Checked = true;
             else
                 DownloadCompilationCheck.Checked = false;
 
-            if (settings.GetDownloadFormatExists("EP"))
+            if (SettingsHandler.GetDownloadFormatExists("EP"))
                 DownloadEPCheck.Checked = true;
             else
                 DownloadEPCheck.Checked = false;
 
-            if (settings.GetDownloadFormatExists("Interview"))
+            if (SettingsHandler.GetDownloadFormatExists("Interview"))
                 DownloadInterviewCheck.Checked = true;
             else
                 DownloadInterviewCheck.Checked = false;
 
-            if (settings.GetDownloadFormatExists("Live"))
+            if (SettingsHandler.GetDownloadFormatExists("Live"))
                 DownloadLiveCheck.Checked = true;
             else
                 DownloadLiveCheck.Checked = false;
 
-            if (settings.GetDownloadFormatExists("Mixtape"))
+            if (SettingsHandler.GetDownloadFormatExists("Mixtape"))
                 DownloadMixtapeCheck.Checked = true;
             else
                 DownloadMixtapeCheck.Checked = false;
 
-            if (settings.GetDownloadFormatExists("Remix"))
+            if (SettingsHandler.GetDownloadFormatExists("Remix"))
                 DownloadRemixCheck.Checked = true;
             else
                 DownloadRemixCheck.Checked = false;
 
-            if (settings.GetDownloadFormatExists("Single"))
+            if (SettingsHandler.GetDownloadFormatExists("Single"))
                 DownloadSingleCheck.Checked = true;
             else
                 DownloadSingleCheck.Checked = false;
 
-            if (settings.GetDownloadFormatExists("Single"))
+            if (SettingsHandler.GetDownloadFormatExists("Single"))
                 DownloadSoundtrackCheck.Checked = true;
             else
                 DownloadSoundtrackCheck.Checked = false;
 
-            if (settings.GetDownloadFormatExists("Soundtrack"))
+            if (SettingsHandler.GetDownloadFormatExists("Soundtrack"))
                 DownloadSoundtrackCheck.Checked = true;
             else
                 DownloadSoundtrackCheck.Checked = false;
 
-            if (settings.GetDownloadFormatExists("Unknown"))
+            if (SettingsHandler.GetDownloadFormatExists("Unknown"))
                 DownloadUnknownCheck.Checked = true;
             else
                 DownloadUnknownCheck.Checked = false;
 
-            if (settings.GetUppercaseAllFolderNames())
+            if (SettingsHandler.GetUppercaseAllFolderNames())
                 UppercaseFolderNamesCheckBox.Checked = true;
             else
                 UppercaseFolderNamesCheckBox.Checked = false;
 
-            if (settings.GetLowercaseAllFolderNames())
+            if (SettingsHandler.GetLowercaseAllFolderNames())
                 LowercaseAllFolderNamesCheckBox.Checked = true;
             else
                 LowercaseAllFolderNamesCheckBox.Checked = false;
 
-            if (settings.GetTrackTorrents())
+            if (SettingsHandler.GetTrackTorrents())
                 TrackTorrentsCheck.Checked = true;
             else
                 TrackTorrentsCheck.Checked = false;
 
-            if (settings.GetTrackZips())
+            if (SettingsHandler.GetTrackZips())
                 TrackZipsCheck.Checked = true;
             else
                 TrackZipsCheck.Checked = false;
@@ -176,58 +164,58 @@ namespace CSL_Test__1
         private void DoubleSpaceRemoverCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             if (DoubleSpaceRemoverCheckBox.Checked)
-                settings.SetRemoveDoubleSpaces(true);
+                SettingsHandler.SetRemoveDoubleSpaces(true);
             else
-                settings.SetRemoveDoubleSpaces(false);
+                SettingsHandler.SetRemoveDoubleSpaces(false);
         }
 
         private void ArtistFlipCheck_CheckedChanged(object sender, EventArgs e)
         {
             if (ArtistFlipCheck.Checked)
-                settings.SetArtistFlip(true);
+                SettingsHandler.SetArtistFlip(true);
             else
-                settings.SetArtistFlip(false);
+                SettingsHandler.SetArtistFlip(false);
         }
 
         private void TorrentProgramDirectoryTextbox_TextChanged(object sender, EventArgs e)
         {
-            settings.SetTorrentClientFolder(TorrentProgramDirectoryTextbox.Text);
+            SettingsHandler.SetTorrentClientFolder(TorrentProgramDirectoryTextbox.Text);
         }
 
         private void TorrentProgramDirectoryTextbox_MouseDown(object sender, MouseEventArgs e)
         {
             FolderBrowser.ShowDialog();
-            settings.SetTorrentClientFolder(FolderBrowser.SelectedPath);
+            SettingsHandler.SetTorrentClientFolder(FolderBrowser.SelectedPath);
             TorrentProgramDirectoryTextbox.Text = FolderBrowser.SelectedPath;
         }
 
         private void MusicFolderTextbox_TextChanged(object sender, EventArgs e)
         {
-            settings.SetDownloadFolder(MusicFolderTextbox.Text);
+            SettingsHandler.SetDownloadFolder(MusicFolderTextbox.Text);
         }
 
         private void MusicFolderTextbox_MouseDown(object sender, MouseEventArgs e)
         {
             FolderBrowser.ShowDialog();
-            settings.SetDownloadFolder(FolderBrowser.SelectedPath);
+            SettingsHandler.SetDownloadFolder(FolderBrowser.SelectedPath);
             MusicFolderTextbox.Text = FolderBrowser.SelectedPath;
         }
 
         private void TorrentFolderTextbox_TextChanged(object sender, EventArgs e)
         {
-            settings.SetTorrentSaveFolder(TorrentFolderTextbox.Text);
+            SettingsHandler.SetTorrentSaveFolder(TorrentFolderTextbox.Text);
         }
 
         private void TorrentFolderTextbox_MouseDown(object sender, MouseEventArgs e)
         {
             FolderBrowser.ShowDialog();
-            settings.SetTorrentSaveFolder(FolderBrowser.SelectedPath);
+            SettingsHandler.SetTorrentSaveFolder(FolderBrowser.SelectedPath);
             TorrentFolderTextbox.Text = FolderBrowser.SelectedPath;
         }
 
         private void CustomFolderTextbox_TextChanged(object sender, EventArgs e)
         {
-            settings.SetCustomDirectory(CustomFolderTextbox.Text);
+            SettingsHandler.SetCustomDirectory(CustomFolderTextbox.Text);
         }
 
         private void CustomFolderTextbox_Validating(object sender, CancelEventArgs e)
@@ -265,31 +253,15 @@ namespace CSL_Test__1
             if (AutoProcessCheckbox.Checked)
             {
                 AutoCheckTime.Enabled = true;
-                settings.SetAutoHandleBool(true);
-
-                if (tw_thread != null)
-                {
-                    if (!tw_thread.IsAlive)
-                    {
-                        tw_thread.Abort();
-                        Thread.Sleep(100);
-                        tw_thread = new Thread(new ThreadStart(tw.Watch));
-                        tw_thread.Start();
-                    }
-                }
-                else
-                {
-                    tw_thread = new Thread(new ThreadStart(tw.Watch));
-                    tw_thread.Start();
-                }  
+                SettingsHandler.SetAutoHandleBool(true);
             }
             else
             {
                 AutoCheckTime.Enabled = false;
-                settings.SetAutoHandleBool(false);
-                if (tw_thread.IsAlive)
-                    tw_thread.Abort();
+                SettingsHandler.SetAutoHandleBool(false);
             }
+
+            MainWindow.UpdateTimer(SettingsHandler.GetAutoHandleBool(), SettingsHandler.GetAutoHandleTime());
         }
 
         public void StopTorrentWatch()
@@ -300,105 +272,105 @@ namespace CSL_Test__1
         private void DownloadAlbumCheck_CheckedChanged(object sender, EventArgs e)
         {
             if (DownloadAlbumCheck.Checked)
-                settings.AddDownloadFormat("Album");
+                SettingsHandler.AddDownloadFormat("Album");
             else
-                settings.RemoveDownloadFormat("Album");
+                SettingsHandler.RemoveDownloadFormat("Album");
         }
 
         private void DownloadEPCheck_CheckedChanged(object sender, EventArgs e)
         {
             if (DownloadEPCheck.Checked)
-                settings.AddDownloadFormat("EP");
+                SettingsHandler.AddDownloadFormat("EP");
             else
-                settings.RemoveDownloadFormat("EP");
+                SettingsHandler.RemoveDownloadFormat("EP");
         }
 
         private void DownloadSingleCheck_CheckedChanged(object sender, EventArgs e)
         {
             if (DownloadSingleCheck.Checked)
-                settings.AddDownloadFormat("Single");
+                SettingsHandler.AddDownloadFormat("Single");
             else
-                settings.RemoveDownloadFormat("Single");
+                SettingsHandler.RemoveDownloadFormat("Single");
         }
 
         private void DownloadLiveCheck_CheckedChanged(object sender, EventArgs e)
         {
             if (DownloadLiveCheck.Checked)
-                settings.AddDownloadFormat("Live");
+                SettingsHandler.AddDownloadFormat("Live");
             else
-                settings.RemoveDownloadFormat("Live");
+                SettingsHandler.RemoveDownloadFormat("Live");
         }
 
         private void DownloadRemixCheck_CheckedChanged(object sender, EventArgs e)
         {
             if (DownloadRemixCheck.Checked)
-                settings.AddDownloadFormat("Remix");
+                SettingsHandler.AddDownloadFormat("Remix");
             else
-                settings.RemoveDownloadFormat("Remix");
+                SettingsHandler.RemoveDownloadFormat("Remix");
         }
 
         private void DownloadCompilationCheck_CheckedChanged(object sender, EventArgs e)
         {
             if (DownloadCompilationCheck.Checked)
-                settings.AddDownloadFormat("Compilation");
+                SettingsHandler.AddDownloadFormat("Compilation");
             else
-                settings.RemoveDownloadFormat("Compilation");
+                SettingsHandler.RemoveDownloadFormat("Compilation");
         }
 
         private void DownloadSoundtrackCheck_CheckedChanged(object sender, EventArgs e)
         {
             if (DownloadSoundtrackCheck.Checked)
-                settings.AddDownloadFormat("Soundtrack");
+                SettingsHandler.AddDownloadFormat("Soundtrack");
             else
-                settings.RemoveDownloadFormat("Soundtrack");
+                SettingsHandler.RemoveDownloadFormat("Soundtrack");
         }
 
         private void DownloadBootlegCheck_CheckedChanged(object sender, EventArgs e)
         {
             if (DownloadBootlegCheck.Checked)
-                settings.AddDownloadFormat("Bootleg");
+                SettingsHandler.AddDownloadFormat("Bootleg");
             else
-                settings.RemoveDownloadFormat("Bootleg");
+                SettingsHandler.RemoveDownloadFormat("Bootleg");
         }
 
         private void DownloadInterviewCheck_CheckedChanged(object sender, EventArgs e)
         {
             if (DownloadInterviewCheck.Checked)
-                settings.AddDownloadFormat("Interview");
+                SettingsHandler.AddDownloadFormat("Interview");
             else
-                settings.RemoveDownloadFormat("Interview");
+                SettingsHandler.RemoveDownloadFormat("Interview");
         }
 
         private void DownloadMixtapeCheck_CheckedChanged(object sender, EventArgs e)
         {
             if (DownloadMixtapeCheck.Checked)
-                settings.AddDownloadFormat("Mixtape");
+                SettingsHandler.AddDownloadFormat("Mixtape");
             else
-                settings.RemoveDownloadFormat("Mixtape");
+                SettingsHandler.RemoveDownloadFormat("Mixtape");
         }
 
         private void DownloadUnknownCheck_CheckedChanged(object sender, EventArgs e)
         {
             if (DownloadUnknownCheck.Checked)
-                settings.AddDownloadFormat("Unknown");
+                SettingsHandler.AddDownloadFormat("Unknown");
             else
-                settings.RemoveDownloadFormat("Unknown");
+                SettingsHandler.RemoveDownloadFormat("Unknown");
         }
 
         private void TrackTorrentsCheck_CheckedChanged(object sender, EventArgs e)
         {
             if (TrackTorrentsCheck.Checked)
-                settings.SetTrackTorrents(true);
+                SettingsHandler.SetTrackTorrents(true);
             else
-                settings.SetTrackTorrents(false);
+                SettingsHandler.SetTrackTorrents(false);
         }
 
         private void TrackZipsCheck_CheckedChanged(object sender, EventArgs e)
         {
             if (TrackZipsCheck.Checked)
-                settings.SetTrackZips(true);
+                SettingsHandler.SetTrackZips(true);
             else
-                settings.SetTrackZips(false);
+                SettingsHandler.SetTrackZips(false);
         }
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -425,120 +397,183 @@ namespace CSL_Test__1
         private void LowercaseAllFolderNamesCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             if (LowercaseAllFolderNamesCheckBox.Checked)
-                settings.SetLowercaseAllFolderNames(true);
+                SettingsHandler.SetLowercaseAllFolderNames(true);
             else
-                settings.SetLowercaseAllFolderNames(false);
+                SettingsHandler.SetLowercaseAllFolderNames(false);
         }
 
         private void UppercaseFolderNamesCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             if (UppercaseFolderNamesCheckBox.Checked)
-                settings.SetUppercaseAllFolderNames(true);
+                SettingsHandler.SetUppercaseAllFolderNames(true);
             else
-                settings.SetUppercaseAllFolderNames(false);
+                SettingsHandler.SetUppercaseAllFolderNames(false);
         }
 
         private void AutoCheckTime_ValueChanged(object sender, EventArgs e)
         {
-            settings.SetAutoHandleTime(AutoCheckTime.Value);
+            SettingsHandler.SetRawHandleTime(AutoCheckTime.Value);
+
+            switch (TimeFormatComboBox.Text)
+            {
+                case "Seconds":
+                    SettingsHandler.SetAutoHandleTime(AutoCheckTime.Value * 1000);
+                    break;
+                case "Minutes":
+                    SettingsHandler.SetAutoHandleTime(AutoCheckTime.Value * 1000 * 60);
+                    break;
+                case "Hours":
+                    SettingsHandler.SetAutoHandleTime(AutoCheckTime.Value * 1000 * 60 * 60);
+                    break;
+                default:
+                    SettingsHandler.SetAutoHandleTime(AutoCheckTime.Value * 1000);
+                    break;
+            }
+
+            MainWindow.UpdateTimer(SettingsHandler.GetAutoHandleBool(), SettingsHandler.GetAutoHandleTime());
         }
 
         private void ReleaseAlbumTextBox_TextChanged(object sender, EventArgs e)
         {
-            settings.SetReleaseFormatName("Album", ReleaseAlbumTextBox.Text);
+            SettingsHandler.SetReleaseFormatName("Album", ReleaseAlbumTextBox.Text);
         }
 
         private void ReleaseEPTextBox_TextChanged(object sender, EventArgs e)
         {
-            settings.SetReleaseFormatName("EP", ReleaseEPTextBox.Text);
+            SettingsHandler.SetReleaseFormatName("EP", ReleaseEPTextBox.Text);
         }
 
         private void ReleaseLiveTextBox_TextChanged(object sender, EventArgs e)
         {
-            settings.SetReleaseFormatName("Live", ReleaseLiveTextBox.Text);
+            SettingsHandler.SetReleaseFormatName("Live", ReleaseLiveTextBox.Text);
         }
 
         private void ReleaseSingleTextBox_TextChanged(object sender, EventArgs e)
         {
-            settings.SetReleaseFormatName("Single", ReleaseSingleTextBox.Text);
+            SettingsHandler.SetReleaseFormatName("Single", ReleaseSingleTextBox.Text);
         }
 
         private void ReleaseMixtapeTextBox_TextChanged(object sender, EventArgs e)
         {
-            settings.SetReleaseFormatName("Mixtape", ReleaseMixtapeTextBox.Text);
+            SettingsHandler.SetReleaseFormatName("Mixtape", ReleaseMixtapeTextBox.Text);
         }
 
         private void ReleaseRemixTextBox_TextChanged(object sender, EventArgs e)
         {
-            settings.SetReleaseFormatName("Remix", ReleaseRemixTextBox.Text);
+            SettingsHandler.SetReleaseFormatName("Remix", ReleaseRemixTextBox.Text);
         }
 
         private void ReleaseSoundboardTextBox_TextChanged(object sender, EventArgs e)
         {
-            settings.SetReleaseFormatName("Soundboard", ReleaseSoundboardTextBox.Text);
+            SettingsHandler.SetReleaseFormatName("Soundboard", ReleaseSoundboardTextBox.Text);
         }
 
         private void ReleaseCompilationTextBox_TextChanged(object sender, EventArgs e)
         {
-            settings.SetReleaseFormatName("Compilation", ReleaseCompilationTextBox.Text);
+            SettingsHandler.SetReleaseFormatName("Compilation", ReleaseCompilationTextBox.Text);
         }
 
         private void ReleaseBootlegTextbox_TextChanged(object sender, EventArgs e)
         {
-            settings.SetReleaseFormatName("Bootleg", ReleaseBootlegTextbox.Text);
+            SettingsHandler.SetReleaseFormatName("Bootleg", ReleaseBootlegTextbox.Text);
         }
 
         private void ReleaseInterviewTextBox_TextChanged(object sender, EventArgs e)
         {
-            settings.SetReleaseFormatName("Interview", ReleaseInterviewTextBox.Text);
+            SettingsHandler.SetReleaseFormatName("Interview", ReleaseInterviewTextBox.Text);
         }
 
         private void ReleaseUnknownTextBox_TextChanged(object sender, EventArgs e)
         {
-            settings.SetReleaseFormatName("Unknown", ReleaseUnknownTextBox.Text);
+            SettingsHandler.SetReleaseFormatName("Unknown", ReleaseUnknownTextBox.Text);
         }
 
         private void BitrateVBRTextBox_TextChanged(object sender, EventArgs e)
         {
-            settings.SetBitrateName("VBR", BitrateVBRTextBox.Text);
+            SettingsHandler.SetBitrateName("VBR", BitrateVBRTextBox.Text);
         }
 
         private void BitrateCBRTextBox_TextChanged(object sender, EventArgs e)
         {
-            settings.SetBitrateName("CBR", BitrateCBRTextBox.Text);
+            SettingsHandler.SetBitrateName("CBR", BitrateCBRTextBox.Text);
         }
 
         private void BitrateAPXTextBox_TextChanged(object sender, EventArgs e)
         {
-            settings.SetBitrateName("APX", BitrateAPXTextBox.Text);
+            SettingsHandler.SetBitrateName("APX", BitrateAPXTextBox.Text);
         }
 
         private void BitrateAPSTextBox_TextChanged(object sender, EventArgs e)
         {
-            settings.SetBitrateName("APS", BitrateAPSTextBox.Text);
+            SettingsHandler.SetBitrateName("APS", BitrateAPSTextBox.Text);
         }
 
         private void BitrateQ8xTextBox_TextChanged(object sender, EventArgs e)
         {
-            settings.SetBitrateName("q8.x", BitrateQ8xTextBox.Text);
+            SettingsHandler.SetBitrateName("q8.x", BitrateQ8xTextBox.Text);
         }
 
         private void BitrateLosslessTextBox_TextChanged(object sender, EventArgs e)
         {
-            settings.SetBitrateName("Lossless", BitrateLosslessTextBox.Text);
+            SettingsHandler.SetBitrateName("Lossless", BitrateLosslessTextBox.Text);
         }
 
         private void Bitrate24bitTextBox_TextChanged(object sender, EventArgs e)
         {
-            settings.SetBitrateName("24bitLossless", Bitrate24bitTextBox.Text);
+            SettingsHandler.SetBitrateName("24bitLossless", Bitrate24bitTextBox.Text);
         }
 
         private void MinimizeToTrayCheckbox_CheckedChanged(object sender, EventArgs e)
         {
             if (MinimizeToTrayCheckbox.Checked)
-                settings.SetMinimizeToTray(true);
+                SettingsHandler.SetMinimizeToTray(true);
             else
-                settings.SetMinimizeToTray(false);
+                SettingsHandler.SetMinimizeToTray(false);
+        }
+
+        private void DeleteTheCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (DeleteTheCheckBox.Checked)
+            {
+                SettingsHandler.SetArtistFlip(false);
+                SettingsHandler.SetDeleteTheFolderNames(true);
+                ArtistFlipCheck.Checked = false;
+                ArtistFlipCheck.Enabled = false;
+            }
+            else
+            {
+                SettingsHandler.SetDeleteTheFolderNames(false);
+                ArtistFlipCheck.Enabled = true;
+            }
+        }
+
+        private void LoneTorrentAsAlbumCheck_CheckedChanged(object sender, EventArgs e)
+        {
+            if (LoneTorrentAsAlbumCheck.Checked)
+                SettingsHandler.SetHandleLoneTsAsAlbums(true);
+            else
+                SettingsHandler.SetHandleLoneTsAsAlbums(false);
+        }
+
+        private void TimeFormatComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            switch (TimeFormatComboBox.Text)
+            {
+                case "Seconds":
+                    SettingsHandler.SetAutoHandleTime(AutoCheckTime.Value * 1000);
+                    break;
+                case "Minutes":
+                    SettingsHandler.SetAutoHandleTime(AutoCheckTime.Value * 1000 * 60);
+                    break;
+                case "Hours":
+                    SettingsHandler.SetAutoHandleTime(AutoCheckTime.Value * 1000 * 60 * 60);
+                    break;
+                default:
+                    SettingsHandler.SetAutoHandleTime(AutoCheckTime.Value * 1000);
+                    break;
+            }
+
+            MainWindow.UpdateTimer(SettingsHandler.GetAutoHandleBool(), SettingsHandler.GetAutoHandleTime());
         }
 
 

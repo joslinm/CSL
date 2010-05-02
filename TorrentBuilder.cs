@@ -15,8 +15,23 @@ namespace CSL_Test__1
 {
     class TorrentBuilder : BackgroundWorker
     {
-        SettingsHandler settings = new SettingsHandler();
-        DirectoryHandler dh = new DirectoryHandler();
+        public const string Album = "Album";
+        public const string EP = "EP";
+        public const string Single = "Single";
+        public const string Live = "Live";
+        public const string Remix = "Remix";
+        public const string Compilation = "Compilation";
+        public const string Soundtrack = "Soundtrack";
+        public const string Bootleg = "Bootleg";
+        public const string Interview = "Interview";
+        public const string Mixtape = "Mixtape";
+        public const string Unknown = "Unknown";
+        public string[] ReleaseTypes = new string[] { Album, EP, Single, Live, Remix, Compilation, Soundtrack, Bootleg, Interview, Mixtape, Unknown }; 
+
+        SettingsHandler SettingsHandler = new SettingsHandler();
+        DirectoryHandler DirectoryHandler = new DirectoryHandler();
+        ErrorWindow ew = new ErrorWindow();
+
         string[] information = new string[20];
 
         /*Information[] will hold all values that the user wishes to use for 
@@ -45,17 +60,33 @@ namespace CSL_Test__1
             WorkerReportsProgress = true;
             WorkerSupportsCancellation = true;
         }
+
+        private bool SkipReleaseFormatCheck()
+        {
+            Match match = Regex.Match(SettingsHandler.GetCustomDirectory(), "%l|%s|%c|%e|%r|%v|%n|%x|%u|%v|%z");
+            if (match.Success) return false; //Need release format to properly create save structure
+
+            bool skip = true;
+            foreach(string r in ReleaseTypes)
+            {
+                skip = SettingsHandler.GetDownloadFormatExists(r);
+                if (!skip) //If a don't-download exists, need release format to filter out torrents
+                    break;
+            }
+            return skip;
+        }
+
         protected override void OnDoWork(DoWorkEventArgs e)
         {
-            string d_folder = settings.GetDownloadFolder();
-            string t_folder = settings.GetTorrentSaveFolder();
-            string u_folder = settings.GetTorrentClientFolder();
-            string custom = settings.GetCustomDirectory();
+            string d_folder = SettingsHandler.GetDownloadFolder();
+            string t_folder = SettingsHandler.GetTorrentSaveFolder();
+            string u_folder = SettingsHandler.GetTorrentClientFolder();
+            string custom = SettingsHandler.GetCustomDirectory();
 
             if (d_folder == null || d_folder == "" || t_folder == null || t_folder == ""
                 || u_folder == null || u_folder == "" || custom == null || custom == "")
             {
-                ErrorWindow ew = new ErrorWindow(); //Prevent null errors thrown..
+                 //Prevent null errors thrown..
                 ew.IssueGeneralWarning("Go to options, and start again", "Not all options are set", null);
                 e.Result = null;
             }
@@ -87,18 +118,37 @@ namespace CSL_Test__1
 
                 if (information[14] != "true")
                 {
-                    if (information[2] == null)
-                        information[2] = ExtractAlbumFormat(birth, files[a], files[a].Contains("[CSL]--Temp"));
+                    if (SkipReleaseFormatCheck())
+                    {
+                        torrent = VerifyTorrent(torrent);
+                        torrents.Add(torrent);
+                    }
+                    else
+                    {
+                        if (information[2] == null)
+                        {
+                            string file = (string)files[a];
+                            if (SettingsHandler.GetHandleLoneTAsAlbum())
+                            {
+                                if (file.Contains("[CSL]--Temp"))
+                                    information[2] = ExtractAlbumFormat(birth, file, file.Contains("[CSL]--Temp"));
+                                else
+                                    information[2] = Album;
+                            }
+                            else
+                                information[2] = ExtractAlbumFormat(birth, file, file.Contains("[CSL]--Temp"));
+                        }
 
-                        if (settings.GetDownloadFormatExists(information[2]))
+                        if (SettingsHandler.GetDownloadFormatExists(information[2]))
                         {
                             torrent = VerifyTorrent(torrent);
                             torrents.Add(torrent);
                         }
                         else
                         {
-                            dh.MoveTorrentFile((string)files[a], "unhandled");
+                            DirectoryHandler.MoveTorrentFile((string)files[a], "unhandled");
                         }
+                    }
                 }
 
                 //Clear out information for this run to avoid misinformation on the next run
@@ -107,11 +157,11 @@ namespace CSL_Test__1
 
                 progress = (++count / filescount) * 100;
 
-                if (progress < 100 && progress > 0)
+                if (progress <= 100 && progress >= 0)
                     this.ReportProgress((int)progress);
 
             }
-            ErrorWindow ew = new ErrorWindow();
+            
             ew.ClearApplyToAll();
             object[] raw = torrents.ToArray();
             Torrent[] tarray = Array.ConvertAll(raw, new Converter<object, Torrent>(Converter));
@@ -133,22 +183,37 @@ namespace CSL_Test__1
 
                 if (information[14] != "true")
                 {
-                    if (information[2] == null)
+                    if (SkipReleaseFormatCheck())
                     {
-                        string s = (string)files[a];
-                        information[2] = ExtractAlbumFormat(birth, s, s.Contains("[CSL]--Temp"));
+                        torrent = VerifyTorrent(torrent);
+                        torrents.Add(torrent);
                     }
-
-                        if (settings.GetDownloadFormatExists(information[2]))
+                    else
+                    {
+                        if (information[2] == null)
+                        {
+                            string file = (string)files[a];
+                            if (SettingsHandler.GetHandleLoneTAsAlbum())
+                            {
+                                if (file.Contains("[CSL]--Temp"))
+                                    information[2] = ExtractAlbumFormat(birth, file, file.Contains("[CSL]--Temp"));
+                                else
+                                    information[2] = Album;
+                            }
+                            else
+                                information[2] = ExtractAlbumFormat(birth, file, file.Contains("[CSL]--Temp"));
+                        }
+                        if (SettingsHandler.GetDownloadFormatExists(information[2]))
                         {
                             torrent = VerifyTorrent(torrent);
                             torrents.Add(torrent);
                         }
                         else
                         {
-                            dh.MoveTorrentFile((string)files[a], "unhandled");
+                            DirectoryHandler.MoveTorrentFile((string)files[a], "unhandled");
                         }
                     }
+                }
 
                     //Clear out information for this run to avoid misinformation on the next run
                     for (int b = 0; b < information.Length; b++)
@@ -156,12 +221,12 @@ namespace CSL_Test__1
 
                     progress = (++count / filescount) * 100;
 
-                    if (progress < 100 && progress > 0)
+                    if (progress <= 100 && progress >= 0)
                         this.ReportProgress((int)progress);
 
                 }
             
-            ErrorWindow ew = new ErrorWindow();
+            
             ew.ClearApplyToAll();
             object[] raw = torrents.ToArray();
             Torrent[] tarray = Array.ConvertAll(raw, new Converter<object, Torrent>(Converter));
@@ -181,8 +246,10 @@ namespace CSL_Test__1
            %e = EP             %r = Remix
            %v = Interview      %n = Single
            %x = Bootleg        %u = Unknown
-           %y - Year
-           %t - Album Name     %i = Artist's First Initial
+           %m = Mixtape
+           %f = Album
+           %y = Year
+           %t = Album Name     %i = Artist's First Initial
            %b = Bitrate        %p = Physical Format (CD/Vinyl)
            %d = Bitrate Format (MP3/FLAC)  
            %z = All release formats (live,EP,comp,etc)
@@ -190,11 +257,11 @@ namespace CSL_Test__1
 
             string directoryName = null;
 
-            char[] directoryArray = settings.GetCustomDirectory().ToCharArray();
+            char[] directoryArray = SettingsHandler.GetCustomDirectory().ToCharArray();
 
-            if (!settings.GetDownloadDirectory().EndsWith("\\"))
+            if (!SettingsHandler.GetDownloadDirectory().EndsWith("\\"))
             {
-                settings.SetDownloadFolder(settings.GetDownloadDirectory() + "\\");
+                SettingsHandler.SetDownloadFolder(SettingsHandler.GetDownloadDirectory() + "\\");
             }
 
             for (int a = 0; a < directoryArray.Length; a++)
@@ -210,7 +277,7 @@ namespace CSL_Test__1
                         case ('a'):
                             {
                                 string artist = ExtractArtist(birth, file);
-                                artist = dh.GetHTMLLookUp(artist);
+                                artist = DirectoryHandler.GetHTMLLookUp(artist);
                                 directoryName += artist;
                                 information[0] = artist;
                                 a++;
@@ -246,7 +313,7 @@ namespace CSL_Test__1
                         case ('t'):
                             {
                                 string album = ExtractAlbum(birth, file);
-                                album = dh.GetHTMLLookUp(album);
+                                album = DirectoryHandler.GetHTMLLookUp(album);
                                 directoryName += album;
                                 information[1] = album;
                                 a++;
@@ -254,7 +321,7 @@ namespace CSL_Test__1
                         case ('z'):
                             {
                                 string format = (information[2] == null) ? ExtractAlbumFormat(birth, file, file.Contains("[CSL]--Temp")) : information[2];
-                                directoryName += settings.GetReleaseFormat(format);
+                                directoryName += SettingsHandler.GetReleaseFormat(format);
                                 information[2] = format;
                                 a++;
                             } break;
@@ -262,9 +329,9 @@ namespace CSL_Test__1
                             {
                                 string format = (information[2] == null) ? ExtractAlbumFormat(birth, file, file.Contains("[CSL]--Temp")) : information[2];
 
-                                if (format == "Live")
+                                if (format == Live)
                                 {
-                                    directoryName += settings.GetReleaseFormat("Live");
+                                    directoryName += SettingsHandler.GetReleaseFormat(Live);
                                     information[2] = format;
                                 }
                                 a++;
@@ -273,9 +340,9 @@ namespace CSL_Test__1
                             {
                                 string format = (information[2] == null) ? ExtractAlbumFormat(birth, file, file.Contains("[CSL]--Temp")) : information[2];
 
-                                if (format == "Compilation")
+                                if (format == Compilation)
                                 {
-                                    directoryName += settings.GetReleaseFormat("Compilation");
+                                    directoryName += SettingsHandler.GetReleaseFormat(Compilation);
                                     information[2] = format;
                                 }
                                 a++;
@@ -284,9 +351,9 @@ namespace CSL_Test__1
                             {
                                 string format = (information[2] == null) ? ExtractAlbumFormat(birth, file, file.Contains("[CSL]--Temp")) : information[2];
 
-                                if (format == "EP")
+                                if (format == EP)
                                 {
-                                    directoryName += settings.GetReleaseFormat("EP");
+                                    directoryName += SettingsHandler.GetReleaseFormat(EP);
                                     information[2] = format;
                                 }
                                 a++;
@@ -295,9 +362,9 @@ namespace CSL_Test__1
                             {
                                 string format = (information[2] == null) ? ExtractAlbumFormat(birth, file, file.Contains("[CSL]--Temp")) : information[2];
 
-                                if (format == "Remix")
+                                if (format == Remix)
                                 {
-                                    directoryName += settings.GetReleaseFormat("Remix");
+                                    directoryName += SettingsHandler.GetReleaseFormat(Remix);
                                     information[2] = format;
                                 }
                                 a++;
@@ -306,9 +373,9 @@ namespace CSL_Test__1
                             {
                                 string format = (information[2] == null) ? ExtractAlbumFormat(birth, file, file.Contains("[CSL]--Temp")) : information[2];
 
-                                if (format == "Interview")
+                                if (format == Interview)
                                 {
-                                    directoryName += settings.GetReleaseFormat("Interview");
+                                    directoryName += SettingsHandler.GetReleaseFormat(Interview);
                                     information[2] = format;
                                 }
                                 a++;
@@ -317,9 +384,9 @@ namespace CSL_Test__1
                             {
                                 string format = (information[2] == null) ? ExtractAlbumFormat(birth, file, file.Contains("[CSL]--Temp")) : information[2];
 
-                                if (format == "Single")
+                                if (format == Single)
                                 {
-                                    directoryName += settings.GetReleaseFormat("Single");
+                                    directoryName += SettingsHandler.GetReleaseFormat(Single);
                                     information[2] = format;
                                 }
                                 a++;
@@ -328,9 +395,9 @@ namespace CSL_Test__1
                             {
                                 string format = (information[2] == null) ? ExtractAlbumFormat(birth, file, file.Contains("[CSL]--Temp")) : information[2];
 
-                                if (format == "Bootleg")
+                                if (format == Bootleg)
                                 {
-                                    directoryName += settings.GetReleaseFormat("Bootleg");
+                                    directoryName += SettingsHandler.GetReleaseFormat(Bootleg);
                                     information[2] = format;
                                 }
                                 a++;
@@ -339,9 +406,20 @@ namespace CSL_Test__1
                             {
                                 string format = (information[2] == null) ? ExtractAlbumFormat(birth, file, file.Contains("[CSL]--Temp")) : information[2];
 
-                                if (format == "Soundtrack")
+                                if (format == Soundtrack)
                                 {
-                                    directoryName += settings.GetReleaseFormat("Soundtrack");
+                                    directoryName += SettingsHandler.GetReleaseFormat(Soundtrack);
+                                    information[2] = format;
+                                }
+                                a++;
+                            } break;
+                        case ('m'):
+                            {
+                                string format = (information[2] == null) ? ExtractAlbumFormat(birth, file, file.Contains("[CSL]--Temp")) : information[2];
+
+                                if (format == Mixtape)
+                                {
+                                    directoryName += SettingsHandler.GetReleaseFormat(Mixtape);
                                     information[2] = format;
                                 }
                                 a++;
@@ -350,9 +428,9 @@ namespace CSL_Test__1
                             {
                                 string format = (information[2] == null) ? ExtractAlbumFormat(birth, file, file.Contains("[CSL]--Temp")) : information[2];
 
-                                if (format == "Unknown")
+                                if (format == Unknown)
                                 {
-                                    directoryName += settings.GetReleaseFormat("Unknown");
+                                    directoryName += SettingsHandler.GetReleaseFormat(Unknown);
                                     information[2] = format;
                                 }
                                 a++;
@@ -361,9 +439,9 @@ namespace CSL_Test__1
                             {
                                 string format = (information[2] == null) ? ExtractAlbumFormat(birth, file, file.Contains("[CSL]--Temp")) : information[2];
 
-                                if (format == "Album")
+                                if (format == Album)
                                 {
-                                    directoryName += settings.GetReleaseFormat("Album");
+                                    directoryName += SettingsHandler.GetReleaseFormat(Album);
                                     information[2] = format;
                                 }
                                 a++;
@@ -384,16 +462,16 @@ namespace CSL_Test__1
                 }
             }
 
-            information[13] = settings.GetDownloadDirectory().Trim() + directoryName.Trim();
+            information[13] = SettingsHandler.GetDownloadDirectory().Trim() + directoryName.Trim();
 
-            if (settings.GetUppercaseAllFolderNames())
+            if (SettingsHandler.GetUppercaseAllFolderNames())
                 information[13] = information[13].ToUpper();
-            else if (settings.GetLowercaseAllFolderNames())
+            else if (SettingsHandler.GetLowercaseAllFolderNames())
                 information[13] = information[13].ToLower();
 
             ReturnTorrent:
             information[10] = file;
-            information[11] = dh.GetFileName(file, true);
+            information[11] = DirectoryHandler.GetFileName(file, true);
             information[12] = birth;
             return new Torrent(information);
         }
@@ -411,7 +489,7 @@ namespace CSL_Test__1
                             if (information[a] == null)
                                 goto default;
 
-                            if (settings.GetArtistFlip())
+                            if (SettingsHandler.GetArtistFlip())
                             {
                                 if (information[0].StartsWith("The") || information[0].StartsWith("A "))
                                 {
@@ -429,7 +507,24 @@ namespace CSL_Test__1
                                     information[0] = artist;
                                 }
                             }
-                            if (settings.GetDoubleSpaceRemoval())
+                            else if (SettingsHandler.GetDeleteThe())
+                            {
+                                if (information[0].StartsWith("The"))
+                                {
+                                    string[] modifiedArtist = information[0].Split(' ');
+                                    string artist = "";
+                                    for (int b = 1; b < modifiedArtist.Length; b++)
+                                    {
+                                        artist += modifiedArtist[b];
+                                        if (!((b + 1) == modifiedArtist.Length))
+                                        {
+                                            artist += " ";
+                                        }
+                                    }
+                                    information[0] = artist;
+                                }
+                            }
+                            if (SettingsHandler.GetDoubleSpaceRemoval())
                             {
                                 while (information[0].Contains("  "))
                                     information[0] = information[0].Replace("  ", " ");
@@ -573,7 +668,7 @@ namespace CSL_Test__1
                             }
                             catch { }
 
-                            if ((settings.GetTorrentSaveFolder() + @"\[CSL] -- Handled Torrents\" + information[11]).Length >= 255)
+                            if ((SettingsHandler.GetTorrentSaveFolder() + @"\[CSL] -- Handled Torrents\" + information[11]).Length >= 255)
                             {
                                 IssueError("Torrent save location is greater than 255", information[10]);
                             }
@@ -582,7 +677,7 @@ namespace CSL_Test__1
                     default:
                         {
                             //Check to see if null values are supposed to be null
-                            string switches = settings.GetCustomDirectory().ToLower();
+                            string switches = SettingsHandler.GetCustomDirectory().ToLower();
 
                             switch (a)
                             {
@@ -637,10 +732,10 @@ namespace CSL_Test__1
 
             return new Torrent(information);
         }
-        public string RebuildCustomPath(string[] information)
+        public static string RebuildCustomPath(string[] information)
         {
             string directoryName = null;
-            char[] directoryArray = settings.GetCustomDirectory().ToCharArray();
+            char[] directoryArray = SettingsHandler.GetCustomDirectory().ToCharArray();
 
             for (int a = 0; a < directoryArray.Length; a++)
             {
@@ -716,9 +811,9 @@ namespace CSL_Test__1
                             {
 
                                 string format = information[2];
-                                if (format.Equals("Live"))
+                                if (format.Equals(Live))
                                 {
-                                    directoryName += "Live";
+                                    directoryName += Live;
                                 }
 
                                 a++;
@@ -728,9 +823,9 @@ namespace CSL_Test__1
 
                                 string format = information[2];
 
-                                if (format.Equals("Compilation"))
+                                if (format.Equals(Compilation))
                                 {
-                                    directoryName += "Compilation";
+                                    directoryName += Compilation;
                                 }
 
                                 a++;
@@ -740,9 +835,9 @@ namespace CSL_Test__1
 
                                 string format = information[2];
 
-                                if (format.Equals("EP"))
+                                if (format.Equals(EP))
                                 {
-                                    directoryName += "EP";
+                                    directoryName += EP;
                                 }
 
                                 a++;
@@ -752,9 +847,9 @@ namespace CSL_Test__1
 
                                 string format = information[2];
 
-                                if (format.Equals("Remix"))
+                                if (format.Equals(Remix))
                                 {
-                                    directoryName += "Remix";
+                                    directoryName += Remix;
                                 }
 
                                 a++;
@@ -764,9 +859,9 @@ namespace CSL_Test__1
 
                                 string format = information[2];
 
-                                if (format.Equals("Interview"))
+                                if (format.Equals(Interview))
                                 {
-                                    directoryName += "Interview";
+                                    directoryName += Interview;
                                 }
 
                                 a++;
@@ -776,9 +871,9 @@ namespace CSL_Test__1
 
                                 string format = information[2];
 
-                                if (format.Equals("Single"))
+                                if (format.Equals(Single))
                                 {
-                                    directoryName += "Single";
+                                    directoryName += Single;
                                 }
 
                                 a++;
@@ -788,9 +883,9 @@ namespace CSL_Test__1
 
                                 string format = information[2];
 
-                                if (format.Equals("Bootleg"))
+                                if (format.Equals(Bootleg))
                                 {
-                                    directoryName += "Bootleg";
+                                    directoryName += Bootleg;
                                 }
 
                                 a++;
@@ -799,9 +894,20 @@ namespace CSL_Test__1
                             {
                                 string format = information[2];
 
-                                if (format.Equals("Soundtrack"))
+                                if (format.Equals(Soundtrack))
                                 {
-                                    directoryName += "Soundtrack";
+                                    directoryName += Soundtrack;
+                                }
+
+                                a++;
+                            } break;
+                        case ('m'):
+                            {
+                                string format = information[2];
+
+                                if (format.Equals(Mixtape))
+                                {
+                                    directoryName += Mixtape;
                                 }
 
                                 a++;
@@ -810,20 +916,19 @@ namespace CSL_Test__1
                             {
 
                                 string format = information[2];
-                                if (format.Equals("Unknown"))
+                                if (format.Equals(Unknown))
                                 {
-                                    directoryName += "Unknown";
+                                    directoryName += Unknown;
                                 }
 
                                 a++;
                             } break;
                         case ('f'):
                             {
-
                                 string format = information[2];
-                                if (format.Equals("Album"))
+                                if (format.Equals(Album))
                                 {
-                                    directoryName += "Album";
+                                    directoryName += Album;
                                 }
 
                                 a++;
@@ -843,7 +948,7 @@ namespace CSL_Test__1
                 }
             }
 
-            return settings.GetDownloadDirectory() + directoryName.Trim();
+            return SettingsHandler.GetDownloadDirectory() + directoryName.Trim();
         }
 
         public string GetTorrentBirth(string file)
@@ -889,63 +994,50 @@ namespace CSL_Test__1
             {
                 case "Can't parse artist":
                     {
-                        ErrorWindow ew = new ErrorWindow();
-                        returnString =  ew.IssueArtistError(file);
-                        ew.Dispose();
+                        returnString =  ew.IssueArtistError(file);    
                     }
                     break;
                 case "Can't parse album":
                     {
-                        ErrorWindow ew = new ErrorWindow();
-                        returnString =  ew.IssueAlbumError(file);
-                        ew.Dispose();
+                        returnString =  ew.IssueAlbumError(file);    
                     }
                     break;
                 case "Can't parse year":
                     {
-                        ErrorWindow ew = new ErrorWindow();
                         returnString =  ew.IssueYearError(file);
-                        ew.Dispose();
                     }
                     break;
                 case "Can't parse release format":
                     {
-                        ErrorWindow ew = new ErrorWindow();
-                        returnString =  ew.IssueReleaseFormatError(file);
-                        ew.Dispose();
+                        if(SettingsHandler.GetHandleLoneTAsAlbum())
+                            returnString = (file.Contains("[CSL]--Temp"))? ew.IssueReleaseFormatError(file) : Album;
+                        else
+                            returnString =  ew.IssueReleaseFormatError(file);
                     }
                     break;
                 case "Can't parse bitrate":
                     {
-                        ErrorWindow ew = new ErrorWindow();
-                        returnString =  ew.IssueBitrateError(file);
-                        ew.Dispose();
+                        returnString =  ew.IssueBitrateError(file);    
                     }
                     break;
                 case "Can't parse physical format":
                     {
-                        ErrorWindow ew = new ErrorWindow();
-                        returnString =  ew.IssuePhysicalFormatError(file);
-                        ew.Dispose();
+                        returnString =  ew.IssuePhysicalFormatError(file);    
                     }
                     break;
                 case "Can't parse bit format":
                     {
-                        ErrorWindow ew = new ErrorWindow();
-                        returnString =  ew.IssueBitformatError(file);
-                        ew.Dispose();
+                        returnString =  ew.IssueBitformatError(file);    
                     }
                     break;
                 case "Can't parse birth":
                     {
-                        ErrorWindow ew = new ErrorWindow();
                         returnString = ew.IssueBirthError(file);
-                        ew.Dispose();
                     }
                     break;
                 case "Illegal characters":
                     {
-                        ErrorWindow ew = new ErrorWindow();
+                         
                         returnString = ew.IssueIllegalCharactersError(file, information[13]);
                         Match match = Regex.Match(returnString, "<|>|:|/|[|]|[?]|*");
 
@@ -955,7 +1047,7 @@ namespace CSL_Test__1
                             match = Regex.Match(returnString, "<|>|:|/|[|]|[?]|*");
                         }
 
-                        ew.Dispose();
+                         
                     }
                     break;
                 default:
@@ -978,23 +1070,17 @@ namespace CSL_Test__1
             {
                 case "Artist is not a perfect match":
                     {
-                        ErrorWindow ew = new ErrorWindow();
                         returnString = ew.IssueArtistWarning(file, (value == null) ? information[0] : value);
-                        ew.Dispose();
                     }
                     break;
                 case "Album is not a perfect match":
-                    {
-                        ErrorWindow ew = new ErrorWindow();
-                        returnString = ew.IssueAlbumWarning(file, (value == null)? information[1] : value);
-                        ew.Dispose();
+                    {  
+                        returnString = ew.IssueAlbumWarning(file, (value == null)? information[1] : value);    
                     }
                     break;
                 case "Year is unrealistic":
                     {
-                        ErrorWindow ew = new ErrorWindow();
                         returnString = ew.IssueYearWarning(file, (value == null) ? information[4] : value);
-                        ew.Dispose();
                     }
                     break;
             }
@@ -1018,7 +1104,7 @@ namespace CSL_Test__1
             {
                 case "waffles":
                     {
-                        file = dh.GetFileName(file, true);
+                        file = DirectoryHandler.GetFileName(file, true);
                         /*Look for a space on either side of the dash*/
                         int startingPosition = 0;
                         int dashes = file.Split('-').Length;
@@ -1044,7 +1130,7 @@ namespace CSL_Test__1
                         {
                             case (true):
                                 {
-                                    file = dh.GetDirectoryName(file);
+                                    file = DirectoryHandler.GetDirectoryName(file);
                                     //...\[CSL]--Temp\artist\[physicalformat]\[files]
                                     int firstSlash = file.IndexOf("[CSL]--Temp") - 1;
                                     int secondSlash = file.IndexOf(@"\", firstSlash + 1) + 1;
@@ -1057,7 +1143,7 @@ namespace CSL_Test__1
                                     /*Look for a space on either side of the dash*/
                                     int startingPosition = 0;
                                     int dashes = file.Split('-').Length;
-                                    string filename = dh.GetFileName(file, true);
+                                    string filename = DirectoryHandler.GetFileName(file, true);
                                     for (int a = 0; a <= dashes; a++)
                                     {
                                         int dash = filename.IndexOf('-', startingPosition);
@@ -1084,7 +1170,7 @@ namespace CSL_Test__1
         }
         public string ExtractAlbum(string birth, string file)
         {
-            file = dh.GetFileName(file, true);
+            file = DirectoryHandler.GetFileName(file, true);
 
             if (information[1] != null) //AlbumFormat may be called first which may grab the album name
                 return information[1];
@@ -1143,12 +1229,13 @@ namespace CSL_Test__1
          *  */
         public string ExtractYear(string birth, string file)
         {
+            string filename = DirectoryHandler.GetFileName(file, true);
+
             switch (birth)
             {
                 case "waffles":
                     {
-                        string filename = dh.GetFileName(file, true);
-                        Match match = Regex.Match(dh.GetFileName(file, true), "[1-2]{1}[09][0-9][0-9]");
+                        Match match = Regex.Match(DirectoryHandler.GetFileName(file, true), "[1-2]{1}[09][0-9][0-9]");
                         if (match.Success)
                         {
                             int year = Int32.Parse(match.Value);
@@ -1172,7 +1259,11 @@ namespace CSL_Test__1
                     }
                 case "what":
                     {
-                        Match match = Regex.Match(dh.GetFileName(file, true), "[1-2]{1}[09][0-9][0-9]");
+                        if (filename == null)
+                        {
+                            DirectoryHandler.GetFileName(file, false); //Try again..
+                        }
+                        Match match = Regex.Match(filename, "[1-2]{1}[09][0-9][0-9]");
                         if(match.Success)
                         {
                             int year = Int32.Parse(match.Value);
@@ -1206,7 +1297,7 @@ namespace CSL_Test__1
                         {
                             if (file.Contains("V0"))
                             {
-                                string structure = settings.GetBitrate("VBR");
+                                string structure = SettingsHandler.GetBitrate("VBR");
                                 string bitrate = "V0(VBR)";
                                 if (structure.Contains("#"))
                                 {
@@ -1221,7 +1312,7 @@ namespace CSL_Test__1
                             }
                             else if (file.Contains("V10"))
                             {
-                                string structure = settings.GetBitrate("VBR");
+                                string structure = SettingsHandler.GetBitrate("VBR");
                                 string bitrate = "V10(VBR)";
                                 if (structure.Contains("#"))
                                 {
@@ -1236,7 +1327,7 @@ namespace CSL_Test__1
                             }
                             else if (file.Contains("V2"))
                             {
-                                string structure = settings.GetBitrate("VBR");
+                                string structure = SettingsHandler.GetBitrate("VBR");
                                 string bitrate = "V2(VBR)";
                                 if (structure.Contains("#"))
                                 {
@@ -1251,7 +1342,7 @@ namespace CSL_Test__1
                             }
                             else if (file.Contains("V4"))
                             {
-                                string structure = settings.GetBitrate("VBR");
+                                string structure = SettingsHandler.GetBitrate("VBR");
                                 string bitrate = "V4(VBR)";
                                 if (structure.Contains("#"))
                                 {
@@ -1266,7 +1357,7 @@ namespace CSL_Test__1
                             }
                             else if (file.Contains("V6"))
                             {
-                                string structure = settings.GetBitrate("VBR");
+                                string structure = SettingsHandler.GetBitrate("VBR");
                                 string bitrate = "V6(VBR)";
                                 if (structure.Contains("#"))
                                 {
@@ -1281,7 +1372,7 @@ namespace CSL_Test__1
                             }
                             else if (file.Contains("V8"))
                             {
-                                string structure = settings.GetBitrate("VBR");
+                                string structure = SettingsHandler.GetBitrate("VBR");
                                 string bitrate = "V8(VBR)";
                                 if (structure.Contains("#"))
                                 {
@@ -1296,7 +1387,7 @@ namespace CSL_Test__1
                             }
                         }
                         else if (file.Contains("Lossless]"))
-                            return settings.GetBitrate("Lossless");
+                            return SettingsHandler.GetBitrate("Lossless");
                         else
                         {
                             Match match = Regex.Match(file, "[-][1-2]{1}[0-9]{2}");
@@ -1309,7 +1400,7 @@ namespace CSL_Test__1
 
                                 if (int.Parse(value) > 191 && int.Parse(value) < 321)
                                 {
-                                    string structure = settings.GetBitrate("CBR");
+                                    string structure = SettingsHandler.GetBitrate("CBR");
 
                                     if (structure.Contains("###"))
                                     {
@@ -1341,7 +1432,7 @@ namespace CSL_Test__1
                         {
                             if (file.Contains("V0"))
                             {
-                                string structure = settings.GetBitrate("VBR");
+                                string structure = SettingsHandler.GetBitrate("VBR");
                                 string bitrate = "V0(VBR)";
                                 if (structure.Contains("#"))
                                 {
@@ -1356,7 +1447,7 @@ namespace CSL_Test__1
                             }
                             else if (file.Contains("V10"))
                             {
-                                string structure = settings.GetBitrate("VBR");
+                                string structure = SettingsHandler.GetBitrate("VBR");
                                 string bitrate = "V10(VBR)";
                                 if (structure.Contains("#"))
                                 {
@@ -1371,7 +1462,7 @@ namespace CSL_Test__1
                             }
                             else if (file.Contains("V1"))
                             {
-                                string structure = settings.GetBitrate("VBR");
+                                string structure = SettingsHandler.GetBitrate("VBR");
                                 string bitrate = "V1(VBR)";
                                 if (structure.Contains("#"))
                                 {
@@ -1386,7 +1477,7 @@ namespace CSL_Test__1
                             }
                             else if (file.Contains("V2"))
                             {
-                                string structure = settings.GetBitrate("VBR");
+                                string structure = SettingsHandler.GetBitrate("VBR");
                                 string bitrate = "V2(VBR)";
                                 if (structure.Contains("#"))
                                 {
@@ -1401,7 +1492,7 @@ namespace CSL_Test__1
                             }
                             else if (file.Contains("V4"))
                             {
-                                string structure = settings.GetBitrate("VBR");
+                                string structure = SettingsHandler.GetBitrate("VBR");
                                 string bitrate = "V4(VBR)";
                                 if (structure.Contains("#"))
                                 {
@@ -1416,7 +1507,7 @@ namespace CSL_Test__1
                             }
                             else if (file.Contains("V6"))
                             {
-                                string structure = settings.GetBitrate("VBR");
+                                string structure = SettingsHandler.GetBitrate("VBR");
                                 string bitrate = "V6(VBR)";
                                 if (structure.Contains("#"))
                                 {
@@ -1431,7 +1522,7 @@ namespace CSL_Test__1
                             }
                             else if (file.Contains("V8"))
                             {
-                                string structure = settings.GetBitrate("VBR");
+                                string structure = SettingsHandler.GetBitrate("VBR");
                                 string bitrate = "V8(VBR)";
                                 if (structure.Contains("#"))
                                 {
@@ -1446,16 +1537,16 @@ namespace CSL_Test__1
                             }
                             
                             else if (file.Contains("APX(VBR)"))
-                                return settings.GetBitrate("APX");
+                                return SettingsHandler.GetBitrate("APX");
                             else if (file.Contains("APS(VBR)"))
-                                return settings.GetBitrate("APS");
+                                return SettingsHandler.GetBitrate("APS");
                             else if (file.Contains("q8.x(VBR)"))
-                                return settings.GetBitrate("q8.x");
+                                return SettingsHandler.GetBitrate("q8.x");
                             else
                                 return IssueError("Can't parse bitrate", file);
                         }
                         else if (file.Contains("24bit Lossless"))
-                            return settings.GetBitrate("24bitLossless");
+                            return SettingsHandler.GetBitrate("24bitLossless");
                         else
                         {
                             Match match = Regex.Match(file, "[1-2]{1}[0-9]{2}[)]");
@@ -1467,7 +1558,7 @@ namespace CSL_Test__1
 
                                 if (int.Parse(value) > 191 && int.Parse(value) < 321)
                                 {
-                                    string structure = settings.GetBitrate("CBR");
+                                    string structure = SettingsHandler.GetBitrate("CBR");
                                     if (structure.Contains("###"))
                                     {
                                         bitrate = "";
@@ -1498,7 +1589,7 @@ namespace CSL_Test__1
             {
                 case "waffles":
                     {
-                        file = dh.GetFileName(file, true);
+                        file = DirectoryHandler.GetFileName(file, true);
 
                         int parenthesisIndex = file.IndexOf("[20") - 1;
                         if (parenthesisIndex < 0)
@@ -1524,7 +1615,7 @@ namespace CSL_Test__1
                     }
                 case "what":
                     {
-                        file = dh.GetFileName(file, true);
+                        file = DirectoryHandler.GetFileName(file, true);
                         if (file.Contains("MP3"))
                             return "MP3";
                         else if (file.Contains("AAC"))
@@ -1550,7 +1641,7 @@ namespace CSL_Test__1
             {
                 case "waffles":
                     {
-                        file = dh.GetFileName(file, true);
+                        file = DirectoryHandler.GetFileName(file, true);
 
                         if (file.Contains("-CD"))
                             return "CD";
@@ -1565,7 +1656,7 @@ namespace CSL_Test__1
                     }
                 case "what":
                     {
-                        file = dh.GetFileName(file, true);
+                        file = DirectoryHandler.GetFileName(file, true);
 
                         if (file.Contains("(CD"))
                             return "CD";
@@ -1597,27 +1688,27 @@ namespace CSL_Test__1
                 case (true):
                     {
                         if (file.Contains("\\Album\\"))
-                            return ("Album");
+                            return (Album);
                         else if (file.Contains("\\Bootleg\\"))
-                            return ("Bootleg");
+                            return (Bootleg);
                         else if (file.Contains("\\Live album\\"))
-                            return ("Live");
+                            return (Live);
                         else if (file.Contains("\\Mixtape\\"))
-                            return ("Mixtape");
+                            return (Mixtape);
                         else if (file.Contains("\\EP\\"))
-                            return ("EP");
+                            return (EP);
                         else if (file.Contains("\\Compilation\\"))
-                            return ("Compilation");
+                            return (Compilation);
                         else if (file.Contains("\\Interview\\"))
-                            return ("Interview");
+                            return (Interview);
                         else if (file.Contains("\\Remix\\"))
-                            return ("Remix");
+                            return (Remix);
                         else if (file.Contains("\\Single\\"))
-                            return ("Single");
+                            return (Single);
                         else if (file.Contains("\\Unknown\\"))
-                            return ("Unknown");
+                            return (Unknown);
                         else if (file.Contains("\\Soundtrack\\"))
-                            return ("Soundtrack");
+                            return (Soundtrack);
                         else
                             return IssueError("Can't parse release format", file);
                     }

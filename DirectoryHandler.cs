@@ -12,12 +12,19 @@ using System.ComponentModel;
 
 namespace CSL_Test__1
 {
-    class DirectoryHandler
+    class DirectoryHandler : DataGridViewHandler
     {
-        SettingsHandler settings = new SettingsHandler();
+        ErrorWindow ew = new ErrorWindow();
+        SettingsHandler SettingsHandler = new SettingsHandler();
         FastZip fz = new FastZip();
+        private Object obj = new Object();
 
-        public void DeleteFile(string path)
+
+        protected override void OnDoWork(DoWorkEventArgs e)
+        {
+            MoveProcessedFiles((Torrent[])e.Argument);
+        }
+        public static void DeleteFile(string path)
         {
             FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read);
 
@@ -30,10 +37,10 @@ namespace CSL_Test__1
                 catch (Exception e)
                 { }
             }
-            
+
             fs.Dispose();
         }
-        public bool DeleteFolder(string folder)
+        public static bool DeleteFolder(string folder)
         {
             if (Directory.Exists(folder))
             {
@@ -43,19 +50,21 @@ namespace CSL_Test__1
             else
                 return false;
         }
-        public bool DeleteTempFolder()
+        public static bool DeleteTempFolder()
         {
-            if (Directory.Exists(settings.GetTorrentSaveFolder() + @"\[CSL]--Temp"))
-                Directory.Delete(settings.GetTorrentSaveFolder() + @"\[CSL]--Temp", true);
+            if (Directory.Exists(SettingsHandler.GetTorrentSaveFolder() + @"\[CSL]--Temp"))
+                Directory.Delete(SettingsHandler.GetTorrentSaveFolder() + @"\[CSL]--Temp", true);
 
-            if (!Directory.Exists(settings.GetTorrentSaveFolder() + @"\[CSL]--Temp"))
+            if (!Directory.Exists(SettingsHandler.GetTorrentSaveFolder() + @"\[CSL]--Temp"))
                 return true;
             else
                 return false;
         }
-        public void DeleteZipFiles()
+        public static void DeleteZipFiles()
         {
-            string[] zipFiles = Directory.GetFiles(settings.GetTorrentSaveFolder(), "*.zip", SearchOption.TopDirectoryOnly);
+            string[] zipFiles = null;
+
+            zipFiles = Directory.GetFiles(SettingsHandler.GetTorrentSaveFolder(), "*.zip", SearchOption.TopDirectoryOnly);
 
             for (int a = 0; a < zipFiles.Length; a++)
             {
@@ -63,30 +72,35 @@ namespace CSL_Test__1
             }
         }
 
-        public string[] GetTorrentZips()
+        public static string[] GetTorrentZips()
         {
+            string[] files;
+
             try
             {
-                string[] files = Directory.GetFiles(settings.GetTorrentSaveFolder(), "*.zip", SearchOption.TopDirectoryOnly);
+                files = Directory.GetFiles(SettingsHandler.GetTorrentSaveFolder(), "*.zip", SearchOption.TopDirectoryOnly);
                 return (files.Length == 0) ? null : files;
             }
             catch { return null; }
         }
-        public string[] GetTorrents()
+        public static string[] GetTorrents()
         {
             try
             {
-                string[] files = Directory.GetFiles(settings.GetTorrentSaveFolder(), "*.torrent", SearchOption.TopDirectoryOnly);
+                string[] files = Directory.GetFiles(SettingsHandler.GetTorrentSaveFolder(), "*.torrent", SearchOption.TopDirectoryOnly);
                 return (files.Length == 0) ? null : files;
             }
             catch { return null; }
         }
-        public string GetFileName(string path, bool extension)
+
+        public static string GetFileName(string path, bool extension)
         {
+            FileStream fs;
+            string filename;
+
             try
             {
-                string filename;
-                FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read);
+                fs = new FileStream(path, FileMode.Open, FileAccess.Read);
 
                 if (extension)
                     filename = Path.GetFileName(fs.Name);
@@ -102,44 +116,48 @@ namespace CSL_Test__1
             }
 
         }
-        public string GetDirectoryName(string path)
+        public static string GetDirectoryName(string path)
         {
-            string directoryname;
             FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read);
-
-            directoryname = Path.GetDirectoryName(fs.Name);
-
+            string directoryname = Path.GetDirectoryName(fs.Name);
             fs.Dispose();
+
             return directoryname;
         }
-        public string GetHTMLLookUp(string value)
+        public static string GetHTMLLookUp(string value)
         {
-            FileStream fs = null;
-            if (value == null)
-                return value;
+            ErrorWindow ew = new ErrorWindow();
+            StreamReader sr = null;
+
             string[] ab = new string[2];
+            string a;
+            string b;
             int c = 0;
             string[] lines = null;
+            string replace;
+
+            if (value == null)
+                return value;
             try
             {
-                StreamReader sr = new StreamReader(System.Windows.Forms.Application.StartupPath + @"\HTML-Look-Up.txt");
-               
-                while(!sr.EndOfStream)
+                sr = new StreamReader(System.Windows.Forms.Application.StartupPath + @"\HTML-Look-Up.txt");
+
+                while (!sr.EndOfStream)
                 {
                     ab = sr.ReadLine().Split(' ');
-                    string a = ab[0];
-                    string b = ab[1];
+                    a = ab[0];
+                    b = ab[1];
 
                     if (value.Contains(a) || value.Contains(b))
                     {
                         while (value.Contains(a))
                         {
-                            string replace = sr.ReadLine();
+                            replace = sr.ReadLine();
                             value = value.Replace(a, replace);
                         }
                         while (value.Contains(b))
                         {
-                            string replace = sr.ReadLine();
+                            replace = sr.ReadLine();
                             value = value.Replace(b, replace);
                         }
                     }
@@ -148,30 +166,27 @@ namespace CSL_Test__1
                         sr.ReadLine();
                     }
                 }
-
             }
             catch (FileNotFoundException)
             {
-                ErrorWindow ew = new ErrorWindow();
                 ew.IssueGeneralWarning("HTML replacing will not occur", "Could not find HTML-Look-Up.txt...", null);
             }
             catch (Exception e)
             {
-                ErrorWindow ew = new ErrorWindow();
                 ew.IssueGeneralWarning("Error..", lines[c], e.Message);
             }
             finally
             {
-                if (fs != null)
-                    fs.Dispose();
+                if (sr != null)
+                    sr.Dispose();
             }
-            
+
             return value;
         }
-        public bool GetFileExists(string path)
+        public static bool GetFileExists(string path)
         {
-            bool value;
             FileStream fs = null;
+            bool value;
 
             try
             {
@@ -192,26 +207,30 @@ namespace CSL_Test__1
             }
             finally
             {
-                if(fs != null)
-                fs.Dispose();
+                if (fs != null)
+                    fs.Dispose();
             }
 
             return value;
         }
-        public bool MoveFile(string origin, string dest)
+        public static bool MoveFile(string origin, string dest)
         {
+            FileStream fs;
+
             try
             {
-                FileStream fs = new FileStream(origin, FileMode.Open, FileAccess.Read);
+                fs = new FileStream(origin, FileMode.Open, FileAccess.Read);
                 FileStream ds = null;
+
                 try
                 {
-                    ds = new FileStream(dest + Path.GetFileName(origin), FileMode.Open, FileAccess.Read);
-                    fs.Close();
-                    File.Delete(origin);
+                    ds = new FileStream(dest + Path.GetFileName(origin), FileMode.Open, FileAccess.Read); //Try accessing destination file
+                    fs.Close(); //Destination file exists if reach here
+                    if (!fs.Name.Contains("[CSL] -- Handled Torrents"))
+                        File.Delete(origin);
                     return true;
                 }
-                catch(Exception e)
+                catch (FileNotFoundException)
                 {
                     string o = fs.Name;
                     string d = dest + Path.GetFileName(fs.Name);
@@ -219,152 +238,202 @@ namespace CSL_Test__1
                     File.Move(fs.Name, dest + Path.GetFileName(fs.Name));
                     return true;
                 }
+                catch (Exception) { return false; }
             }
             catch { return false; }
         }
-
-
-        public string[] UnzipFile(string zipFile)
+        public static string[] UnzipFile(string zipFile)
         {
+            string destination;
             string[] files;
+            FastZip fz = new FastZip();
 
             try
             {
-                string destination = settings.GetTorrentSaveFolder() + @"\[CSL]--Temp\" + this.GetFileName(zipFile, false);
+                destination = SettingsHandler.GetTorrentSaveFolder() + @"\[CSL]--Temp\" + DirectoryHandler.GetFileName(zipFile, false);
                 Directory.CreateDirectory(destination);
-                fz.ExtractZip(zipFile,destination,".torrent");
+                fz.ExtractZip(zipFile, destination, ".torrent");
 
-                files = Directory.GetFiles(destination,"*.torrent",SearchOption.AllDirectories);
+                files = Directory.GetFiles(destination, "*.torrent", SearchOption.AllDirectories);
                 return files;
             }
 
-            catch(Exception e)
+            catch (Exception)
             {
-                return files = null;
+                return null;
             }
         }
-        public object[] UnzipFiles(string[] zipFiles)
+        public static object[] UnzipFiles(string[] zipFiles)
         {
-            ArrayList al = new ArrayList(); //not sure of proper array size, so using arraylist
+            ArrayList al = new ArrayList();
+            FastZip fz = new FastZip();
+            ErrorWindow ew = new ErrorWindow();
             string[] files = null;
+            string filename;
+            string destination;
 
             foreach (string zipfile in zipFiles)
             {
-                string destination = settings.GetTorrentSaveFolder() + @"\[CSL]--Temp\" + this.GetFileName(zipfile, false) + @"\";
+                filename = DirectoryHandler.GetFileName(zipfile, false);
+                destination = SettingsHandler.GetTorrentSaveFolder() + @"\[CSL]--Temp\" + filename + @"\";
 
                 try
                 {
                     fz.ExtractZip(zipfile, destination, ".torrent");
                 }
-                catch (Exception e) { }
+                catch (Exception) { ew.IssueGeneralWarning("No action necessary", "Warning: Could not unzip " + filename, zipfile); }
 
                 try
                 {
                     files = Directory.GetFiles(destination,
                         "*.torrent", SearchOption.AllDirectories);
                 }
-                catch (DirectoryNotFoundException e)
-                {
-                    //This most likely means that the zip file had nothing in it
-                    //Flagging a warning here would be wise
-                }
+                catch (DirectoryNotFoundException) { ew.IssueGeneralWarning("No action necessary", "Warning: " + filename + "was empty", zipfile); }
+
                 finally
                 {
                     foreach (string file in files)
                         al.Add(file);
                 }
             }
-            return al.ToArray(); //return all files of all zips
+
+            return al.ToArray();
         }
 
-        public string MoveTorrentFile(string file, string where)
+        public static string MoveTorrentFile(string file, string where)
         {
             string cslSaveFolder = null;
-            string fileName = null;
+            string filename;
 
-            fileName = this.GetFileName(file, true);
+            filename = DirectoryHandler.GetFileName(file, true);
 
             switch (where)
             {
                 case "handled":
-                    cslSaveFolder = settings.GetTorrentSaveFolder() + @"\[CSL] -- Handled Torrents\";
+                    cslSaveFolder = SettingsHandler.GetTorrentSaveFolder() + @"\[CSL] -- Handled Torrents\";
                     break;
                 case "unhandled":
-                    cslSaveFolder = settings.GetTorrentSaveFolder() + @"\[CSL] -- Unhandled Torrents\";
+                    cslSaveFolder = SettingsHandler.GetTorrentSaveFolder() + @"\[CSL] -- Unhandled Torrents\";
                     break;
                 default:
-                    cslSaveFolder = settings.GetTorrentSaveFolder() + '\\' + where + '\\';
+                    cslSaveFolder = SettingsHandler.GetTorrentSaveFolder() + '\\' + where + '\\';
                     break;
             }
             if (!Directory.Exists(cslSaveFolder))
-                Directory.CreateDirectory(cslSaveFolder);    
+                Directory.CreateDirectory(cslSaveFolder);
 
-            bool success = this.MoveFile(file, cslSaveFolder);
+            bool success = DirectoryHandler.MoveFile(file, cslSaveFolder);
 
             if (success)
-                return cslSaveFolder + fileName;
+                return cslSaveFolder + filename;
             else
-                return null;     
+                return null;
         }
-        public void MoveProcessedFiles(TorrentXMLHandler data)
+
+        //Remain unstatic in order to accomodate theading
+        public void MoveProcessedFiles(Torrent[] torrents) 
         {
             string filepath;
+            string[] zipFiles;
             bool skip = false;
-            int count = data.table.Rows.Count;
-            
-            foreach (DataRow datarow in data.table.Rows)
+            int total = TorrentXMLHandler.table.Rows.Count;
+            double progress = 0;
+            double count = 0;
+
+            ArrayList al = new ArrayList();
+
+            foreach (Torrent t in torrents)
             {
-                if (!datarow["File Path"].Equals(DBNull.Value))
+                DataRow dr = table.Rows.Find(t.GetFileName());
+                al.Add(dr);
+            }
+
+            //MOVE TORRENT FILES
+            foreach (object datarow in al)
+            {
+                DataRow dr = (DataRow)datarow;
+                if (!dr["File Path"].Equals(DBNull.Value))
                 {
-                    int index = data.table.Rows.IndexOf(datarow);
+                    int index = TorrentXMLHandler.table.Rows.IndexOf(dr);
+                    filepath = (string)dr["File Path"];
 
-                    filepath = (string)datarow["File Path"];
-
-                    if (filepath.Contains("[CSL] -- Unhandled Torrents") && (bool)datarow["Error"])
+                    if (filepath.Contains("[CSL] -- Unhandled Torrents") && (bool)dr["Error"])
                         skip = true;
-                    else if ((bool)datarow["Handled"])
+                    else if ((bool)dr["Handled"])
                         skip = true;
                     else
                         skip = false;
 
                     if (!skip)
                     {
-                        switch ((bool)datarow["Error"])
+                        switch ((bool)dr["Error"])
                         {
                             case true:
-                                data.table.Rows[index]["File Path"] = MoveTorrentFile((string)datarow["File Path"], "unhandled");
+                                filepath = MoveTorrentFile((string)dr["File Path"], "unhandled");
+                                if (filepath == null)
+                                {
+                                    TorrentXMLHandler.table.Rows[index]["File Path"] = "Problem moving file..";
+                                    TorrentXMLHandler.table.Columns["Error"].ReadOnly = false;
+                                    TorrentXMLHandler.table.Rows[index]["Error"] = true;
+                                    TorrentXMLHandler.table.Columns["Error"].ReadOnly = true;
+                                }
+                                else
+                                    TorrentXMLHandler.table.Rows[index]["File Path"] = filepath;
                                 break;
                             case false:
-                                data.table.Rows[index]["File Path"] = MoveTorrentFile((string)datarow["File Path"], "handled");
+                                filepath = MoveTorrentFile((string)dr["File Path"], "handled");
+                                if (filepath == null)
+                                {
+                                    TorrentXMLHandler.table.Rows[index]["File Path"] = "Problem moving file..";
+                                    TorrentXMLHandler.table.Columns["Error"].ReadOnly = false;
+                                    TorrentXMLHandler.table.Rows[index]["Error"] = true;
+                                    TorrentXMLHandler.table.Columns["Error"].ReadOnly = true;
+                                }
+                                else
+                                    TorrentXMLHandler.table.Rows[index]["File Path"] = filepath;
                                 break;
                             default:
-                                data.table.Rows[index]["File Path"] = MoveTorrentFile((string)datarow["File Path"], "unhandled");
+                                filepath = MoveTorrentFile((string)dr["File Path"], "handled");
+                                if (filepath == null)
+                                {
+                                    TorrentXMLHandler.table.Rows[index]["File Path"] = "Problem moving file..";
+                                    TorrentXMLHandler.table.Columns["Error"].ReadOnly = false;
+                                    TorrentXMLHandler.table.Rows[index]["Error"] = true;
+                                    TorrentXMLHandler.table.Columns["Error"].ReadOnly = true;
+                                }
+                                else
+                                    TorrentXMLHandler.table.Rows[index]["File Path"] = filepath;
                                 break;
                         }
                     }
                 }
-            }
-            data.Save();
 
-            string[] zipFiles = Directory.GetFiles(settings.GetTorrentSaveFolder(), "*.zip", SearchOption.TopDirectoryOnly);
+
+                progress = (++count / total) * 100;
+
+                if (progress <= 100 && progress >= 0)
+                    ReportProgress((int)progress);
+            }
+            TorrentXMLHandler.Save();
+            //MOVE ZIP FILES
+            zipFiles = Directory.GetFiles(SettingsHandler.GetTorrentSaveFolder(), "*.zip", SearchOption.TopDirectoryOnly);
 
             if (zipFiles != null && zipFiles.Length > 0)
             {
-                if (!Directory.Exists(settings.GetTorrentSaveFolder() + @"\[CSL] -- Processed Zips"))
-                    Directory.CreateDirectory(settings.GetTorrentSaveFolder() + @"\[CSL] -- Processed Zips");
+                if (!Directory.Exists(SettingsHandler.GetTorrentSaveFolder() + @"\[CSL] -- Processed Zips"))
+                    Directory.CreateDirectory(SettingsHandler.GetTorrentSaveFolder() + @"\[CSL] -- Processed Zips");
 
                 for (int a = 0; a < zipFiles.Length; a++)
                 {
-                    if(!File.Exists(settings.GetTorrentSaveFolder() + @"\[CSL] -- Processed Zips\" + zipFiles[a].Substring(zipFiles[a].LastIndexOf('\\') + 1)))
-                    File.Move(zipFiles[a], settings.GetTorrentSaveFolder() + @"\[CSL] -- Processed Zips\" + zipFiles[a].Substring(zipFiles[a].LastIndexOf('\\') + 1));
+                    if (!File.Exists(SettingsHandler.GetTorrentSaveFolder() + @"\[CSL] -- Processed Zips\" + zipFiles[a].Substring(zipFiles[a].LastIndexOf('\\') + 1)))
+                        File.Move(zipFiles[a], SettingsHandler.GetTorrentSaveFolder() + @"\[CSL] -- Processed Zips\" + zipFiles[a].Substring(zipFiles[a].LastIndexOf('\\') + 1));
                     else
-                    File.Delete(zipFiles[a]);
+                        File.Delete(zipFiles[a]);
                 }
             }
 
-            if (Directory.Exists(settings.GetTorrentSaveFolder() + @"\[CSL]--Temp"))
-                Directory.Delete(settings.GetTorrentSaveFolder() + @"\[CSL]--Temp", true);
+            if (Directory.Exists(SettingsHandler.GetTorrentSaveFolder() + @"\[CSL]--Temp"))
+                Directory.Delete(SettingsHandler.GetTorrentSaveFolder() + @"\[CSL]--Temp", true);
         }
-
     }
 }

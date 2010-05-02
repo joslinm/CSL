@@ -4,53 +4,122 @@ using System.Windows.Forms;
 using System.IO;
 using System.Collections;
 using System.Data;
+using System.Threading;
 
 namespace CSL_Test__1
 {
     public partial class MainWindow : Form
     {
-        TorrentXMLHandler data = new TorrentXMLHandler();
         uTorrentHandler utorrent = new uTorrentHandler();
         TorrentBuilder builder = new TorrentBuilder();
-        SettingsHandler settings = new SettingsHandler();
         TorrentBuilder tb = new TorrentBuilder();
+        OptionsWindow ow = new OptionsWindow();
         DirectoryHandler dh = new DirectoryHandler();
-        OptionsWindow ow;
-        public bool restart = false;
+        static System.Timers.Timer timer = new System.Timers.Timer();
+        DataGridViewHandler dgvh;
+        ArrayList al;
 
+        private Object lockingobject = new Object();
+
+        string[] files;
+        string[] torrents;
+        string[] zips;
+
+        delegate void ProcessTorrentsInvoker();
+
+        private void PerformClickProcessTorrents()
+        {
+            ProcessTorrentsButton.PerformClick();
+        }
         public MainWindow()
         {
             InitializeComponent();
-            ow = new OptionsWindow(data);
-            dataGridView.DataSource = data.table;
-            dataGridView.Columns["Site Origin"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-            dataGridView.Columns["Year"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-            dataGridView.Columns["Bitrate"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-            dataGridView.Columns["Release Format"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-            dataGridView.Columns["Bit Format"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-            dataGridView.Columns["Handled"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-            dataGridView.Columns["Error"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-            dataGridView.Columns["File Path"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            TorrentXMLHandler.Initialize(); //Initialize data source (read XML file)
+
+            timer.Interval = (double)SettingsHandler.GetAutoHandleTime();
+            timer.Elapsed += new System.Timers.ElapsedEventHandler(timer_Elapsed);
+            if(SettingsHandler.GetAutoHandleBool())
+                timer.Start();
+
+
+            Arrow.Visible = false;
+            StatusLabel.Visible = false;
+            ArrowText.Visible = false;
             notifyIcon.Visible = false;
+
+            dgvh = new DataGridViewHandler(dataGridView);
+
+            tb.RunWorkerCompleted += new RunWorkerCompletedEventHandler(tb_BuildCompleted);
+            tb.ProgressChanged += new ProgressChangedEventHandler(bw_ProgressChange);
+            dgvh.ProgressChanged += new ProgressChangedEventHandler(bw_ProgressChange);
+            dgvh.RunWorkerCompleted += new RunWorkerCompletedEventHandler(data_RunWorkerCompleted);
+            dh.ProgressChanged += new ProgressChangedEventHandler(bw_ProgressChange);
+            dh.RunWorkerCompleted += new RunWorkerCompletedEventHandler(dh_RunWorkerCompleted);
+        }
+
+        public static void UpdateTimer(bool active, decimal time)
+        {
+            if (active)
+            {
+                if (timer == null)
+                    timer = new System.Timers.Timer();
+
+                timer.Interval = (double)time;
+                if (!timer.Enabled)
+                    timer.Start();
+            }
+            else
+            {
+                timer.Stop();
+                timer.Close();
+            }
+        }
+
+        void timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            if (ProcessTorrentsButton.InvokeRequired)
+                this.Invoke(new ProcessTorrentsInvoker(PerformClickProcessTorrents));
+            else
+                ProcessTorrentsButton.PerformClick();
+        }
+
+        private void RefreshData()
+        {
+            lock (lockingobject)
+            {
+                dgvh = new DataGridViewHandler(dataGridView);
+                dgvh.ProgressChanged += new ProgressChangedEventHandler(bw_ProgressChange);
+                dgvh.RunWorkerCompleted += new RunWorkerCompletedEventHandler(data_RunWorkerCompleted);
+
+                dataGridViewProgressBar.Visible = false;
+                StatusLabel.Visible = false;
+
+                if (timer.Enabled == false)
+                    timer.Start();
+            }
         }
 
         private void MainWindow_FormClosing(object sender, FormClosingEventArgs e)
         {
-            data.Save();
-            ow.StopTorrentWatch();
+            timer.Stop();
+            timer.Close();
+            TorrentXMLHandler.Save();
+            this.Dispose();
         }
 
         private void dataGridView_DragDrop(object sender, DragEventArgs e)
         {
-            ArrayList al = new ArrayList();
-            string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+            al = new ArrayList();
+            files = (string[])e.Data.GetData(DataFormats.FileDrop);
+            dataGridViewProgressBar.Visible = true;
+            StatusLabel.Visible = true;
 
             foreach (string file in files)
             {
                 string extension = Path.GetExtension(file);
                 if (Path.GetExtension(file).Equals(".zip") || Path.GetExtension(file).Equals(".rar"))
                 {
-                    foreach (string unzipped in dh.UnzipFile(file))
+                    foreach (string unzipped in DirectoryHandler.UnzipFile(file))
                         al.Add(unzipped);
                 }
                 else if (Path.GetExtension(file).Equals(".torrent"))
@@ -59,54 +128,101 @@ namespace CSL_Test__1
                 }
             }
 
-            dataGridViewProgressBar.Visible = true;
-            tb.RunWorkerCompleted += new RunWorkerCompletedEventHandler(tb_DragDropCompleted);
-            tb.ProgressChanged += new ProgressChangedEventHandler(tb_DragDropProgress);
-            tb.RunWorkerAsync(al);
+            lock (lockingobject)
+            {
+                tb.RunWorkerAsync(al);
+            }
         }
 
-        void tb_DragDropProgress(object sender, ProgressChangedEventArgs e)
+        void data_DeleteProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             if (!(e.ProgressPercentage > 100 || e.ProgressPercentage < 0))
-            dataGridViewProgressBar.Value = e.ProgressPercentage;
+                dataGridViewProgressBar.Value = e.ProgressPercentage;
+
+            if ((e.ProgressPercentage % 10) == 0)
+                StatusLabel.Text = "Deleting torrents " + 10 * (e.ProgressPercentage / 10) + "%";
+            else
+                StatusLabel.Text += ".";
         }
 
-        void tb_DragDropCompleted(object sender, RunWorkerCompletedEventArgs e)
+        void bw_ProgressChange(object sender, ProgressChangedEventArgs e)
+        {
+            if (!(e.ProgressPercentage > 100 || e.ProgressPercentage < 0))
+                dataGridViewProgressBar.Value = e.ProgressPercentage;
+
+            if ((e.ProgressPercentage % 10) == 0)
+            {
+                string test = sender.ToString();
+                switch (test)
+                {
+                    case "CSL_Test__1.TorrentBuilder":
+                        StatusLabel.Text = "Building " + 10 * (e.ProgressPercentage / 10) + "%";
+                        break;
+                    case "CSL_Test__1.TorrentXMLHandler":
+                        StatusLabel.Text = "Adding torrents " + 10 * (e.ProgressPercentage / 10) + "%";
+                        break;
+                    case "CSL_Test__1.DirectoryHandler":
+                        StatusLabel.Text = "Moving files " + 10 * (e.ProgressPercentage / 10) + "%";
+                        break;
+                    default:
+                        StatusLabel.Text = "Working...";
+                        break;
+                }
+            }
+            else
+                StatusLabel.Text += ".";
+        }
+
+        void tb_BuildCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             if (e.Result != null)
             {
-                data.AddTorrents((Torrent[])e.Result);
                 builder.Dispose();
-                dh.MoveProcessedFiles(data);
-                dataGridViewProgressBar.Visible = false;
+                dgvh.RunWorkerAsync((Torrent[])e.Result);
             }
+        }
+
+        void data_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            dh.RunWorkerAsync((Torrent[])e.Result);
+        }
+
+        void dh_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            dataGridViewProgressBar.Visible = false;
+            StatusLabel.Visible = false;
+            RefreshData();
+        }
+
+        void data_DeleteWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            RefreshData();
+            dgvh.RunWorkerCompleted -= new RunWorkerCompletedEventHandler(data_DeleteWorkerCompleted);
         }
 
         private void dataGridView_DragEnter(object sender, DragEventArgs e)
         {
-            // make sure they're actually dropping files (not text or anything else)
+            // make sure they're actually dropping files
             if (e.Data.GetDataPresent(DataFormats.FileDrop, false) == true)
                 // allow them to continue
-                // (without this, the cursor stays a "NO" symbol
+                // (without this, the cursor stays a "NO" symbol)
                 e.Effect = DragDropEffects.All;
         }
 
         private void uTorrentSendAllButton_Click(object sender, EventArgs e)
         {
-            utorrent.SendAllTorrents(data);
-            dataGridView.Update();
+            uTorrentHandler.SendAllTorrents();
+            dgvh.dv.Update();
         }
 
         private void DeleteButton_Click(object sender, EventArgs e)
         {
-            if (settings.GetAutoHandleBool())
-                ow.StopThread();
-
-            lock (this)
-            {
-
-                DataGridViewSelectedRowCollection dr = dataGridView.SelectedRows;
-                DataGridViewSelectedCellCollection dc = dataGridView.SelectedCells;
+            dgvh.RunWorkerCompleted -= new RunWorkerCompletedEventHandler(data_RunWorkerCompleted);
+            dgvh.RunWorkerCompleted += new RunWorkerCompletedEventHandler(data_DeleteWorkerCompleted);
+            dgvh.RunWorkerAsync("Delete");
+           
+            dataGridViewProgressBar.Visible = true;
+                /*
                 if (dr.Count > 0)
                 {
                     foreach (DataGridViewRow r in dr)
@@ -114,7 +230,7 @@ namespace CSL_Test__1
                         dataGridView.Rows.Remove(r);
                     }
 
-                    data.Save();
+                    dgvh.Save();
                 }
                 else if (dc.Count > 0)
                 {
@@ -126,23 +242,19 @@ namespace CSL_Test__1
                         }
                     }
 
-                    data.Save();
+                    dgvh.Save();
                 }
 
-
                 dataGridView.Update();
-                data.Save();
-            }
-
-            if (settings.GetAutoHandleBool())
-                ow.StartThread();
+                dgvh.Save();*/
+            
         }
 
         private void MainWindow_Resize(object sender, EventArgs e)
         {
             if(this.WindowState == FormWindowState.Minimized)
             {
-                if (settings.GetMinimizeToTray())
+                if (SettingsHandler.GetMinimizeToTray())
                 {
                     Hide();
                     notifyIcon.Visible = true;
@@ -172,118 +284,44 @@ namespace CSL_Test__1
 
         private void ProcessTorrentsButton_Click(object sender, EventArgs e)
         {
-            ArrayList al = new ArrayList();
-            string[] torrents = dh.GetTorrents();
-            string[] zips = dh.GetTorrentZips();
-
-            if (torrents != null || zips != null)
+            lock (lockingobject)
             {
-                if (torrents != null)
-                {
-                    foreach (string torrent in torrents)
-                        al.Add(torrent);
-                }
+                al = new ArrayList();
+                torrents = DirectoryHandler.GetTorrents();
+                zips = DirectoryHandler.GetTorrentZips();
 
-                if (zips != null)
+                if (torrents != null || zips != null)
                 {
-                    object[] rawFiles = dh.UnzipFiles(zips);
-                    string[] ziptorrents = Array.ConvertAll<object, string>(rawFiles, Convert.ToString);
-                    foreach (string ziptorrent in ziptorrents)
-                        al.Add(ziptorrent);
-                }
+                    if (torrents != null)
+                    {
+                        foreach (string torrent in torrents)
+                            al.Add(torrent);
+                    }
 
-                dataGridViewProgressBar.Visible = true;
-                tb.RunWorkerCompleted += new RunWorkerCompletedEventHandler(tb_DragDropCompleted);
-                tb.ProgressChanged += new ProgressChangedEventHandler(tb_DragDropProgress);
-                tb.RunWorkerAsync(al);
+                    if (zips != null)
+                    {
+                        object[] rawFiles = DirectoryHandler.UnzipFiles(zips);
+                        string[] ziptorrents = Array.ConvertAll<object, string>(rawFiles, Convert.ToString);
+                        foreach (string ziptorrent in ziptorrents)
+                            al.Add(ziptorrent);
+                    }
+
+                    timer.Stop();
+                    dataGridViewProgressBar.Visible = true;
+                    StatusLabel.Visible = true;
+                    tb.RunWorkerAsync(al);
+                }
             }
         }
 
         private void RefreshButton_Click(object sender, EventArgs e)
         {
-            this.Refresh();
-            dataGridView.Refresh();
-            dataGridView.ScrollBars = ScrollBars.Both;
+            dgvh.Refresh();
         }
 
         private void uTorrentSendIndividualButton_Click(object sender, EventArgs e)
         {
-            DataGridViewSelectedRowCollection rc = dataGridView.SelectedRows;
-            DataGridViewSelectedCellCollection cc = dataGridView.SelectedCells;
-
-            if (rc.Count > 0)
-            {
-                foreach (DataGridViewRow r in rc)
-                {
-                    if (!(bool)r.Cells["Error"].Value && !(bool)r.Cells["Handled"].Value && !r.Cells["Save Structure"].Equals(DBNull.Value) && !r.Cells["File Path"].Equals(DBNull.Value))
-                    {
-                        string save = (string)r.Cells["Save Structure"].Value;
-                        string path = (string)r.Cells["File Path"].Value;
-
-                        string success = utorrent.SendTorrent(save, path);
-
-                        if (success.Equals("SUCCESS"))
-                        {
-                            data.table.Columns["Handled"].ReadOnly = false;
-                            r.Cells["Handled"].Value = true;
-                            data.table.Columns["Handled"].ReadOnly = true;
-                        }
-                        else
-                        {
-                            data.table.Columns["Error"].ReadOnly = false;
-                            r.Cells["Error"].Value = true;
-                            if (!success.Equals("uTorrent.exe does not exist"))
-                                r.Cells["Site Origin"].Value = success;
-                            data.table.Columns["Error"].ReadOnly = false;
-                        }
-                    }
-                }
-                
-            }
-            if (cc.Count > 0)
-            {
-                foreach (DataGridViewCell c in cc)
-                {
-                    if (!(bool)c.OwningRow.Cells["Error"].Value && !(bool)c.OwningRow.Cells["Handled"].Value && !c.OwningRow.Cells["Save Structure"].Value.Equals(DBNull.Value) && !c.OwningRow.Cells["File Path"].Value.Equals(DBNull.Value))
-                    {
-                        string save = (string)c.OwningRow.Cells["Save Structure"].Value;
-                        string path = (string)c.OwningRow.Cells["File Path"].Value;
-
-                        string success = utorrent.SendTorrent(save, path);
-                        if (success.Equals("SUCCESS"))
-                        {
-                            data.table.Columns["Handled"].ReadOnly = false;
-                            c.OwningRow.Cells["Handled"].Value = true;
-                            data.table.Columns["Handled"].ReadOnly = true;
-                        }
-                        else
-                        {
-                            data.table.Columns["Error"].ReadOnly = false;
-                            c.OwningRow.Cells["Error"].Value = true;
-                            c.OwningRow.Cells["File"].Value = success;
-                            data.table.Columns["Error"].ReadOnly = false;
-                        }
-                    }
-                    else
-                    {
-                        if (c.OwningRow.Cells["Save Structure"].Value.Equals(DBNull.Value))
-                        {
-                            c.OwningRow.Cells["Site Origin"].Value = "No save structure..";
-                            data.table.Columns["Error"].ReadOnly = false;
-                            c.OwningRow.Cells["Error"].Value = true;
-                            data.table.Columns["Error"].ReadOnly = false;
-                        }
-                        if (c.OwningRow.Cells["File Path"].Value.Equals(DBNull.Value))
-                        {
-                            c.OwningRow.Cells["Site Origin"].Value = "No file path..";
-                            data.table.Columns["Error"].ReadOnly = false;
-                            c.OwningRow.Cells["Error"].Value = true;
-                            data.table.Columns["Error"].ReadOnly = false;
-                        }
-                    }
-                }
-                
-            }
+            
         }
 
         private void dataGridView_KeyUp(object sender, KeyEventArgs e)
@@ -292,68 +330,24 @@ namespace CSL_Test__1
                 DeleteButton_Click(sender, e);
         }
 
-        private void dataGridView_CurrentCellDirtyStateChanged(object sender, EventArgs e)
-        {
-            if (dataGridView.IsCurrentCellDirty)
-            {
-                if(dataGridView.CurrentCell.OwningColumn.Name.Equals("Save Structure"))
-                    dataGridView.CommitEdit(DataGridViewDataErrorContexts.Commit);
-                else if (!dataGridView.CurrentCell.ReadOnly)
-                {
-                    dataGridView.CommitEdit(DataGridViewDataErrorContexts.Commit);
-
-                    string[] information = new string[7];
-                    DataGridViewCellCollection dc = dataGridView.CurrentCell.OwningRow.Cells;
-                    foreach (DataGridViewCell c in dc)
-                    {
-                        switch (c.OwningColumn.Name)
-                        {
-                                /* information
-                                 * 0: artist
-                                 * 1: album
-                                 * 2: release format
-                                 * 3: bitrate
-                                 * 4: year
-                                 * 5: physical format
-                                 * 6: bit format
-                                 * */
-                            case "Artist":
-                                information[0] = (c.Value.Equals(DBNull.Value))? "" : (string)c.Value;
-                                break;
-                            case "Album":
-                                information[1] = (c.Value.Equals(DBNull.Value)) ? "" : (string)c.Value;
-                                break;
-                            case "Release Format":
-                                information[2] = (c.Value.Equals(DBNull.Value)) ? "" : (string)c.Value;
-                                break;
-                            case "Bitrate":
-                                information[3] = (c.Value.Equals(DBNull.Value)) ? "" : (string)c.Value;
-                                break;
-                            case "Year":
-                                information[4] = (c.Value.Equals(DBNull.Value)) ? "" : (string)c.Value;
-                                break;
-                            case "Physical Format":
-                                information[5] = (c.Value.Equals(DBNull.Value)) ? "" : (string)c.Value;
-                                break;
-                            case "Bit Format":
-                                information[6] = (c.Value.Equals(DBNull.Value)) ? "" : (string)c.Value;
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-                        
-                    string newSavePath = tb.RebuildCustomPath(information);
-                    dataGridView["Save Structure", dataGridView.CurrentCell.OwningRow.Index].Value = newSavePath;
-                }
-            }
-        }
-
         private void notifyIcon_MouseClick(object sender, MouseEventArgs e)
         {
             Show();
             WindowState = FormWindowState.Normal;
             notifyIcon.Visible = false;
+        }
+
+        private void DeleteButton_MouseEnter(object sender, EventArgs e)
+        {
+            RefreshButton.Visible = false;
+            Arrow.Visible = true;
+            ArrowText.Visible = true;
+        }
+        private void DeleteButton_MouseLeave(object sender, EventArgs e)
+        {
+            RefreshButton.Visible = true;
+            ArrowText.Visible = false;
+            Arrow.Visible = false;
         }
     }
 }

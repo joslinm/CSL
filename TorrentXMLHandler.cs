@@ -5,30 +5,34 @@ using System.Text;
 using System.IO;
 using System.Data;
 using System.Xml;
+using System.ComponentModel;
+using System.Windows.Forms;
+using System.Reflection;
 
 namespace CSL_Test__1
 {
-    public class TorrentXMLHandler
+    public class TorrentXMLHandler : BackgroundWorker
     {
+        public static DataSet dataset;
+        public static DataTable table;
+        private static FileStream xmlStream;
+        private Object obj = new Object();
         static string xmlDataName = "torrents.xml";
         static string xmlSchemaName = "torrentschema.xml";
-        static string xmlUpdateURL = "csl_update.xml";
         static string xmlDataPath = Directory.GetCurrentDirectory() + @"\" + xmlDataName;
         static string xmlSchemaPath = Directory.GetCurrentDirectory() + @"\" + xmlSchemaName;
 
-        static FileStream xmlStream;
-        DirectoryHandler dh = new DirectoryHandler();
-
-        public DataSet dataset;
-        public DataTable table;
+        private BindingSource bs = new BindingSource();
 
         public TorrentXMLHandler()
         {
-            if (dataset == null && table == null)
-                Initialize();
+            WorkerReportsProgress = true;
+            WorkerSupportsCancellation = true;
         }
-        public void Initialize()
+        static public void Initialize()
         {
+            DataColumn column;
+
             if (File.Exists(xmlSchemaName))
             {
                 dataset = new DataSet();
@@ -41,8 +45,7 @@ namespace CSL_Test__1
             {
                 dataset = new DataSet("TorrentSet");
                 table = new DataTable("Torrent");
-                DataColumn column;
-
+                
                 table.Columns.Add("Site Origin", typeof(string));
                 table.Columns.Add("Artist", typeof(string));
                 table.Columns.Add("Album", typeof(string));
@@ -90,73 +93,26 @@ namespace CSL_Test__1
                     xmlStream.Close();
                 }
             }
-            //CHECK FOR PROGRAM UPDATE
-            Version newVersion = null;
-            string url = "";
-            XmlTextReader reader = null;
-            try
-            {
-                reader = new XmlTextReader(xmlUpdateURL);
-                reader.MoveToContent();
-                string elementName = "";
-                if ((reader.NodeType == XmlNodeType.Element) && (reader.Name == "CSL_UPDATE"))
-                {
-                    while (reader.Read())
-                    {
-                        // when we find an element node,  
-                        // we remember its name  
-                        if (reader.NodeType == XmlNodeType.Element)
-                            elementName = reader.Name;
-                        else
-                        { 
-                            if ((reader.NodeType == XmlNodeType.Text) &&
-                                (reader.HasValue))
-                            { 
-                                switch (elementName)
-                                {
-                                    case "version":
-                                        // thats why we keep the version info  
-                                        // in xxx.xxx.xxx.xxx format  
-                                        // the Version class does the  
-                                        // parsing for us  
-                                        newVersion = new Version(reader.Value);
-                                        break;
-                                    case "url":
-                                        url = reader.Value;
-                                        break;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            catch{ }
-            finally
-            {
-                if (reader != null) reader.Close();
-            }
-
-            // get the running version  
-            Version curVersion =
-             System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
-            // compare the versions  
-            if (curVersion.CompareTo(newVersion) < 0)
-            {
-                //ASK USER TO UPDATE
-            }  
-
         }
-        public void Save()
+
+        static public void Save()
         {
             dataset.AcceptChanges();
 
-            if (xmlStream != null)
+            if (xmlStream.Name == xmlDataName)
+            {
+                dataset.WriteXml(xmlStream);
+            }
+            else
+            {
                 xmlStream.Close();
+                xmlStream = new FileStream(xmlDataName, FileMode.OpenOrCreate);
+                dataset.WriteXml(xmlStream);
+            }
 
-            xmlStream = new FileStream(xmlDataName, FileMode.OpenOrCreate);
-            dataset.WriteXml(xmlStream);
             xmlStream.Close();
         }
+
         public void AddTorrents(Torrent[] torrents)
         {
             #region Information Contents
@@ -179,16 +135,12 @@ namespace CSL_Test__1
          * information[14] --> discard
          * */
             #endregion
-
-            DataRow row;
-            string[] information;
-            string filename;
-            string currentfilename;
+            
 
             foreach (Torrent torrent in torrents)
             {
-                information = torrent.GetInformation();
-
+                string[] information = torrent.GetInformation();
+                DataRow row;
                 row = table.NewRow();
                 row["File"] = information[11]; 
                 row["Artist"] = information[0];
@@ -204,14 +156,18 @@ namespace CSL_Test__1
                 row["File Path"] = information[10];
                 row["Site Origin"] = (information[14] == "true") ? "Discarded" : information[12];
 
-                currentfilename = torrent.GetFileName();
-
-                DataRow dr = table.Rows.Find(currentfilename);
-                if (dr != null)
+                string currentfilename = torrent.GetFileName();
+                lock (obj)
                 {
-                    table.Rows[table.Rows.IndexOf(dr)].Delete();
+                    DataRow dr = table.Rows.Find(currentfilename);
+                    if (dr != null)
+                    {
+                        table.Rows[table.Rows.IndexOf(dr)].Delete();
+                    }
+
+                    table.Rows.Add(row);
                 }
-                table.Rows.Add(row);
+
             }
 
             table.AcceptChanges();

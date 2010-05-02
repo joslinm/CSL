@@ -9,13 +9,36 @@ namespace CSL_Test__1
     {
         static SettingsFile settings = new SettingsFile();
 
-        public void Save()
+        public SettingsHandler()
+        {
+            try
+            {
+                if (!(settings.CurrentVersion.Equals(System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString())))
+                {
+                    UpdatedInformationWindow uw = new UpdatedInformationWindow();
+                    uw.ShowDialog();
+                    settings.CurrentVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
+                }
+            }
+            catch (StackOverflowException){ }
+        }
+        public static void Save()
         {
             settings.Save();
         }
 
         #region Set Options
-        public void SetReleaseFormatName(string format, string name)
+        public static void SetDeleteTheFolderNames(bool value)
+        {
+            settings.DeleteTheFolderNames = value;
+            settings.Save();
+        }
+        public static void SetSkipReleaseFormatCheck(bool value)
+        {
+            settings.SkipReleaseFormatCheck = value;
+            settings.Save();
+        }
+        public static void SetReleaseFormatName(string format, string name)
         {
             for (int a = 0; a < settings.ReleaseFormatNames.Count; a++)
             {
@@ -29,7 +52,7 @@ namespace CSL_Test__1
 
             settings.Save();
         }
-        public void SetBitrateName(string bitrate, string name)
+        public static void SetBitrateName(string bitrate, string name)
         {
             for (int a = 0; a < settings.BitrateNames.Count; a++)
             {
@@ -43,114 +66,146 @@ namespace CSL_Test__1
 
             settings.Save();
         }
-        public void SetTrackTorrents(bool value)
+        public static void SetTrackTorrents(bool value)
         {
             settings.TrackTorrentFiles = value;
             settings.Save();
         }
-        public void SetTrackZips(bool value)
+        public static void SetTrackZips(bool value)
         {
             settings.TrackZipFiles = value;
             settings.Save();
         }
-        public void SetRemoveDoubleSpaces(bool value)
+        public static void SetRemoveDoubleSpaces(bool value)
         {
             settings.RemoveDoubleSpaces = value;
             settings.Save();
         }
-        public void SetAutoHandleBool(bool value)
+        public static void SetAutoHandleBool(bool value)
         {
             settings.AutoCheck = value;
             settings.Save();
         }
-        public void SetAutoHandleTime(decimal value)
+        public static void SetAutoHandleTime(decimal value)
         {
             settings.AutoCheckTime = value;
             settings.Save();
         }
-        public void SetArtistFlip(bool value)
+        public static void SetArtistFlip(bool value)
         {
             settings.ArtistFlip = value;
             settings.Save();
         }
 
-        public void SetDisableNotifications(bool value)
+        public static void SetDisableNotifications(bool value)
         {
             settings.DisableNotifications = value;
             settings.Save();
         }
+
+        public static void SetRawHandleTime(decimal time)
+        {
+            settings.RawHandleTime = time;
+            settings.Save();
+        }
         
-        public void SetDeleteZipFiles(bool value)
+        public static void SetDeleteZipFiles(bool value)
         {
             settings.DeleteZipFiles = value;
             settings.Save();
         }
-        public void AddDownloadFormat(string value)
+        public static void AddDownloadFormat(string value)
         {
             if (!settings.DownloadFormats.Contains(value))
                 settings.DownloadFormats += " " + value;
 
             settings.Save();
         }
-        public void RemoveDownloadFormat(string value)
+        public static void RemoveDownloadFormat(string value)
         {
             if (settings.DownloadFormats.Contains(value))
                 settings.DownloadFormats = settings.DownloadFormats.Replace(value, "");
 
             settings.Save();
         }
-        public void SetUppercaseAllFolderNames(bool value)
+        public static void SetUppercaseAllFolderNames(bool value)
         {
             settings.UppercaseAllFolderNames = value;
             settings.Save();
         }
-        public void SetLowercaseAllFolderNames(bool value)
+        public static void SetLowercaseAllFolderNames(bool value)
         {
             settings.LowercaseAllFolderNames = value;
             settings.Save();
         }
 
-        public void SetTorrentClient(string value)
+        public static void SetTorrentClient(string value)
         {
             settings.TorrentClient = value;
             settings.Save();
         }
-        public void SetTorrentClientFolder(string value)
+        public static void SetTorrentClientFolder(string value)
         {
             settings.TorrentClientFolder = value;
             settings.Save();
         }
-        public void SetTorrentSaveFolder(string value)
+        public static void SetTorrentSaveFolder(string value)
         {
             settings.TorrentSaveFolder = value;
             settings.Save();
         }
-        public void SetDownloadFolder(string value)
+        public static void SetDownloadFolder(string value)
         {
             settings.DownloadFolder = value;
             settings.Save();
         }
-        public void SetCustomDirectory(string value)
+        public static void SetCustomDirectory(string value)
         {
             settings.CustomDirectory = value;
             settings.Save();
         }
-        public void SetMinimizeToTray(bool value)
+        public static void SetMinimizeToTray(bool value)
         {
             settings.MinimizeToTray = value;
             settings.Save();
         }
+        public static void SetHandleLoneTsAsAlbums(bool value)
+        {
+            settings.ProcessLoneTsAlbums = value;
+            settings.Save();
+        }
+        public static void SetTimeFormat(string value)
+        {
+            settings.TimeFormat = value;
+            settings.Save();
+        }
         #endregion
         #region Get Options
-        public bool GetTrackZips()
+        public static string GetTimeFormat()
+        {
+            return settings.TimeFormat;
+        }
+        public static decimal GetRawHandleTime()
+        {
+            return settings.RawHandleTime;
+        }
+        public static bool GetDeleteThe()
+        {
+            return settings.DeleteTheFolderNames;
+        }
+        public static bool GetTrackZips()
         {
             return settings.TrackZipFiles;
         }
-        public bool GetTrackTorrents()
+        public static bool GetTrackTorrents()
         {
             return settings.TrackTorrentFiles;
         }
-        public string GetReleaseFormat(string format)
+        public static bool GetHandleLoneTAsAlbum()
+        {
+            return settings.ProcessLoneTsAlbums;
+        }
+        public static string GetReleaseFormat(string format)
         {
             for (int a = 0; a < settings.ReleaseFormatNames.Count; a++)
             {
@@ -164,7 +219,7 @@ namespace CSL_Test__1
 
             return format;
         }
-        public string GetBitrate(string bitrate)
+        public static string GetBitrate(string bitrate)
         {
             for (int a = 0; a < settings.BitrateNames.Count; a++)
             {
@@ -179,72 +234,76 @@ namespace CSL_Test__1
             return bitrate;
         }
 
-        public bool GetDoubleSpaceRemoval()
+        public static bool GetDoubleSpaceRemoval()
         {
             return settings.RemoveDoubleSpaces;
         }
-        public bool GetArtistFlip()
+        public static bool GetArtistFlip()
         {
             return settings.ArtistFlip;
         }
-        public bool GetDeleteZipFiles()
+        public static bool GetDeleteZipFiles()
         {
             return settings.DeleteZipFiles;
         }
-        public bool GetDisableNotifications()
+        public static bool GetDisableNotifications()
         {
             return settings.DisableNotifications;
         }
-        public bool GetMinimizeToTray()
+        public static bool GetMinimizeToTray()
         {
             return settings.MinimizeToTray;
         }
-        public bool GetDownloadFormatExists(string format)
+        public static bool GetDownloadFormatExists(string format)
         {
             if (settings.DownloadFormats.Contains(format))
                 return true;
             else
                 return false;
         }
-        public bool GetUppercaseAllFolderNames()
+        public static bool GetUppercaseAllFolderNames()
         {
             return settings.UppercaseAllFolderNames;
         }
-        public bool GetLowercaseAllFolderNames()
+        public static bool GetLowercaseAllFolderNames()
         {
             return settings.LowercaseAllFolderNames;
         }
-        public string GetTorrentClient()
+        public static string GetTorrentClient()
         {
             return settings.TorrentClient;
         }
-        public string GetTorrentClientFolder()
+        public static string GetTorrentClientFolder()
         {
             return settings.TorrentClientFolder;
         }
-        public string GetDownloadDirectory()
+        public static string GetDownloadDirectory()
         {
             return settings.DownloadFolder;
         }
-        public string GetTorrentSaveFolder()
+        public static string GetTorrentSaveFolder()
         {
             return settings.TorrentSaveFolder;
         }
-        public string GetDownloadFolder()
+        public static string GetDownloadFolder()
         {
             return settings.DownloadFolder;
         }
-        public string GetCustomDirectory()
+        public static string GetCustomDirectory()
         {
             return settings.CustomDirectory;
         }
-        public bool GetAutoHandleBool()
+        public static bool GetAutoHandleBool()
         {
             return settings.AutoCheck;
         }
-        public decimal GetAutoHandleTime()
+        public static decimal GetAutoHandleTime()
         {
             return settings.AutoCheckTime;
+        }
+        public static bool GetSkipReleaseCheck()
+        {
+            return settings.SkipReleaseFormatCheck;
         }
         #endregion
 

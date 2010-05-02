@@ -9,7 +9,7 @@ namespace CSL_Test__1
     {
         /// <summary>
         /// The main entry point for the application.
-        /// </summary>j
+        /// </summary>
         [STAThread]
         static void Main()
         {

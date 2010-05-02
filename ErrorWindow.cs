@@ -14,10 +14,14 @@ namespace CSL_Test__1
 {
     public partial class ErrorWindow : Form
     {
+        static DirectoryHandler DirectoryHandler = new DirectoryHandler(); //Prevent infinite loop between DirectoryHandler & ErrorWindow
+
+        int s_index;
+        int e_index;
+
         bool discard = false;
         static string applyToAll = "";
-        DirectoryHandler dh = new DirectoryHandler();
-
+        
         public ErrorWindow()
         {
             InitializeComponent();
@@ -49,8 +53,8 @@ namespace CSL_Test__1
         {
             if (applyToAll.Contains("CSL::YEAR|"))
             {
-                int s_index = applyToAll.IndexOf("CSL::YEAR|") + 10;
-                int e_index = applyToAll.IndexOf("***", s_index);
+                s_index = applyToAll.IndexOf("CSL::YEAR|") + 10;
+                e_index = applyToAll.IndexOf("***", s_index);
                 return applyToAll.Substring(s_index, e_index - s_index);
             }
 
@@ -59,14 +63,17 @@ namespace CSL_Test__1
 
             SelectionTextBox.Show();
             OkButton.Enabled = false; //Will enable when key is pressed
-            FileNameLabel.Text = dh.GetFileName(file, true);
+            FileNameLabel.Text = DirectoryHandler.GetFileName(file, true);
             FilePathRichTextBox.Text = file;
 
             this.Activate();
             this.ShowDialog();
 
             if (discard)
+            {
+                discard = false; //To ensure future Issues aren't discarded
                 return null;
+            }
             else
             {
                 if (ApplyToAllCheck.Checked)
@@ -79,8 +86,8 @@ namespace CSL_Test__1
         {
             if (applyToAll.Contains("CSL::ARTIST|"))
             {
-                int s_index = applyToAll.IndexOf("CSL::ARTIST|") + 12;
-                int e_index = applyToAll.IndexOf("***", s_index);
+                s_index = applyToAll.IndexOf("CSL::ARTIST|") + 12;
+                e_index = applyToAll.IndexOf("***", s_index);
                 return applyToAll.Substring(s_index, e_index - s_index);
             }
 
@@ -89,14 +96,17 @@ namespace CSL_Test__1
 
             SelectionTextBox.Show();
             OkButton.Enabled = false; //Will enable when key is pressed
-            FileNameLabel.Text = dh.GetFileName(file, true);
+            FileNameLabel.Text = DirectoryHandler.GetFileName(file, true);
             FilePathRichTextBox.Text = file;
             
             this.Activate();
             this.ShowDialog();
 
             if (discard)
+            {
+                discard = false; //To ensure future Issues aren't discarded
                 return null;
+            }
             else
             {
                 if (ApplyToAllCheck.Checked)
@@ -109,8 +119,8 @@ namespace CSL_Test__1
         {
             if (applyToAll.Contains("CSL::ALBUM|"))
             {
-                int s_index = applyToAll.IndexOf("CSL::ALBUM|") + 11;
-                int e_index = applyToAll.IndexOf("***", s_index);
+                  s_index = applyToAll.IndexOf("CSL::ALBUM|") + 11;
+                  e_index = applyToAll.IndexOf("***", s_index);
                 return applyToAll.Substring(s_index, e_index - s_index);
             }
 
@@ -119,14 +129,17 @@ namespace CSL_Test__1
 
             SelectionTextBox.Show();
             OkButton.Enabled = false; //Will enable when key is pressed
-            FileNameLabel.Text = dh.GetFileName(file, true);
+            FileNameLabel.Text = DirectoryHandler.GetFileName(file, true);
             FilePathRichTextBox.Text = file;
             
             this.Activate();
             this.ShowDialog();
 
             if (discard)
+            {
+                discard = false; //To ensure future Issues aren't discarded
                 return null;
+            }
             else
             {
                 if (ApplyToAllCheck.Checked)
@@ -139,8 +152,8 @@ namespace CSL_Test__1
         {
             if (applyToAll.Contains("CSL::RELEASEF|"))
             {
-                int s_index = applyToAll.IndexOf("CSL::RELEASEF|") + 14;
-                int e_index = applyToAll.IndexOf("***", s_index);
+                  s_index = applyToAll.IndexOf("CSL::RELEASEF|") + 14;
+                  e_index = applyToAll.IndexOf("***", s_index);
                 return applyToAll.Substring(s_index, e_index - s_index);
             }
 
@@ -148,14 +161,17 @@ namespace CSL_Test__1
             InstructionalLabel.Text = "Please select a release format below";
 
             ReleaseSelectionComboBox.Show();
-            FileNameLabel.Text = dh.GetFileName(file, true);
+            FileNameLabel.Text = DirectoryHandler.GetFileName(file, true);
             FilePathRichTextBox.Text = file;
             
             this.Activate();
             this.ShowDialog();
 
             if (discard)
+            {
+                discard = false; //To ensure future Issues aren't discarded
                 return null;
+            }
             else
             {
                 if (ApplyToAllCheck.Checked)
@@ -169,8 +185,8 @@ namespace CSL_Test__1
         {
             if (applyToAll.Contains("CSL::PHYSICALF|"))
             {
-                int s_index = applyToAll.IndexOf("CSL::PHYSICALF|") + 15;
-                int e_index = applyToAll.IndexOf("***", s_index);
+                  s_index = applyToAll.IndexOf("CSL::PHYSICALF|") + 15;
+                  e_index = applyToAll.IndexOf("***", s_index);
                 return applyToAll.Substring(s_index, e_index - s_index);
             }
 
@@ -178,14 +194,17 @@ namespace CSL_Test__1
             InstructionalLabel.Text = "Please select a physical format below";
 
             PhysicalFormatSelectionComboBox.Show();
-            FileNameLabel.Text = dh.GetFileName(file, true);
+            FileNameLabel.Text = DirectoryHandler.GetFileName(file, true);
             FilePathRichTextBox.Text = file;
 
             this.Activate();
             this.ShowDialog();
 
             if (discard)
+            {
+                discard = false; //To ensure future Issues aren't discarded
                 return null;
+            }
             else
             {
                 if (ApplyToAllCheck.Checked)
@@ -198,8 +217,8 @@ namespace CSL_Test__1
         {
             if (applyToAll.Contains("CSL::BITF|"))
             {
-                int s_index = applyToAll.IndexOf("CSL::BITF|") + 10;
-                int e_index = applyToAll.IndexOf("***", s_index);
+                  s_index = applyToAll.IndexOf("CSL::BITF|") + 10;
+                  e_index = applyToAll.IndexOf("***", s_index);
                 return applyToAll.Substring(s_index, e_index - s_index);
             }
 
@@ -207,14 +226,17 @@ namespace CSL_Test__1
             InstructionalLabel.Text = "Please select a bit format below";
 
             BitformatSelectionComboBox.Show();
-            FileNameLabel.Text = dh.GetFileName(file, true);
+            FileNameLabel.Text = DirectoryHandler.GetFileName(file, true);
             FilePathRichTextBox.Text = file;
 
             this.Activate();
             this.ShowDialog();
 
             if (discard)
+            {
+                discard = false; //To ensure future Issues aren't discarded
                 return null;
+            }
             else
             {
                 if (ApplyToAllCheck.Checked)
@@ -227,8 +249,8 @@ namespace CSL_Test__1
         {
             if (applyToAll.Contains("CSL::BITR|"))
             {
-                int s_index = applyToAll.IndexOf("CSL::BITR|") + 10;
-                int e_index = applyToAll.IndexOf("***", s_index);
+                  s_index = applyToAll.IndexOf("CSL::BITR|") + 10;
+                  e_index = applyToAll.IndexOf("***", s_index);
                 return applyToAll.Substring(s_index, e_index - s_index);
             }
 
@@ -236,14 +258,17 @@ namespace CSL_Test__1
             InstructionalLabel.Text = "Please select a bitrate below";
 
             BitrateSelectionComboBox.Show();
-            FileNameLabel.Text = dh.GetFileName(file, true);
+            FileNameLabel.Text = DirectoryHandler.GetFileName(file, true);
             FilePathRichTextBox.Text = file;
 
             this.Activate();
             this.ShowDialog();
 
             if (discard)
+            {
+                discard = false; //To ensure future Issues aren't discarded
                 return null;
+            }
             else
             {
                 if (ApplyToAllCheck.Checked)
@@ -256,22 +281,25 @@ namespace CSL_Test__1
         {
             if (applyToAll.Contains("CSL::BIRTH|"))
             {
-                int s_index = applyToAll.IndexOf("CSL::BIRTH|") + 11;
-                int e_index = applyToAll.IndexOf("***", s_index);
+                  s_index = applyToAll.IndexOf("CSL::BIRTH|") + 11;
+                  e_index = applyToAll.IndexOf("***", s_index);
                 return applyToAll.Substring(s_index, e_index - s_index);
             }
 
             ErrorLabel.Text = "CSL doesn't know which site this torrent came from";
             InstructionalLabel.Text = "Please select a torrent site below";
-            FileNameLabel.Text = dh.GetFileName(file, true);
+            FileNameLabel.Text = DirectoryHandler.GetFileName(file, true);
             FilePathRichTextBox.Text = file;
 
             BirthSelectionComboBox.Show();
             this.Activate();
             this.ShowDialog();
 
-           if (discard)
+            if (discard)
+            {
+                discard = false; //To ensure future Issues aren't discarded
                 return null;
+            }
             else
             {
                 if (ApplyToAllCheck.Checked)
@@ -288,7 +316,7 @@ namespace CSL_Test__1
             SelectionTextBox.Show();
             SelectionTextBox.Text = destPath;
             OkButton.Enabled = false; //Will enable when key is pressed
-            FileNameLabel.Text = dh.GetFileName(file, true);
+            FileNameLabel.Text = DirectoryHandler.GetFileName(file, true);
             FilePathRichTextBox.Text = file;
 
             this.Activate();
@@ -303,7 +331,7 @@ namespace CSL_Test__1
 
             SelectionTextBox.Show();
             SelectionTextBox.Text = artist;
-            FileNameLabel.Text = dh.GetFileName(file, true);
+            FileNameLabel.Text = DirectoryHandler.GetFileName(file, true);
             FilePathRichTextBox.Text = file;
 
             this.Text = "[CSL] -- Warning";
@@ -311,7 +339,10 @@ namespace CSL_Test__1
             this.ShowDialog();
 
             if (discard)
+            {
+                discard = false; //To ensure future Issues aren't discarded
                 return null;
+            }
             else
                 return SelectionTextBox.Text;
         }
@@ -322,7 +353,7 @@ namespace CSL_Test__1
 
             SelectionTextBox.Show();
             SelectionTextBox.Text = album;
-            FileNameLabel.Text = dh.GetFileName(file, true);
+            FileNameLabel.Text = DirectoryHandler.GetFileName(file, true);
             FilePathRichTextBox.Text = file;
 
             this.Text = "[CSL] -- Warning";
@@ -330,7 +361,10 @@ namespace CSL_Test__1
             this.ShowDialog();
 
             if (discard)
+            {
+                discard = false; //To ensure future Issues aren't discarded
                 return null;
+            }
             else
                 return SelectionTextBox.Text;
         }
@@ -341,7 +375,7 @@ namespace CSL_Test__1
 
             SelectionTextBox.Show();
             SelectionTextBox.Text = year;
-            FileNameLabel.Text = dh.GetFileName(file, true);
+            FileNameLabel.Text = DirectoryHandler.GetFileName(file, true);
             FilePathRichTextBox.Text = file;
 
             this.Text = "[CSL] -- Warning";
@@ -349,7 +383,10 @@ namespace CSL_Test__1
             this.ShowDialog();
 
             if (discard)
+            {
+                discard = false; //To ensure future Issues aren't discarded
                 return null;
+            }
             else
                 return SelectionTextBox.Text;
             
@@ -359,9 +396,8 @@ namespace CSL_Test__1
             InstructionalLabel.Text = "The file could not be moved";
                 ErrorLabel.Text = "Please manually delete or move it";
 
-
             FilePathRichTextBox.Text = file;
-            FileNameLabel.Text = dh.GetFileName(file, true);
+            FileNameLabel.Text = DirectoryHandler.GetFileName(file, true);
 
             this.Text = "[CSL] -- Warning";
             this.Activate();
@@ -371,10 +407,11 @@ namespace CSL_Test__1
         {
             InstructionalLabel.Text = message;
             ErrorLabel.Text = submessage;
+            DiscardButton.Visible = false;
             if (file != null)
             {
                 FilePathRichTextBox.Text = file;
-                FileNameLabel.Text = dh.GetFileName(file, true);
+                FileNameLabel.Text = DirectoryHandler.GetFileName(file, true);
             }
             this.Text = "[CSL] -- Warning";
             this.Activate();
@@ -384,10 +421,27 @@ namespace CSL_Test__1
         private void DiscardButton_Click(object sender, EventArgs e)
         {
             discard = true;
+            //Reset all to hidden -- the issues choose which one to show
+            SelectionTextBox.Visible = false;
+            ReleaseSelectionComboBox.Visible = false;
+            BitformatSelectionComboBox.Visible = false;
+            BitrateSelectionComboBox.Visible = false;
+            BirthSelectionComboBox.Visible = false;
+            PhysicalFormatSelectionComboBox.Visible = false;
+
             this.Hide();
         }
         private void OkButton_Click(object sender, EventArgs e)
         {
+            DiscardButton.Visible = true;
+            //Reset all to hidden -- the issues choose which one to show
+            SelectionTextBox.Visible = false;
+            ReleaseSelectionComboBox.Visible = false;
+            BitformatSelectionComboBox.Visible = false;
+            BitrateSelectionComboBox.Visible = false;
+            BirthSelectionComboBox.Visible = false;
+            PhysicalFormatSelectionComboBox.Visible = false;
+
             this.Hide();
         }
 

@@ -8,30 +8,31 @@ using System.Data;
 
 namespace CSL_Test__1
 {
-    class uTorrentHandler
+    class uTorrentHandler : DataGridViewHandler
     {
-        SettingsHandler settings = new SettingsHandler();
-        DirectoryHandler dh = new DirectoryHandler();
+        ErrorWindow ew = new ErrorWindow();
+        private Object locker = new Object();
 
-        public void SendAllTorrents(TorrentXMLHandler xml)
+        public static void SendAllTorrents()
         {
-            if (!dh.GetFileExists(settings.GetTorrentClientFolder() + "\\uTorrent.exe"))
+            ErrorWindow ew = new ErrorWindow();
+
+            if (!DirectoryHandler.GetFileExists(SettingsHandler.GetTorrentClientFolder() + "\\uTorrent.exe"))
             {
-                ErrorWindow ew = new ErrorWindow();
                 ew.IssueGeneralWarning("Be sure uTorrent folder is correct", "uTorrent.exe does not exist", null);
             }
             else
             {
-                xml.table.Columns["Handled"].ReadOnly = false;
-                xml.table.Columns["Error"].ReadOnly = false;
+                table.Columns["Handled"].ReadOnly = false;
+                table.Columns["Error"].ReadOnly = false;
 
-                foreach (DataRow row in xml.dataset.Tables[0].Rows)
+                foreach (DataRow row in dataset.Tables[0].Rows)
                 {
                     try
                     {
                         if (!(bool)row["Error"] && !(bool)row["Handled"] && !row["File Path"].Equals(DBNull.Value))
                         {
-                            if (dh.GetFileExists((string)row["File Path"]))
+                            if (DirectoryHandler.GetFileExists((string)row["File Path"]))
                             {
                                 try
                                 {
@@ -40,9 +41,9 @@ namespace CSL_Test__1
 
                                     string fullArgument = "/directory " + "\"" + row["Save Structure"] + "\" "
                                         + "\"" + row["File Path"] + "\"";
-                                    sendTorrentProcess.StartInfo.WorkingDirectory = settings.GetTorrentClientFolder();
+                                    sendTorrentProcess.StartInfo.WorkingDirectory = SettingsHandler.GetTorrentClientFolder();
                                     sendTorrentProcess.StartInfo.Arguments = fullArgument;
-                                    sendTorrentProcess.StartInfo.FileName = settings.GetTorrentClient();
+                                    sendTorrentProcess.StartInfo.FileName = SettingsHandler.GetTorrentClient();
 
                                     sendTorrentProcess.Start();
 
@@ -84,15 +85,22 @@ namespace CSL_Test__1
                         row.EndEdit();
                     }
                 }
-                xml.table.Columns["Handled"].ReadOnly = true;
-                xml.table.Columns["Error"].ReadOnly = true;
+                TorrentXMLHandler.table.Columns["Handled"].ReadOnly = true;
+                TorrentXMLHandler.table.Columns["Error"].ReadOnly = true;
+                Save();
             }
         }
-        public string SendTorrent(string save, string path)
+
+        protected override void OnDoWork(System.ComponentModel.DoWorkEventArgs e)
         {
-            if (!dh.GetFileExists(settings.GetTorrentClientFolder() + "\\uTorrent.exe"))
+            SendAllTorrents();
+        }
+        public static string SendTorrent(string save, string path)
+        {
+            ErrorWindow ew = new ErrorWindow();
+
+            if (!DirectoryHandler.GetFileExists(SettingsHandler.GetTorrentClientFolder() + "\\uTorrent.exe"))
             {
-                ErrorWindow ew = new ErrorWindow();
                 ew.IssueGeneralWarning("Be sure uTorrent folder is correct", "uTorrent.exe does not exist", null);
                 return "uTorrent.exe does not exist";
             }
@@ -102,13 +110,13 @@ namespace CSL_Test__1
                 {
                     Process sendTorrentProcess = new Process();
                     //torrentClient.exe /directory "C:\Save Path" "D:\Some folder\your.torrent"
-                    if (dh.GetFileExists(path))
+                    if (DirectoryHandler.GetFileExists(path))
                     {
                         string fullArgument = "/directory " + "\"" + save + "\" "
                             + "\"" + path + "\"";
-                        sendTorrentProcess.StartInfo.WorkingDirectory = settings.GetTorrentClientFolder();
+                        sendTorrentProcess.StartInfo.WorkingDirectory = SettingsHandler.GetTorrentClientFolder();
                         sendTorrentProcess.StartInfo.Arguments = fullArgument;
-                        sendTorrentProcess.StartInfo.FileName = settings.GetTorrentClient();
+                        sendTorrentProcess.StartInfo.FileName = SettingsHandler.GetTorrentClient();
 
                         sendTorrentProcess.Start();
 

@@ -45,7 +45,7 @@
             this.DownloadSingleCheck = new System.Windows.Forms.CheckBox();
             this.DownloadEPCheck = new System.Windows.Forms.CheckBox();
             this.DownloadAlbumCheck = new System.Windows.Forms.CheckBox();
-            this.label24 = new System.Windows.Forms.Label();
+            this.LoneTorrentAsAlbumCheck = new System.Windows.Forms.CheckBox();
             this.label28 = new System.Windows.Forms.Label();
             this.AutoCheckTime = new System.Windows.Forms.NumericUpDown();
             this.MinimizeToTrayCheckbox = new System.Windows.Forms.CheckBox();
@@ -63,8 +63,6 @@
             this.label10 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
             this.DoubleSpaceRemoverCheckBox = new System.Windows.Forms.CheckBox();
-            this.LowercaseAllFolderNamesCheckBox = new System.Windows.Forms.CheckBox();
-            this.UppercaseFolderNamesCheckBox = new System.Windows.Forms.CheckBox();
             this.AutoProcessCheckbox = new System.Windows.Forms.CheckBox();
             this.ArtistFlipCheck = new System.Windows.Forms.CheckBox();
             this.TorrentProgramDirectoryTextbox = new System.Windows.Forms.TextBox();
@@ -73,6 +71,10 @@
             this.label14 = new System.Windows.Forms.Label();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.DeleteTheCheckBox = new System.Windows.Forms.CheckBox();
+            this.LowercaseAllFolderNamesCheckBox = new System.Windows.Forms.CheckBox();
+            this.UppercaseFolderNamesCheckBox = new System.Windows.Forms.CheckBox();
+            this.label1 = new System.Windows.Forms.Label();
             this.BitrateCBRTextBox = new System.Windows.Forms.TextBox();
             this.label46 = new System.Windows.Forms.Label();
             this.BitrateLosslessTextBox = new System.Windows.Forms.TextBox();
@@ -115,6 +117,7 @@
             this.label33 = new System.Windows.Forms.Label();
             this.ReleaseAlbumTextBox = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
+            this.TimeFormatComboBox = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.ErrorProvider)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -141,7 +144,7 @@
             this.tabControl1.Location = new System.Drawing.Point(0, 2);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(686, 528);
+            this.tabControl1.Size = new System.Drawing.Size(695, 513);
             this.tabControl1.TabIndex = 38;
             // 
             // tabPage1
@@ -150,7 +153,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(678, 502);
+            this.tabPage1.Size = new System.Drawing.Size(687, 487);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "General Options";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -183,7 +186,8 @@
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.BackColor = System.Drawing.Color.GhostWhite;
-            this.splitContainer2.Panel2.Controls.Add(this.label24);
+            this.splitContainer2.Panel2.Controls.Add(this.TimeFormatComboBox);
+            this.splitContainer2.Panel2.Controls.Add(this.LoneTorrentAsAlbumCheck);
             this.splitContainer2.Panel2.Controls.Add(this.label28);
             this.splitContainer2.Panel2.Controls.Add(this.AutoCheckTime);
             this.splitContainer2.Panel2.Controls.Add(this.MinimizeToTrayCheckbox);
@@ -201,16 +205,14 @@
             this.splitContainer2.Panel2.Controls.Add(this.label10);
             this.splitContainer2.Panel2.Controls.Add(this.label11);
             this.splitContainer2.Panel2.Controls.Add(this.DoubleSpaceRemoverCheckBox);
-            this.splitContainer2.Panel2.Controls.Add(this.LowercaseAllFolderNamesCheckBox);
-            this.splitContainer2.Panel2.Controls.Add(this.UppercaseFolderNamesCheckBox);
             this.splitContainer2.Panel2.Controls.Add(this.AutoProcessCheckbox);
             this.splitContainer2.Panel2.Controls.Add(this.ArtistFlipCheck);
             this.splitContainer2.Panel2.Controls.Add(this.TorrentProgramDirectoryTextbox);
             this.splitContainer2.Panel2.Controls.Add(this.label12);
             this.splitContainer2.Panel2.Controls.Add(this.label13);
             this.splitContainer2.Panel2.Controls.Add(this.label14);
-            this.splitContainer2.Size = new System.Drawing.Size(672, 496);
-            this.splitContainer2.SplitterDistance = 201;
+            this.splitContainer2.Size = new System.Drawing.Size(681, 481);
+            this.splitContainer2.SplitterDistance = 203;
             this.splitContainer2.TabIndex = 2;
             // 
             // TrackZipsCheck
@@ -393,21 +395,23 @@
             this.DownloadAlbumCheck.UseVisualStyleBackColor = true;
             this.DownloadAlbumCheck.CheckedChanged += new System.EventHandler(this.DownloadAlbumCheck_CheckedChanged);
             // 
-            // label24
+            // LoneTorrentAsAlbumCheck
             // 
-            this.label24.AutoSize = true;
-            this.label24.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label24.Location = new System.Drawing.Point(317, 309);
-            this.label24.Name = "label24";
-            this.label24.Size = new System.Drawing.Size(56, 14);
-            this.label24.TabIndex = 40;
-            this.label24.Text = "seconds";
+            this.LoneTorrentAsAlbumCheck.AutoSize = true;
+            this.LoneTorrentAsAlbumCheck.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LoneTorrentAsAlbumCheck.Location = new System.Drawing.Point(24, 281);
+            this.LoneTorrentAsAlbumCheck.Name = "LoneTorrentAsAlbumCheck";
+            this.LoneTorrentAsAlbumCheck.Size = new System.Drawing.Size(341, 18);
+            this.LoneTorrentAsAlbumCheck.TabIndex = 41;
+            this.LoneTorrentAsAlbumCheck.Text = "Automatically process lone torrents as albums";
+            this.LoneTorrentAsAlbumCheck.UseVisualStyleBackColor = true;
+            this.LoneTorrentAsAlbumCheck.CheckedChanged += new System.EventHandler(this.LoneTorrentAsAlbumCheck_CheckedChanged);
             // 
             // label28
             // 
             this.label28.AutoSize = true;
             this.label28.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label28.Location = new System.Drawing.Point(64, 309);
+            this.label28.Location = new System.Drawing.Point(64, 264);
             this.label28.Name = "label28";
             this.label28.Size = new System.Drawing.Size(196, 14);
             this.label28.TabIndex = 39;
@@ -416,7 +420,7 @@
             // AutoCheckTime
             // 
             this.AutoCheckTime.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AutoCheckTime.Location = new System.Drawing.Point(266, 303);
+            this.AutoCheckTime.Location = new System.Drawing.Point(266, 258);
             this.AutoCheckTime.Maximum = new decimal(new int[] {
             1000,
             0,
@@ -444,7 +448,7 @@
             this.MinimizeToTrayCheckbox.Checked = true;
             this.MinimizeToTrayCheckbox.CheckState = System.Windows.Forms.CheckState.Checked;
             this.MinimizeToTrayCheckbox.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.MinimizeToTrayCheckbox.Location = new System.Drawing.Point(24, 326);
+            this.MinimizeToTrayCheckbox.Location = new System.Drawing.Point(24, 305);
             this.MinimizeToTrayCheckbox.Name = "MinimizeToTrayCheckbox";
             this.MinimizeToTrayCheckbox.Size = new System.Drawing.Size(138, 18);
             this.MinimizeToTrayCheckbox.TabIndex = 37;
@@ -458,7 +462,7 @@
             this.checkBox18.Enabled = false;
             this.checkBox18.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.checkBox18.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.checkBox18.Location = new System.Drawing.Point(45, 422);
+            this.checkBox18.Location = new System.Drawing.Point(45, 401);
             this.checkBox18.Name = "checkBox18";
             this.checkBox18.Size = new System.Drawing.Size(54, 18);
             this.checkBox18.TabIndex = 36;
@@ -471,7 +475,7 @@
             this.checkBox19.Enabled = false;
             this.checkBox19.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.checkBox19.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.checkBox19.Location = new System.Drawing.Point(45, 398);
+            this.checkBox19.Location = new System.Drawing.Point(45, 377);
             this.checkBox19.Name = "checkBox19";
             this.checkBox19.Size = new System.Drawing.Size(61, 18);
             this.checkBox19.TabIndex = 35;
@@ -484,7 +488,7 @@
             this.checkBox20.Enabled = false;
             this.checkBox20.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.checkBox20.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.checkBox20.Location = new System.Drawing.Point(45, 374);
+            this.checkBox20.Location = new System.Drawing.Point(45, 353);
             this.checkBox20.Name = "checkBox20";
             this.checkBox20.Size = new System.Drawing.Size(68, 18);
             this.checkBox20.TabIndex = 34;
@@ -497,7 +501,7 @@
             this.checkBox21.Enabled = false;
             this.checkBox21.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.checkBox21.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.checkBox21.Location = new System.Drawing.Point(24, 350);
+            this.checkBox21.Location = new System.Drawing.Point(24, 329);
             this.checkBox21.Name = "checkBox21";
             this.checkBox21.Size = new System.Drawing.Size(222, 18);
             this.checkBox21.TabIndex = 33;
@@ -607,35 +611,11 @@
             this.DoubleSpaceRemoverCheckBox.UseVisualStyleBackColor = true;
             this.DoubleSpaceRemoverCheckBox.CheckedChanged += new System.EventHandler(this.DoubleSpaceRemoverCheckBox_CheckedChanged);
             // 
-            // LowercaseAllFolderNamesCheckBox
-            // 
-            this.LowercaseAllFolderNamesCheckBox.AutoSize = true;
-            this.LowercaseAllFolderNamesCheckBox.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LowercaseAllFolderNamesCheckBox.Location = new System.Drawing.Point(24, 240);
-            this.LowercaseAllFolderNamesCheckBox.Name = "LowercaseAllFolderNamesCheckBox";
-            this.LowercaseAllFolderNamesCheckBox.Size = new System.Drawing.Size(208, 18);
-            this.LowercaseAllFolderNamesCheckBox.TabIndex = 21;
-            this.LowercaseAllFolderNamesCheckBox.Text = "lowercase all folder names";
-            this.LowercaseAllFolderNamesCheckBox.UseVisualStyleBackColor = true;
-            this.LowercaseAllFolderNamesCheckBox.CheckedChanged += new System.EventHandler(this.LowercaseAllFolderNamesCheckBox_CheckedChanged);
-            // 
-            // UppercaseFolderNamesCheckBox
-            // 
-            this.UppercaseFolderNamesCheckBox.AutoSize = true;
-            this.UppercaseFolderNamesCheckBox.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.UppercaseFolderNamesCheckBox.Location = new System.Drawing.Point(24, 217);
-            this.UppercaseFolderNamesCheckBox.Name = "UppercaseFolderNamesCheckBox";
-            this.UppercaseFolderNamesCheckBox.Size = new System.Drawing.Size(208, 18);
-            this.UppercaseFolderNamesCheckBox.TabIndex = 20;
-            this.UppercaseFolderNamesCheckBox.Text = "UPPERCASE all folder names";
-            this.UppercaseFolderNamesCheckBox.UseVisualStyleBackColor = true;
-            this.UppercaseFolderNamesCheckBox.CheckedChanged += new System.EventHandler(this.UppercaseFolderNamesCheckBox_CheckedChanged);
-            // 
             // AutoProcessCheckbox
             // 
             this.AutoProcessCheckbox.AutoSize = true;
             this.AutoProcessCheckbox.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AutoProcessCheckbox.Location = new System.Drawing.Point(24, 288);
+            this.AutoProcessCheckbox.Location = new System.Drawing.Point(24, 243);
             this.AutoProcessCheckbox.Name = "AutoProcessCheckbox";
             this.AutoProcessCheckbox.Size = new System.Drawing.Size(236, 18);
             this.AutoProcessCheckbox.TabIndex = 15;
@@ -690,7 +670,7 @@
             // 
             this.label14.AutoSize = true;
             this.label14.Font = new System.Drawing.Font("Courier New", 15.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label14.Location = new System.Drawing.Point(95, 262);
+            this.label14.Location = new System.Drawing.Point(95, 217);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(205, 23);
             this.label14.TabIndex = 11;
@@ -701,13 +681,17 @@
             this.tabPage3.Controls.Add(this.panel1);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(678, 502);
+            this.tabPage3.Size = new System.Drawing.Size(687, 487);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Advanced Directory";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.DeleteTheCheckBox);
+            this.panel1.Controls.Add(this.LowercaseAllFolderNamesCheckBox);
+            this.panel1.Controls.Add(this.UppercaseFolderNamesCheckBox);
+            this.panel1.Controls.Add(this.label1);
             this.panel1.Controls.Add(this.BitrateCBRTextBox);
             this.panel1.Controls.Add(this.label46);
             this.panel1.Controls.Add(this.BitrateLosslessTextBox);
@@ -754,6 +738,52 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(686, 503);
             this.panel1.TabIndex = 111;
+            // 
+            // DeleteTheCheckBox
+            // 
+            this.DeleteTheCheckBox.AutoSize = true;
+            this.DeleteTheCheckBox.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.DeleteTheCheckBox.Location = new System.Drawing.Point(12, 414);
+            this.DeleteTheCheckBox.Name = "DeleteTheCheckBox";
+            this.DeleteTheCheckBox.Size = new System.Drawing.Size(222, 18);
+            this.DeleteTheCheckBox.TabIndex = 123;
+            this.DeleteTheCheckBox.Text = "Delete \'The\' in folder names";
+            this.DeleteTheCheckBox.UseVisualStyleBackColor = true;
+            this.DeleteTheCheckBox.CheckedChanged += new System.EventHandler(this.DeleteTheCheckBox_CheckedChanged);
+            // 
+            // LowercaseAllFolderNamesCheckBox
+            // 
+            this.LowercaseAllFolderNamesCheckBox.AutoSize = true;
+            this.LowercaseAllFolderNamesCheckBox.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LowercaseAllFolderNamesCheckBox.Location = new System.Drawing.Point(12, 390);
+            this.LowercaseAllFolderNamesCheckBox.Name = "LowercaseAllFolderNamesCheckBox";
+            this.LowercaseAllFolderNamesCheckBox.Size = new System.Drawing.Size(208, 18);
+            this.LowercaseAllFolderNamesCheckBox.TabIndex = 122;
+            this.LowercaseAllFolderNamesCheckBox.Text = "lowercase all folder names";
+            this.LowercaseAllFolderNamesCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // UppercaseFolderNamesCheckBox
+            // 
+            this.UppercaseFolderNamesCheckBox.AutoSize = true;
+            this.UppercaseFolderNamesCheckBox.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.UppercaseFolderNamesCheckBox.Location = new System.Drawing.Point(12, 367);
+            this.UppercaseFolderNamesCheckBox.Name = "UppercaseFolderNamesCheckBox";
+            this.UppercaseFolderNamesCheckBox.Size = new System.Drawing.Size(208, 18);
+            this.UppercaseFolderNamesCheckBox.TabIndex = 121;
+            this.UppercaseFolderNamesCheckBox.Text = "UPPERCASE all folder names";
+            this.UppercaseFolderNamesCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.ForeColor = System.Drawing.Color.Maroon;
+            this.label1.Location = new System.Drawing.Point(309, 257);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(272, 64);
+            this.label1.TabIndex = 120;
+            this.label1.Text = "*Changing these will change the way \r\nyour save structure displays if you use\r\nth" +
+                "e release format (%z, %l, %c,...) \r\nor bitrate switch (%b)\r\n";
             // 
             // BitrateCBRTextBox
             // 
@@ -1139,11 +1169,25 @@
             this.label4.TabIndex = 26;
             this.label4.Text = "Release Formats";
             // 
+            // TimeFormatComboBox
+            // 
+            this.TimeFormatComboBox.FormattingEnabled = true;
+            this.TimeFormatComboBox.Items.AddRange(new object[] {
+            "Seconds",
+            "Minutes",
+            "Hours"});
+            this.TimeFormatComboBox.Location = new System.Drawing.Point(318, 258);
+            this.TimeFormatComboBox.Name = "TimeFormatComboBox";
+            this.TimeFormatComboBox.Size = new System.Drawing.Size(73, 21);
+            this.TimeFormatComboBox.TabIndex = 42;
+            this.TimeFormatComboBox.Text = "Seconds";
+            this.TimeFormatComboBox.SelectedIndexChanged += new System.EventHandler(this.TimeFormatComboBox_SelectedIndexChanged);
+            // 
             // OptionsWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(698, 542);
+            this.ClientSize = new System.Drawing.Size(698, 516);
             this.Controls.Add(this.tabControl1);
             this.Name = "OptionsWindow";
             this.Text = "Options";
@@ -1200,8 +1244,6 @@
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.CheckBox DoubleSpaceRemoverCheckBox;
-        private System.Windows.Forms.CheckBox LowercaseAllFolderNamesCheckBox;
-        private System.Windows.Forms.CheckBox UppercaseFolderNamesCheckBox;
         private System.Windows.Forms.CheckBox AutoProcessCheckbox;
         private System.Windows.Forms.CheckBox ArtistFlipCheck;
         private System.Windows.Forms.TextBox TorrentProgramDirectoryTextbox;
@@ -1252,10 +1294,15 @@
         private System.Windows.Forms.Label label42;
         private System.Windows.Forms.TextBox BitrateCBRTextBox;
         private System.Windows.Forms.Label label46;
-        private System.Windows.Forms.Label label24;
         private System.Windows.Forms.Label label28;
         private System.Windows.Forms.NumericUpDown AutoCheckTime;
         private System.Windows.Forms.CheckBox MinimizeToTrayCheckbox;
+        private System.Windows.Forms.CheckBox LoneTorrentAsAlbumCheck;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.CheckBox DeleteTheCheckBox;
+        private System.Windows.Forms.CheckBox LowercaseAllFolderNamesCheckBox;
+        private System.Windows.Forms.CheckBox UppercaseFolderNamesCheckBox;
+        private System.Windows.Forms.ComboBox TimeFormatComboBox;
 
 
     }
