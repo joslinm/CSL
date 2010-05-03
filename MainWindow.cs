@@ -55,6 +55,24 @@ namespace CSL_Test__1
             dgvh.RunWorkerCompleted += new RunWorkerCompletedEventHandler(data_RunWorkerCompleted);
             dh.ProgressChanged += new ProgressChangedEventHandler(bw_ProgressChange);
             dh.RunWorkerCompleted += new RunWorkerCompletedEventHandler(dh_RunWorkerCompleted);
+
+            try
+            {
+                if (System.Deployment.Application.ApplicationDeployment.IsNetworkDeployed)
+                {
+                    System.Deployment.Application.ApplicationDeployment ad =
+                    System.Deployment.Application.ApplicationDeployment.CurrentDeployment;
+                    string version = ad.CurrentVersion.ToString();
+
+                    if (SettingsHandler.GetCurrentVersion().CompareTo(version) < 0)
+                    {
+                        UpdatedInformationWindow uw = new UpdatedInformationWindow();
+                        uw.ShowDialog();
+                        SettingsHandler.SetCurrentVersion(version);
+                    }
+                }
+            }
+            catch (Exception) { }
         }
 
         public static void UpdateTimer(bool active, decimal time)

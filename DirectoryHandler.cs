@@ -14,12 +14,6 @@ namespace CSL_Test__1
 {
     class DirectoryHandler : DataGridViewHandler
     {
-        ErrorWindow ew = new ErrorWindow();
-        SettingsHandler SettingsHandler = new SettingsHandler();
-        FastZip fz = new FastZip();
-        private Object obj = new Object();
-
-
         protected override void OnDoWork(DoWorkEventArgs e)
         {
             MoveProcessedFiles((Torrent[])e.Argument);
@@ -242,6 +236,7 @@ namespace CSL_Test__1
             }
             catch { return false; }
         }
+
         public static string[] UnzipFile(string zipFile)
         {
             string destination;
@@ -329,8 +324,7 @@ namespace CSL_Test__1
             else
                 return null;
         }
-
-        //Remain unstatic in order to accomodate theading
+        //To be called only from override DoWork
         public void MoveProcessedFiles(Torrent[] torrents) 
         {
             string filepath;

@@ -11,16 +11,6 @@ namespace CSL_Test__1
 
         public SettingsHandler()
         {
-            try
-            {
-                if (!(settings.CurrentVersion.Equals(System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString())))
-                {
-                    UpdatedInformationWindow uw = new UpdatedInformationWindow();
-                    uw.ShowDialog();
-                    settings.CurrentVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
-                }
-            }
-            catch (StackOverflowException){ }
         }
         public static void Save()
         {
@@ -28,6 +18,11 @@ namespace CSL_Test__1
         }
 
         #region Set Options
+        public static void SetCurrentVersion(string value)
+        {
+            settings.CurrentVersion = value;
+            settings.Save();
+        }
         public static void SetDeleteTheFolderNames(bool value)
         {
             settings.DeleteTheFolderNames = value;
@@ -181,6 +176,10 @@ namespace CSL_Test__1
         }
         #endregion
         #region Get Options
+        public static string GetCurrentVersion()
+        {
+            return settings.CurrentVersion;
+        }
         public static string GetTimeFormat()
         {
             return settings.TimeFormat;

@@ -49,14 +49,14 @@ namespace CSL_Test__1
 
 
             if (SettingsHandler.GetDeleteThe())
-                DeleteTheCheckBox.Checked = true;
+                TheArtistOptions.Text = "Flip (Artist, The)";
             else
-                DeleteTheCheckBox.Checked = false;
+                TheArtistOptions.Text = "Ignore";
 
             if (SettingsHandler.GetHandleLoneTAsAlbum())
-                LoneTorrentAsAlbumCheck.Checked = true;
+                TheArtistOptions.Text = "Remove (Artist)";
             else
-                LoneTorrentAsAlbumCheck.Checked = false;
+                TheArtistOptions.Text = "Ignore";
 
             if (SettingsHandler.GetMinimizeToTray())
                 MinimizeToTrayCheckbox.Checked = true;
@@ -66,11 +66,6 @@ namespace CSL_Test__1
                 DoubleSpaceRemoverCheckBox.Checked = true;
             else
                 DoubleSpaceRemoverCheckBox.Checked = false;
-
-            if (SettingsHandler.GetArtistFlip())
-                ArtistFlipCheck.Checked = true;
-            else
-                ArtistFlipCheck.Checked = false;
 
             if (SettingsHandler.GetAutoHandleBool())
                 AutoProcessCheckbox.Checked = true;
@@ -141,14 +136,14 @@ namespace CSL_Test__1
                 DownloadUnknownCheck.Checked = false;
 
             if (SettingsHandler.GetUppercaseAllFolderNames())
-                UppercaseFolderNamesCheckBox.Checked = true;
+                TextCaseOptions.Text = "Uppercase (CASE)";
             else
-                UppercaseFolderNamesCheckBox.Checked = false;
+                TextCaseOptions.Text = "Ignore";
 
             if (SettingsHandler.GetLowercaseAllFolderNames())
-                LowercaseAllFolderNamesCheckBox.Checked = true;
+                TextCaseOptions.Text = "Lowercase (case)";
             else
-                LowercaseAllFolderNamesCheckBox.Checked = false;
+                TextCaseOptions.Text = "Ignore";
 
             if (SettingsHandler.GetTrackTorrents())
                 TrackTorrentsCheck.Checked = true;
@@ -167,14 +162,6 @@ namespace CSL_Test__1
                 SettingsHandler.SetRemoveDoubleSpaces(true);
             else
                 SettingsHandler.SetRemoveDoubleSpaces(false);
-        }
-
-        private void ArtistFlipCheck_CheckedChanged(object sender, EventArgs e)
-        {
-            if (ArtistFlipCheck.Checked)
-                SettingsHandler.SetArtistFlip(true);
-            else
-                SettingsHandler.SetArtistFlip(false);
         }
 
         private void TorrentProgramDirectoryTextbox_TextChanged(object sender, EventArgs e)
@@ -394,22 +381,6 @@ namespace CSL_Test__1
 
         }
 
-        private void LowercaseAllFolderNamesCheckBox_CheckedChanged(object sender, EventArgs e)
-        {
-            if (LowercaseAllFolderNamesCheckBox.Checked)
-                SettingsHandler.SetLowercaseAllFolderNames(true);
-            else
-                SettingsHandler.SetLowercaseAllFolderNames(false);
-        }
-
-        private void UppercaseFolderNamesCheckBox_CheckedChanged(object sender, EventArgs e)
-        {
-            if (UppercaseFolderNamesCheckBox.Checked)
-                SettingsHandler.SetUppercaseAllFolderNames(true);
-            else
-                SettingsHandler.SetUppercaseAllFolderNames(false);
-        }
-
         private void AutoCheckTime_ValueChanged(object sender, EventArgs e)
         {
             SettingsHandler.SetRawHandleTime(AutoCheckTime.Value);
@@ -531,22 +502,6 @@ namespace CSL_Test__1
                 SettingsHandler.SetMinimizeToTray(false);
         }
 
-        private void DeleteTheCheckBox_CheckedChanged(object sender, EventArgs e)
-        {
-            if (DeleteTheCheckBox.Checked)
-            {
-                SettingsHandler.SetArtistFlip(false);
-                SettingsHandler.SetDeleteTheFolderNames(true);
-                ArtistFlipCheck.Checked = false;
-                ArtistFlipCheck.Enabled = false;
-            }
-            else
-            {
-                SettingsHandler.SetDeleteTheFolderNames(false);
-                ArtistFlipCheck.Enabled = true;
-            }
-        }
-
         private void LoneTorrentAsAlbumCheck_CheckedChanged(object sender, EventArgs e)
         {
             if (LoneTorrentAsAlbumCheck.Checked)
@@ -560,7 +515,10 @@ namespace CSL_Test__1
             switch (TimeFormatComboBox.Text)
             {
                 case "Seconds":
-                    SettingsHandler.SetAutoHandleTime(AutoCheckTime.Value * 1000);
+                    if (AutoCheckTime.Value > 10)
+                        SettingsHandler.SetAutoHandleTime(AutoCheckTime.Value * 1000);
+                    else
+                        SettingsHandler.SetAutoHandleTime(AutoCheckTime.Value * 1000);
                     break;
                 case "Minutes":
                     SettingsHandler.SetAutoHandleTime(AutoCheckTime.Value * 1000 * 60);
@@ -576,7 +534,43 @@ namespace CSL_Test__1
             MainWindow.UpdateTimer(SettingsHandler.GetAutoHandleBool(), SettingsHandler.GetAutoHandleTime());
         }
 
+        private void TheArtistOptions_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            switch (TheArtistOptions.Text)
+            {
 
+                case "Flip (Artist, The)":
+                    SettingsHandler.SetArtistFlip(true);
+                    SettingsHandler.SetDeleteTheFolderNames(false);
+                    break;
+                case "Remove (Artist)":
+                    SettingsHandler.SetArtistFlip(false);
+                    SettingsHandler.SetDeleteTheFolderNames(true);
+                    break;
+                default:
+                    SettingsHandler.SetArtistFlip(false);
+                    SettingsHandler.SetDeleteTheFolderNames(false);
+                    break;
+            }
+        }
 
+        private void TextCaseOptions_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            switch (TextCaseOptions.Text)
+            {
+                case "Uppercase (CASE)":
+                    SettingsHandler.SetLowercaseAllFolderNames(false);
+                    SettingsHandler.SetUppercaseAllFolderNames(true);
+                    break;
+                case "Lowercase (case)":
+                    SettingsHandler.SetLowercaseAllFolderNames(true);
+                    SettingsHandler.SetUppercaseAllFolderNames(false);
+                    break;
+                default:
+                    SettingsHandler.SetLowercaseAllFolderNames(false);
+                    SettingsHandler.SetUppercaseAllFolderNames(false);
+                    break;
+            }
+        }
     }
 }

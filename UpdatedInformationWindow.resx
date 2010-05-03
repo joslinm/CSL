@@ -118,7 +118,20 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="richTextBox1.Text" xml:space="preserve">
-    <value>4/30/10
+    <value>5/2/10
+**Additions**
+--&gt; Status indicator
+--&gt; GUI recommendations by guerillaradio implemented
+**Improvements**
+--&gt; Better thread handling
+--&gt; Faster file moving
+--&gt; Faster row deleting
+--&gt; GUI shouldn't freeze up for a long time anymore
+**Possible Bugs**
+--&gt; After hitting 'delete', the grid may show a red X. If this happens, restart the program
+**Bug Fixes**
+--&gt; The Artist flip wasn't flipping the artist in save structure
+4/30/10
 --&gt; Added in the ability to delete "THE" from folder names
 --&gt; Program is smarter about skipping asking you for release format if it doesn't need it. 
 (Please note: if you aren't downloading a release format or using the release format switch, then it will always ask you since it needs to know how to filter out releases)

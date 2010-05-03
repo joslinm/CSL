@@ -278,8 +278,44 @@ namespace CSL_Test__1
                             {
                                 string artist = ExtractArtist(birth, file);
                                 artist = DirectoryHandler.GetHTMLLookUp(artist);
-                                directoryName += artist;
                                 information[0] = artist;
+
+                                if (SettingsHandler.GetArtistFlip())
+                                {
+                                    if (information[0].StartsWith("The") || information[0].StartsWith("A "))
+                                    {
+                                        string[] modifiedArtist = information[0].Split(' ');
+                                        artist = "";
+                                        for (int b = 1; b < modifiedArtist.Length; b++)
+                                        {
+                                            artist += modifiedArtist[b];
+                                            if (!((b + 1) == modifiedArtist.Length))
+                                            {
+                                                artist += " ";
+                                            }
+                                        }
+                                        artist += ", " + modifiedArtist[0];
+                                        information[0] = artist;
+                                    }
+                                }
+                                else if (SettingsHandler.GetDeleteThe())
+                                {
+                                    if (information[0].StartsWith("The"))
+                                    {
+                                        string[] modifiedArtist = information[0].Split(' ');
+                                        artist = "";
+                                        for (int b = 1; b < modifiedArtist.Length; b++)
+                                        {
+                                            artist += modifiedArtist[b];
+                                            if (!((b + 1) == modifiedArtist.Length))
+                                            {
+                                                artist += " ";
+                                            }
+                                        }
+                                        information[0] = artist;
+                                    }
+                                }
+                                directoryName += information[0];
                                 a++;
                             } break;
                         case ('y'):
@@ -489,41 +525,6 @@ namespace CSL_Test__1
                             if (information[a] == null)
                                 goto default;
 
-                            if (SettingsHandler.GetArtistFlip())
-                            {
-                                if (information[0].StartsWith("The") || information[0].StartsWith("A "))
-                                {
-                                    string[] modifiedArtist = information[0].Split(' ');
-                                    string artist = "";
-                                    for (int b = 1; b < modifiedArtist.Length; b++)
-                                    {
-                                        artist += modifiedArtist[b];
-                                        if (!((b + 1) == modifiedArtist.Length))
-                                        {
-                                            artist += " ";
-                                        }
-                                    }
-                                    artist += ", " + modifiedArtist[0];
-                                    information[0] = artist;
-                                }
-                            }
-                            else if (SettingsHandler.GetDeleteThe())
-                            {
-                                if (information[0].StartsWith("The"))
-                                {
-                                    string[] modifiedArtist = information[0].Split(' ');
-                                    string artist = "";
-                                    for (int b = 1; b < modifiedArtist.Length; b++)
-                                    {
-                                        artist += modifiedArtist[b];
-                                        if (!((b + 1) == modifiedArtist.Length))
-                                        {
-                                            artist += " ";
-                                        }
-                                    }
-                                    information[0] = artist;
-                                }
-                            }
                             if (SettingsHandler.GetDoubleSpaceRemoval())
                             {
                                 while (information[0].Contains("  "))
@@ -656,6 +657,11 @@ namespace CSL_Test__1
                             {
                                 information[13] = information[13].Replace("  ", " ");
                             }
+
+                            if (SettingsHandler.GetUppercaseAllFolderNames())
+                                information[13] = information[13].ToUpper();
+                            else if (SettingsHandler.GetLowercaseAllFolderNames())
+                                information[13] = information[13].ToLower();
 
                             try
                             {
