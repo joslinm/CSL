@@ -15,79 +15,87 @@ namespace CSL_Test__1
 
         public static void SendAllTorrents()
         {
-            ErrorWindow ew = new ErrorWindow();
-
-            if (!DirectoryHandler.GetFileExists(SettingsHandler.GetTorrentClientFolder() + "\\uTorrent.exe"))
+            try
             {
-                ew.IssueGeneralWarning("Be sure uTorrent folder is correct", "uTorrent.exe does not exist", null);
-            }
-            else
-            {
-                table.Columns["Handled"].ReadOnly = false;
-                table.Columns["Error"].ReadOnly = false;
+                ErrorWindow ew = new ErrorWindow();
 
-                foreach (DataRow row in dataset.Tables[0].Rows)
+                if (!DirectoryHandler.GetFileExists(SettingsHandler.GetTorrentClientFolder() + "\\uTorrent.exe"))
                 {
-                    try
+                    ew.IssueGeneralWarning("Be sure uTorrent folder is correct", "uTorrent.exe does not exist", null);
+                }
+                else
+                {
+                    table.Columns["Handled"].ReadOnly = false;
+                    table.Columns["Error"].ReadOnly = false;
+
+                    foreach (DataRow row in dataset.Tables[0].Rows)
                     {
-                        if (!(bool)row["Error"] && !(bool)row["Handled"] && !row["File Path"].Equals(DBNull.Value))
+                        try
                         {
-                            if (DirectoryHandler.GetFileExists((string)row["File Path"]))
+                            if (!(bool)row["Error"] && !(bool)row["Handled"] && !row["File Path"].Equals(DBNull.Value))
                             {
-                                try
+                                if (DirectoryHandler.GetFileExists((string)row["File Path"]))
                                 {
-                                    Process sendTorrentProcess = new Process();
-                                    //torrentClient.exe /directory "C:\Save Path" "D:\Some folder\your.torrent"
+                                    try
+                                    {
+                                        Process sendTorrentProcess = new Process();
+                                        //torrentClient.exe /directory "C:\Save Path" "D:\Some folder\your.torrent"
 
-                                    string fullArgument = "/directory " + "\"" + row["Save Structure"] + "\" "
-                                        + "\"" + row["File Path"] + "\"";
-                                    sendTorrentProcess.StartInfo.WorkingDirectory = SettingsHandler.GetTorrentClientFolder();
-                                    sendTorrentProcess.StartInfo.Arguments = fullArgument;
-                                    sendTorrentProcess.StartInfo.FileName = SettingsHandler.GetTorrentClient();
+                                        string fullArgument = "/directory " + "\"" + row["Save Structure"] + "\" "
+                                            + "\"" + row["File Path"] + "\"";
+                                        sendTorrentProcess.StartInfo.WorkingDirectory = SettingsHandler.GetTorrentClientFolder();
+                                        sendTorrentProcess.StartInfo.Arguments = fullArgument;
+                                        sendTorrentProcess.StartInfo.FileName = SettingsHandler.GetTorrentClient();
 
-                                    sendTorrentProcess.Start();
+                                        sendTorrentProcess.Start();
 
-                                    Thread.Sleep(100);
-                                    sendTorrentProcess.Dispose();
-                                    sendTorrentProcess.Close();
+                                        Thread.Sleep(100);
+                                        sendTorrentProcess.Dispose();
+                                        sendTorrentProcess.Close();
 
-                                    row.BeginEdit();
-                                    row["Handled"] = true;
-                                    row.EndEdit();
+                                        row.BeginEdit();
+                                        row["Handled"] = true;
+                                        row.EndEdit();
 
+                                    }
+                                    catch (Exception e)
+                                    {
+                                        Debug.Print(e.ToString());
+                                    }
                                 }
-                                catch (Exception e)
+                                else
                                 {
-                                    Debug.Print(e.ToString());
+                                    row.BeginEdit();
+                                    row["Error"] = true;
+                                    row["Birth"] = "File does not exist";
+                                    row.EndEdit();
                                 }
                             }
-                            else
+                            else if (row["File Path"].Equals(DBNull.Value))
                             {
                                 row.BeginEdit();
                                 row["Error"] = true;
-                                row["Birth"] = "File does not exist";
+                                row["Site Origin"] = "No file path";
                                 row.EndEdit();
                             }
                         }
-                        else if (row["File Path"].Equals(DBNull.Value))
+                        catch (Exception e)
                         {
                             row.BeginEdit();
                             row["Error"] = true;
-                            row["Site Origin"] = "No file path";
+                            row["Birth"] = e.Message;
                             row.EndEdit();
                         }
                     }
-                    catch (Exception e)
-                    {
-                        row.BeginEdit();
-                        row["Error"] = true;
-                        row["Birth"] = e.Message;
-                        row.EndEdit();
-                    }
+                    TorrentXMLHandler.table.Columns["Handled"].ReadOnly = true;
+                    TorrentXMLHandler.table.Columns["Error"].ReadOnly = true;
+                    Save();
                 }
-                TorrentXMLHandler.table.Columns["Handled"].ReadOnly = true;
-                TorrentXMLHandler.table.Columns["Error"].ReadOnly = true;
-                Save();
+            }
+            catch (Exception e)
+            {
+                ErrorWindow ew = new ErrorWindow();
+                ew.IssueGeneralWarning("Fatal Error", "Please report", e.Message + "\n" + e.StackTrace);
             }
         }
 
@@ -95,6 +103,7 @@ namespace CSL_Test__1
         {
             SendAllTorrents();
         }
+
         public static string SendTorrent(string save, string path)
         {
             ErrorWindow ew = new ErrorWindow();

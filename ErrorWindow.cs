@@ -79,6 +79,7 @@ namespace CSL_Test__1
                 if (ApplyToAllCheck.Checked)
                     applyToAll += "CSL::YEAR|" + SelectionTextBox.Text + "***";
 
+                ApplyToAllCheck.Checked = false;
                 return SelectionTextBox.Text;
             }
         }
@@ -112,6 +113,7 @@ namespace CSL_Test__1
                 if (ApplyToAllCheck.Checked)
                     applyToAll += "CSL::ARTIST|" + SelectionTextBox.Text + "***";
 
+                ApplyToAllCheck.Checked = false;
                 return SelectionTextBox.Text;
             }
         }
@@ -145,6 +147,7 @@ namespace CSL_Test__1
                 if (ApplyToAllCheck.Checked)
                     applyToAll += "CSL::ALBUM|" + SelectionTextBox.Text + "***";
 
+                ApplyToAllCheck.Checked = false;
                 return SelectionTextBox.Text;
             }
         }
@@ -177,6 +180,7 @@ namespace CSL_Test__1
                 if (ApplyToAllCheck.Checked)
                     applyToAll += "CSL::RELEASEF|" + ReleaseSelectionComboBox.Text + "***";
 
+                ApplyToAllCheck.Checked = false;
                 return ReleaseSelectionComboBox.Text;
             }
 
@@ -210,6 +214,7 @@ namespace CSL_Test__1
                 if (ApplyToAllCheck.Checked)
                     applyToAll += "CSL::PHYSICALF|" + PhysicalFormatSelectionComboBox.Text + "***";
 
+                ApplyToAllCheck.Checked = false;
                 return PhysicalFormatSelectionComboBox.Text;
             }
         }
@@ -242,6 +247,7 @@ namespace CSL_Test__1
                 if (ApplyToAllCheck.Checked)
                     applyToAll += "CSL::BITF|" + BitformatSelectionComboBox.Text + "***";
 
+                ApplyToAllCheck.Checked = false;
                 return BitformatSelectionComboBox.Text;
             }
         }

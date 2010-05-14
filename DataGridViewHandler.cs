@@ -12,6 +12,7 @@ namespace CSL_Test__1
         public DataGridView dv;
         BindingSource bs;
         private Object obj = new Object();
+        delegate void SuspendLayoutInvoker();
 
         public DataGridViewHandler() { }
 
@@ -34,6 +35,18 @@ namespace CSL_Test__1
             dv.Columns["Handled"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
             dv.Columns["Error"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
             dv.Columns["File Path"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+        }
+
+        public void SuspendLayout()
+        {
+            dv.SuspendLayout();
+            dv.Enabled = false;
+        }
+
+        public void ResumeLayout()
+        {
+            dv.ResumeLayout();
+            dv.Enabled = true;
         }
 
         void dv_CellBeginEdit(object sender, DataGridViewCellCancelEventArgs e)
@@ -245,12 +258,16 @@ namespace CSL_Test__1
             switch (type)
             {
                 case "CSL_Test__1.Torrent[]":
+                    dv.Invoke(new SuspendLayoutInvoker(SuspendLayout));
                     AddTorrents((Torrent[])e.Argument);
                     e.Result = e.Argument; //Chain it along for the directoryhandler to use
+                    dv.Invoke(new SuspendLayoutInvoker(ResumeLayout));
                     this.Dispose();
                     return;
                 case "System.String":
+                    dv.Invoke(new SuspendLayoutInvoker(SuspendLayout));
                     DeleteTorrents();
+                    dv.Invoke(new SuspendLayoutInvoker(ResumeLayout));
                     return;
             }
         }

@@ -16,7 +16,12 @@ namespace CSL_Test__1
     {
         protected override void OnDoWork(DoWorkEventArgs e)
         {
-            MoveProcessedFiles((Torrent[])e.Argument);
+            Type t = e.Argument.GetType();
+          
+            if(t.Equals(typeof(String[])))
+                e.Result = UnzipFiles((string[])e.Argument);
+            else
+                MoveProcessedFiles((Torrent[])e.Argument);
         }
         public static void DeleteFile(string path)
         {
@@ -28,8 +33,10 @@ namespace CSL_Test__1
                 {
                     File.Delete(fs.Name);
                 }
-                catch (Exception e)
-                { }
+                catch
+                {
+                    //e.Message + "\n" + e.StackTrace
+                }
             }
 
             fs.Dispose();
@@ -198,6 +205,8 @@ namespace CSL_Test__1
             catch (Exception e)
             {
                 value = false;
+                ErrorWindow ew = new ErrorWindow();
+                ew.IssueGeneralWarning("\"File exists\" error", "Please report", e.Message + "\n" + e.StackTrace);
             }
             finally
             {
@@ -258,7 +267,8 @@ namespace CSL_Test__1
                 return null;
             }
         }
-        public static object[] UnzipFiles(string[] zipFiles)
+        //To be called only from DoWork
+        public object[] UnzipFiles(string[] zipFiles)
         {
             ArrayList al = new ArrayList();
             FastZip fz = new FastZip();
@@ -266,7 +276,9 @@ namespace CSL_Test__1
             string[] files = null;
             string filename;
             string destination;
-
+            int total = zipFiles.Length;
+            double progress = 0;
+            double count = 0;
             foreach (string zipfile in zipFiles)
             {
                 filename = DirectoryHandler.GetFileName(zipfile, false);
@@ -290,6 +302,11 @@ namespace CSL_Test__1
                     foreach (string file in files)
                         al.Add(file);
                 }
+
+                progress = (++count / total) * 100;
+
+                if (progress <= 100 && progress >= 0)
+                    ReportProgress((int)progress);
             }
 
             return al.ToArray();
@@ -324,7 +341,7 @@ namespace CSL_Test__1
             else
                 return null;
         }
-        //To be called only from override DoWork
+        //To be called only from DoWork
         public void MoveProcessedFiles(Torrent[] torrents) 
         {
             string filepath;

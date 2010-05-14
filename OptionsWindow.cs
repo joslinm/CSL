@@ -13,8 +13,6 @@ namespace CSL_Test__1
 {
     partial class OptionsWindow : Form
     {
-        Thread tw_thread;
-
         public OptionsWindow()
         {
             InitializeComponent();
@@ -48,15 +46,27 @@ namespace CSL_Test__1
             AutoCheckTime.Value = SettingsHandler.GetRawHandleTime();
 
 
-            if (SettingsHandler.GetDeleteThe())
+            if (SettingsHandler.GetArtistFlip())
                 TheArtistOptions.Text = "Flip (Artist, The)";
             else
                 TheArtistOptions.Text = "Ignore";
 
             if (SettingsHandler.GetHandleLoneTAsAlbum())
+                LoneTorrentAsAlbumCheck.Checked = true;
+            else
+                LoneTorrentAsAlbumCheck.Checked = false;
+
+            if(SettingsHandler.GetDeleteThe())
                 TheArtistOptions.Text = "Remove (Artist)";
             else
                 TheArtistOptions.Text = "Ignore";
+
+            if (SettingsHandler.GetUppercaseAllFolderNames())
+                TextCaseOptions.Text = "Uppercase (CASE)";
+            else if (SettingsHandler.GetLowercaseAllFolderNames())
+                TextCaseOptions.Text = "Lowercase (case)";
+            else
+                TextCaseOptions.Text = "Ignore";
 
             if (SettingsHandler.GetMinimizeToTray())
                 MinimizeToTrayCheckbox.Checked = true;
@@ -134,16 +144,6 @@ namespace CSL_Test__1
                 DownloadUnknownCheck.Checked = true;
             else
                 DownloadUnknownCheck.Checked = false;
-
-            if (SettingsHandler.GetUppercaseAllFolderNames())
-                TextCaseOptions.Text = "Uppercase (CASE)";
-            else
-                TextCaseOptions.Text = "Ignore";
-
-            if (SettingsHandler.GetLowercaseAllFolderNames())
-                TextCaseOptions.Text = "Lowercase (case)";
-            else
-                TextCaseOptions.Text = "Ignore";
 
             if (SettingsHandler.GetTrackTorrents())
                 TrackTorrentsCheck.Checked = true;
@@ -249,11 +249,6 @@ namespace CSL_Test__1
             }
 
             MainWindow.UpdateTimer(SettingsHandler.GetAutoHandleBool(), SettingsHandler.GetAutoHandleTime());
-        }
-
-        public void StopTorrentWatch()
-        {
-            tw_thread.Abort();
         }
 
         private void DownloadAlbumCheck_CheckedChanged(object sender, EventArgs e)
