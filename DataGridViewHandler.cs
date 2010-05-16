@@ -15,7 +15,6 @@ namespace CSL_Test__1
         delegate void SuspendLayoutInvoker();
 
         public DataGridViewHandler() { }
-
         public DataGridViewHandler(DataGridView in_dv)
         {
             bs = new BindingSource();
@@ -35,6 +34,9 @@ namespace CSL_Test__1
             dv.Columns["Handled"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
             dv.Columns["Error"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
             dv.Columns["File Path"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            if (dv.Columns["Processed"]  == null)
+                TorrentXMLHandler.InitializeFresh();
+            dv.Columns["Processed"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
         }
 
         public void SuspendLayout()
@@ -42,7 +44,6 @@ namespace CSL_Test__1
             dv.SuspendLayout();
             dv.Enabled = false;
         }
-
         public void ResumeLayout()
         {
             dv.ResumeLayout();
@@ -53,12 +54,11 @@ namespace CSL_Test__1
         {
             MainWindow.UpdateTimer(false, SettingsHandler.GetAutoHandleTime());
         }
-
         void dv_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
-            MainWindow.UpdateTimer(true, SettingsHandler.GetAutoHandleTime());
+            if(SettingsHandler.GetAutoHandleBool())
+                MainWindow.UpdateTimer(true, SettingsHandler.GetAutoHandleTime());
         }
-
         void dv_CurrentCellDirtyStateChanged(object sender, EventArgs e)
         {
             if (dv.IsCurrentCellDirty)
@@ -115,11 +115,11 @@ namespace CSL_Test__1
                 }
             }
         }
-
         void dv_DataError(object sender, DataGridViewDataErrorEventArgs e)
         {
             //Ignore the data error
         }
+
         public void Refresh()
         {
             dv.Refresh();
@@ -254,22 +254,16 @@ namespace CSL_Test__1
 
         protected override void OnDoWork(System.ComponentModel.DoWorkEventArgs e)
         {
-            string type = e.Argument.GetType().ToString();
-            switch (type)
+            Type type = e.Argument.GetType();
+
+            if (type.Equals(typeof(String)))
             {
-                case "CSL_Test__1.Torrent[]":
-                    dv.Invoke(new SuspendLayoutInvoker(SuspendLayout));
-                    AddTorrents((Torrent[])e.Argument);
-                    e.Result = e.Argument; //Chain it along for the directoryhandler to use
-                    dv.Invoke(new SuspendLayoutInvoker(ResumeLayout));
-                    this.Dispose();
-                    return;
-                case "System.String":
-                    dv.Invoke(new SuspendLayoutInvoker(SuspendLayout));
-                    DeleteTorrents();
-                    dv.Invoke(new SuspendLayoutInvoker(ResumeLayout));
-                    return;
+                //dv.Invoke(new SuspendLayoutInvoker(SuspendLayout));
+                DeleteTorrents();
+                //dv.Invoke(new SuspendLayoutInvoker(ResumeLayout));
+                return;
             }
         }
+
     }
 }

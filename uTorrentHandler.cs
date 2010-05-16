@@ -89,7 +89,7 @@ namespace CSL_Test__1
                     }
                     TorrentXMLHandler.table.Columns["Handled"].ReadOnly = true;
                     TorrentXMLHandler.table.Columns["Error"].ReadOnly = true;
-                    Save();
+                    TorrentXMLHandler.table.AcceptChanges();
                 }
             }
             catch (Exception e)

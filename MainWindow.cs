@@ -5,6 +5,7 @@ using System.IO;
 using System.Collections;
 using System.Data;
 using System.Threading;
+using System.Collections.Generic;
 
 namespace CSL_Test__1
 {
@@ -12,20 +13,23 @@ namespace CSL_Test__1
     {
 
         #region Local Variables
-        uTorrentHandler utorrent = new uTorrentHandler();
-        TorrentBuilder builder = new TorrentBuilder();
         TorrentBuilder tb = new TorrentBuilder();
         OptionsWindow ow = new OptionsWindow();
-        DirectoryHandler dh = new DirectoryHandler();
+        BWHandler bw;
+
         static System.Timers.Timer timer = new System.Timers.Timer();
+        static System.Timers.Timer internaltimer = new System.Timers.Timer();
+
         DataGridViewHandler dgvh;
-        ArrayList al;
+        List<FileInfo> items;
 
         string[] files;
         string[] torrents;
         string[] zips;
 
         delegate void ProcessTorrentsInvoker();
+        delegate void RefreshInvoker();
+
         private Object lockingobject = new Object(); 
         #endregion
 
@@ -33,26 +37,21 @@ namespace CSL_Test__1
         {
             InitializeComponent();
             TorrentXMLHandler.Initialize(); //Initialize data source (read XML file)
+            dgvh = new DataGridViewHandler(dataGridView);
+            bw = new BWHandler(dataGridViewProgressBar, StatusLabel);
+
+            internaltimer.Interval = 2;
+            internaltimer.Elapsed += new System.Timers.ElapsedEventHandler(internaltimer_Elapsed);
 
             timer.Interval = (double)SettingsHandler.GetAutoHandleTime();
             timer.Elapsed += new System.Timers.ElapsedEventHandler(timer_Elapsed);
             if (SettingsHandler.GetAutoHandleBool())
                 timer.Start();
 
-
             Arrow.Visible = false;
             StatusLabel.Visible = false;
             ArrowText.Visible = false;
             notifyIcon.Visible = false;
-
-            dgvh = new DataGridViewHandler(dataGridView);
-
-            tb.RunWorkerCompleted += new RunWorkerCompletedEventHandler(BuildWorkerCompleted);
-            tb.ProgressChanged += new ProgressChangedEventHandler(ProgressChanged);
-            dgvh.ProgressChanged += new ProgressChangedEventHandler(ProgressChanged);
-            dgvh.RunWorkerCompleted += new RunWorkerCompletedEventHandler(DataWorkerCompleted);
-            dh.ProgressChanged += new ProgressChangedEventHandler(ProgressChanged);
-            dh.RunWorkerCompleted += new RunWorkerCompletedEventHandler(DirectoryWorkerCompleted);
 
             try
             {
@@ -77,26 +76,24 @@ namespace CSL_Test__1
         /*GENERAL*/
         private void RefreshData()
         {
-            lock (lockingobject)
-            {
-                dgvh = new DataGridViewHandler(dataGridView);
-                dgvh.ProgressChanged += new ProgressChangedEventHandler(ProgressChanged);
-                dgvh.RunWorkerCompleted += new RunWorkerCompletedEventHandler(DataWorkerCompleted);
+            dgvh.ResumeLayout();
 
-                dataGridViewProgressBar.Visible = false;
-                StatusLabel.Visible = false;
+            if (timer.Enabled == false && SettingsHandler.GetAutoHandleBool())
+                timer.Start();
 
-                if (timer.Enabled == false && SettingsHandler.GetAutoHandleBool())
-                    timer.Start();
+            dgvh = new DataGridViewHandler(dataGridView);
 
-                ProcessTorrentsButton.Enabled = true;
-            }
+            dataGridViewProgressBar.Visible = false;
+            StatusLabel.Visible = false;
+            ProcessTorrentsButton.Enabled = true;
+            RefreshButton.Enabled = true;
+            DeleteButton.Enabled = true;
         }
         private void MainWindow_FormClosing(object sender, FormClosingEventArgs e)
         {
             timer.Stop();
             timer.Close();
-            TorrentXMLHandler.Save();
+            TorrentXMLHandler.SaveAndClose();
             this.Dispose();
         }
         private void MainWindow_Resize(object sender, EventArgs e)
@@ -133,14 +130,17 @@ namespace CSL_Test__1
         //Click
         private void DeleteButton_Click(object sender, EventArgs e)
         {
-            dgvh.ProgressChanged -= new ProgressChangedEventHandler(ProgressChanged);
-            dgvh.ProgressChanged += new ProgressChangedEventHandler(DeleteProgressChanged);
-            dgvh.RunWorkerCompleted -= new RunWorkerCompletedEventHandler(DataWorkerCompleted);
-            dgvh.RunWorkerCompleted += new RunWorkerCompletedEventHandler(DataDeleteWorkerCompleted);
-            dgvh.RunWorkerAsync("Delete");
+            if (!dgvh.IsBusy)
+            {
+                dgvh.ProgressChanged += new ProgressChangedEventHandler(DeleteWorkerProgressChange);
+                dgvh.RunWorkerCompleted += new RunWorkerCompletedEventHandler(DeleteWorkerCompleted);
 
-            dataGridViewProgressBar.Visible = true;
-            StatusLabel.Visible = true;
+                try { dgvh.SuspendLayout(); }
+                catch { }
+                dataGridViewProgressBar.Visible = true;
+                StatusLabel.Visible = true;
+                dgvh.RunWorkerAsync("Delete");
+            }
         }
         private void RefreshButton_Click(object sender, EventArgs e)
         {
@@ -148,41 +148,45 @@ namespace CSL_Test__1
         }
         private void ProcessTorrentsButton_Click(object sender, EventArgs e)
         {
-            ProcessTorrentsButton.Enabled = false;
+            items = new List<FileInfo>();
+            torrents = DirectoryHandler.GetTorrents();
+            zips = DirectoryHandler.GetTorrentZips();
 
-            lock (lockingobject)
+            if (torrents != null || zips != null)
             {
-                al = new ArrayList();
-                torrents = DirectoryHandler.GetTorrents();
-                zips = DirectoryHandler.GetTorrentZips();
+                if (dgvh.dv != null)
+                    dgvh.SuspendLayout();
 
-                if (torrents != null || zips != null)
+                ProcessTorrentsButton.Enabled = false;
+                RefreshButton.Enabled = false;
+                DeleteButton.Enabled = false;
+                internaltimer.Start(); //Periodically check to see if BW threads finished
+                timer.Stop();
+
+                if (torrents != null)
                 {
-                    if (torrents != null)
+                    foreach (string torrent in torrents)
                     {
-                        foreach (string torrent in torrents)
-                            al.Add(torrent);
-                    }
-
-                    if (zips != null)
-                    {
-                        torrents = null;
-                        StatusLabel.Visible = true;
-                        dataGridViewProgressBar.Visible = true;
-                        dh.RunWorkerAsync(zips);
-                    }
-                    else
-                    {
-                        timer.Stop();
-                        dataGridViewProgressBar.Visible = true;
-                        StatusLabel.Visible = true;
-                        tb.RunWorkerAsync(al);
+                        try
+                        {
+                            items.Add(new FileInfo(torrent));
+                        }
+                        catch (Exception ee)
+                        {
+                            DirectoryHandler.LogError(ee.Message + "\n" + ee.StackTrace);
+                        }
                     }
                 }
-                else
+
+                if (zips != null)
                 {
-                    ProcessTorrentsButton.Enabled = true;
+                    bw.Unzip(zips);
                 }
+                bw.Process(items);
+            }
+            else
+            {
+                ProcessTorrentsButton.Enabled = true;
             }
         }
         private void uTorrentSendIndividualButton_Click(object sender, EventArgs e)
@@ -198,7 +202,14 @@ namespace CSL_Test__1
         {
             ProcessTorrentsButton.PerformClick();
         }
-
+        private void PerformClickRefreshButton()
+        {
+            RefreshButton.PerformClick();
+        }
+        private void ShowProcessTorrentsButton()
+        {
+            ProcessTorrentsButton.Visible = true;
+        }
         //Hover
         private void DeleteButton_MouseEnter(object sender, EventArgs e)
         {
@@ -229,7 +240,7 @@ namespace CSL_Test__1
         /*DataGridView*/
         private void dataGridView_DragDrop(object sender, DragEventArgs e)
         {
-            al = new ArrayList();
+            items = new List<FileInfo>();
             files = (string[])e.Data.GetData(DataFormats.FileDrop);
             dataGridViewProgressBar.Visible = true;
             StatusLabel.Visible = true;
@@ -240,18 +251,15 @@ namespace CSL_Test__1
                 if (Path.GetExtension(file).Equals(".zip") || Path.GetExtension(file).Equals(".rar"))
                 {
                     foreach (string unzipped in DirectoryHandler.UnzipFile(file))
-                        al.Add(unzipped);
+                        items.Add(new FileInfo(unzipped));
                 }
                 else if (Path.GetExtension(file).Equals(".torrent"))
                 {
-                    al.Add(file);
+                    items.Add(new FileInfo(file));
                 }
             }
 
-            lock (lockingobject)
-            {
-                tb.RunWorkerAsync(al);
-            }
+            tb.RunWorkerAsync(items);
         }
         private void dataGridView_DragEnter(object sender, DragEventArgs e)
         {
@@ -288,92 +296,47 @@ namespace CSL_Test__1
         }
         void timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
-            if (ProcessTorrentsButton.InvokeRequired)
+            if (ProcessTorrentsButton.InvokeRequired && !BWHandler.Busy)
                 this.Invoke(new ProcessTorrentsInvoker(PerformClickProcessTorrents));
-            else
+            else if (!BWHandler.Busy)
                 ProcessTorrentsButton.PerformClick();
-        } 
+        }
+        void internaltimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            if (!BWHandler.Busy)
+            {
+                if (this.InvokeRequired)
+                    this.Invoke(new RefreshInvoker(RefreshData));
+                else
+                    RefreshData();
+
+                if (ProcessTorrentsButton.InvokeRequired)
+                    this.Invoke(new ProcessTorrentsInvoker(ShowProcessTorrentsButton));
+                else
+                    ProcessTorrentsButton.Visible = true;
+
+                internaltimer.Stop();
+            }
+        }
         #endregion
         #region BackgroundWorker
-        /*BACKGROUNDWORKER COMPLETED*/
-        void BuildWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            if (e.Result != null)
-            {
-                builder.Dispose();
-                dgvh.RunWorkerAsync((Torrent[])e.Result);
-            }
-        }
-        void DataWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            dh.RunWorkerAsync((Torrent[])e.Result);
-        }
-        void DirectoryWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            if (e.Result != null && e.Result.GetType().Equals(typeof(object[])))
-            {
-                object[] rawFiles = (object[])e.Result;
-                torrents = Array.ConvertAll<object, string>(rawFiles, Convert.ToString);
-                foreach (string torrent in torrents)
-                    al.Add(torrent);
-
-                timer.Stop();
-                dataGridViewProgressBar.Visible = true;
-                StatusLabel.Visible = true;
-                tb.RunWorkerAsync(al);
-            }
-            else
-            {
-                dataGridViewProgressBar.Visible = false;
-                StatusLabel.Visible = false;
-                RefreshData();
-            }
-        }
-        void DataDeleteWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        void DeleteWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             RefreshData();
-            dgvh.RunWorkerCompleted -= new RunWorkerCompletedEventHandler(DataDeleteWorkerCompleted);
-            dgvh.ProgressChanged -= new ProgressChangedEventHandler(DeleteProgressChanged);
         }
-        /*BACKGROUNDWORKER PROGRESS CHANGE*/
-        void DeleteProgressChanged(object sender, ProgressChangedEventArgs e)
+        void DeleteWorkerProgressChange(object sender, ProgressChangedEventArgs e)
         {
-            if (!(e.ProgressPercentage > 100 || e.ProgressPercentage < 0))
-                dataGridViewProgressBar.Value = e.ProgressPercentage;
+            int progress = 0;
 
-            if ((e.ProgressPercentage % 10) == 0)
-                StatusLabel.Text = "Deleting torrents " + 10 * (e.ProgressPercentage / 10) + "%";
+            if (!(e.ProgressPercentage > 100 || e.ProgressPercentage < 0))
+                progress = e.ProgressPercentage;
+
+            if (progress % 10 == 0)
+                StatusLabel.Text = "Deleting " + 10 * (progress / 10) + "%";
             else
                 StatusLabel.Text += ".";
-        }
-        void ProgressChanged(object sender, ProgressChangedEventArgs e)
-        {
-            if (!(e.ProgressPercentage > 100 || e.ProgressPercentage < 0))
-                dataGridViewProgressBar.Value = e.ProgressPercentage;
-
-            if ((e.ProgressPercentage % 10) == 0)
-            {
-                string test = sender.ToString();
-                switch (test)
-                {
-                    case "CSL_Test__1.TorrentBuilder":
-                        StatusLabel.Text = "Building " + 10 * (e.ProgressPercentage / 10) + "%";
-                        break;
-                    case "CSL_Test__1.TorrentXMLHandler":
-                        StatusLabel.Text = "Adding torrents " + 10 * (e.ProgressPercentage / 10) + "%";
-                        break;
-                    case "CSL_Test__1.DirectoryHandler":
-                        StatusLabel.Text = "Moving files " + 10 * (e.ProgressPercentage / 10) + "%";
-                        break;
-                    default:
-                        StatusLabel.Text = "Working...";
-                        break;
-                }
-            }
-            else
-                StatusLabel.Text += ".";
+            dataGridViewProgressBar.Value = progress;
         }
         #endregion
-
     }
 }
