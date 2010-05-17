@@ -787,6 +787,7 @@ namespace CSL_Test__1
             {
                 ew.IssueGeneralWarning("Error reading from torrent file", "Please report", e.Message + "\n" + e.StackTrace);
                 value = null;
+                information[14] = "true";
             }
             finally
             {

@@ -76,18 +76,24 @@ namespace CSL_Test__1
         /*GENERAL*/
         private void RefreshData()
         {
-            dgvh.ResumeLayout();
-
-            if (timer.Enabled == false && SettingsHandler.GetAutoHandleBool())
-                timer.Start();
-
-            dgvh = new DataGridViewHandler(dataGridView);
+            Thread.Sleep(100);
 
             dataGridViewProgressBar.Visible = false;
             StatusLabel.Visible = false;
             ProcessTorrentsButton.Enabled = true;
             RefreshButton.Enabled = true;
             DeleteButton.Enabled = true;
+
+            dgvh.ResumeLayout();
+
+            if (timer.Enabled == false && SettingsHandler.GetAutoHandleBool())
+                timer.Start();
+
+            try
+            {
+                dgvh = new DataGridViewHandler(dataGridView);
+            }
+            catch { }
         }
         private void MainWindow_FormClosing(object sender, FormClosingEventArgs e)
         {
@@ -132,6 +138,7 @@ namespace CSL_Test__1
         {
             if (!dgvh.IsBusy)
             {
+
                 dgvh.ProgressChanged += new ProgressChangedEventHandler(DeleteWorkerProgressChange);
                 dgvh.RunWorkerCompleted += new RunWorkerCompletedEventHandler(DeleteWorkerCompleted);
 
@@ -322,7 +329,10 @@ namespace CSL_Test__1
         #region BackgroundWorker
         void DeleteWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            RefreshData();
+            dgvh.ResumeLayout();
+            dataGridViewProgressBar.Visible = false;
+            StatusLabel.Visible = false;
+            RefreshButton.Enabled = true;
         }
         void DeleteWorkerProgressChange(object sender, ProgressChangedEventArgs e)
         {

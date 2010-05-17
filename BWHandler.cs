@@ -12,8 +12,8 @@ namespace CSL_Test__1
     {
         static List<FileInfo> unzipped = new List<FileInfo>();
         static List<FileInfo> torrents = new List<FileInfo>();
-        public static bool Busy = false;
-
+        public static bool Busy = true;
+        private object locker = new object();
         DirectoryHandler dh = new DirectoryHandler();
         TorrentBuilder tb = new TorrentBuilder();
         uTorrentHandler utorrent = new uTorrentHandler();
@@ -35,8 +35,11 @@ namespace CSL_Test__1
             torrents = items;
             Busy = true;
 
-            dataGridViewProgressBar.Visible = true;
-            StatusLabel.Visible = true;
+            lock (locker)
+            {
+                dataGridViewProgressBar.Visible = true;
+                StatusLabel.Visible = true;
+            }
 
             if(!dh.IsBusy && items != null)
             {
@@ -72,15 +75,13 @@ namespace CSL_Test__1
             {
                 StatusLabel.Text = "Status";
 
-                if (!tb.IsBusy)
-                {
-                    Busy = false;
-                    dataGridViewProgressBar.Visible = false;
-                    StatusLabel.Visible = false;
-                }
-
+                Busy = false;
+                dataGridViewProgressBar.Visible = false;
+                StatusLabel.Visible = false;
                 DirectoryHandler.MoveZipFiles();
             }
+
+            return;
         }
         /*BACKGROUNDWORKER PROGRESS CHANGE*/
         void ProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -113,9 +114,6 @@ namespace CSL_Test__1
                                 dataGridViewProgressBar.Value = progress;
                             }
                         }
-                        break;
-                    case "CSL_Test__1.DataGridViewHandler":
-                        StatusLabel.Text = "Adding torrents " + 10 * (e.ProgressPercentage / 10) + "%";
                         break;
                     case "CSL_Test__1.DirectoryHandler":
                         StatusLabel.Text = "Moving files " + 10 * (e.ProgressPercentage / 10) + "%";

@@ -471,8 +471,6 @@ namespace CSL_Test__1
 
                                 if (filepath.Contains("[CSL] -- Unhandled Torrents") && (bool)dr["Error"])
                                     skip = true;
-                                else if ((bool)dr["Handled"])
-                                    skip = true;
                                 else
                                     skip = false;
 
