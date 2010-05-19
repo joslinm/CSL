@@ -518,7 +518,7 @@ namespace CSL_Test__1
                     if (AutoCheckTime.Value > 10)
                         SettingsHandler.SetAutoHandleTime(AutoCheckTime.Value * 1000);
                     else
-                        SettingsHandler.SetAutoHandleTime(AutoCheckTime.Value * 1000);
+                        SettingsHandler.SetAutoHandleTime(10 * 1000);
                     break;
                 case "Minutes":
                     SettingsHandler.SetAutoHandleTime(AutoCheckTime.Value * 1000 * 60);

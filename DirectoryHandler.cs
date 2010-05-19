@@ -91,7 +91,7 @@ namespace CSL_Test__1
         {
             FileStream fs;
             string filename;
-
+            
             try
             {
                 fs = new FileStream(path, FileMode.Open, FileAccess.Read);
@@ -118,64 +118,68 @@ namespace CSL_Test__1
 
             return directoryname;
         }
-        public static string GetHTMLLookUp(string value)
+        public static string GetHTMLLookUp(string raw_value)
         {
-            ErrorWindow ew = new ErrorWindow();
-            StreamReader sr = null;
-
-            string[] ab = new string[2];
-            string a;
-            string b;
-            int c = 0;
-            string[] lines = null;
-            string replace;
-
-            if (value == null)
-                return value;
             try
             {
-                sr = new StreamReader(System.Windows.Forms.Application.StartupPath + @"\HTML-Look-Up.txt");
+                ErrorWindow ew = new ErrorWindow();
+                StreamReader sr = null;
 
-                while (!sr.EndOfStream)
+                string[] ab = new string[2];
+                string a;
+                string b;
+                string replace;
+                string value = null;
+
+                if (raw_value == null)
+                    return raw_value;
+                try
                 {
-                    ab = sr.ReadLine().Split(' ');
-                    a = ab[0];
-                    b = ab[1];
+                    sr = new StreamReader(System.Windows.Forms.Application.StartupPath + @"\HTML-Look-Up.txt");
 
-                    if (value.Contains(a) || value.Contains(b))
+                    while (!sr.EndOfStream)
                     {
-                        while (value.Contains(a))
+                        ab = sr.ReadLine().Split(' ');
+                        a = ab[0];
+                        b = ab[1];
+                        value = raw_value;
+
+                        if (value.Contains(a) || value.Contains(b))
                         {
-                            replace = sr.ReadLine();
-                            value = value.Replace(a, replace);
+                            while (value.Contains(a))
+                            {
+                                replace = sr.ReadLine();
+                                value = value.Replace(a, replace);
+                            }
+                            while (value.Contains(b))
+                            {
+                                replace = sr.ReadLine();
+                                value = value.Replace(b, replace);
+                            }
                         }
-                        while (value.Contains(b))
+                        else
                         {
-                            replace = sr.ReadLine();
-                            value = value.Replace(b, replace);
+                            sr.ReadLine();
                         }
-                    }
-                    else
-                    {
-                        sr.ReadLine();
                     }
                 }
-            }
-            catch (FileNotFoundException)
-            {
-                ew.IssueGeneralWarning("HTML replacing will not occur", "Could not find HTML-Look-Up.txt...", null);
-            }
-            catch (Exception e)
-            {
-                ew.IssueGeneralWarning("Error..", lines[c], e.Message);
-            }
-            finally
-            {
-                if (sr != null)
-                    sr.Dispose();
-            }
+                catch (FileNotFoundException)
+                {
+                    ew.IssueGeneralWarning("HTML replacing will not occur", "Could not find HTML-Look-Up.txt...", null);
+                }
+                catch (Exception e)
+                {
+                    ew.IssueGeneralWarning("Error..", raw_value, e.Message);
+                }
+                finally
+                {
+                    if (sr != null)
+                        sr.Dispose();
+                }
 
-            return value;
+                return value;
+            }
+            catch { return raw_value; }
         }
         public static bool GetFileExists(string path)
         {

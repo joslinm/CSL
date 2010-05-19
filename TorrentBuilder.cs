@@ -114,9 +114,17 @@ namespace CSL_Test__1
             for (int a = 0; a < filescount; a++)
             {
                 string birth = GetTorrentBirth(files[a]);
-                torrent = ProcessTorrent(files[a], birth);
+                try
+                {
+                    torrent = ProcessTorrent(files[a], birth);
+                }
+                catch
+                {
+                    torrent = null;
+                    information[14] = "true";
+                }
 
-                if (information[14] != "true")
+                if (information[14] != "true" && torrent != null)
                 {
                     if (SkipReleaseFormatCheck())
                     {

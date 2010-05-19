@@ -298,7 +298,10 @@ namespace CSL_Test__1
         }
         public static decimal GetAutoHandleTime()
         {
-            return settings.AutoCheckTime;
+            if (settings.AutoCheckTime < 10 * 1000)
+                return 10 * 1000;
+            else
+                return settings.AutoCheckTime;
         }
         public static bool GetSkipReleaseCheck()
         {
