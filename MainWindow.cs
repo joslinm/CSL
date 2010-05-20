@@ -35,8 +35,10 @@ namespace CSL_Test__1
 
         public MainWindow()
         {
+            
             InitializeComponent();
-            TorrentXMLHandler.Initialize(); //Initialize data source (read XML file)
+            /*
+            //TorrentXMLHandler.Initialize(); //Initialize data source (read XML file)
             dgvh = new DataGridViewHandler(dataGridView);
             bw = new BWHandler(dataGridViewProgressBar, StatusLabel);
 
@@ -70,8 +72,47 @@ namespace CSL_Test__1
                 }
             }
             catch (Exception) { }
-        }
+            */
+            //test();
+            CSLDataSet.CSLDataTableRow row = cSLDataSet.CSLDataTable.NewCSLDataTableRow();
 
+                row.File_ = "file";
+                row.Artist = "artist11";
+                row.Album = "album";
+                row.Save_Structure = "save";
+                row.Sent = false;
+                row.Error = true;
+                row.Release_Format = "release";
+                row.Bit_Rate = "bitrate..";
+                row.Year = "year";
+                row.Physical_Format = "format";
+                row.Bit_Format = "bitformat";
+                row.File_Path = "File!!path";
+                row.Site_Origin = "what";
+                cSLDataSet.CSLDataTable.Rows.Add(row);
+
+
+                cSLDataSet.AcceptChanges();
+                cSLDataTableTableAdapter.Fill(cSLDataSet.CSLDataTable);
+                
+                cSLDataTableTableAdapter.Update(cSLDataSet);
+                
+            dataGridView.Refresh();
+            dataGridView.Update();
+        }
+        private void test()
+        {
+            TorrentXMLHandler data = new TorrentXMLHandler();
+            string[] information = new string[20];
+            for (int a = 0; a < 20; a++)
+            {
+                byte[] buffer = new byte[10];
+                Random r = new Random();
+                r.NextBytes(buffer);
+                information[a] = (buffer[r.Next(0, 9)].ToString());
+            }
+            data.AddTorrent(new Torrent(information));
+        }
         #region General
         /*GENERAL*/
         private void RefreshData()
@@ -99,7 +140,7 @@ namespace CSL_Test__1
         {
             timer.Stop();
             timer.Close();
-            TorrentXMLHandler.SaveAndClose();
+            //TorrentXMLHandler.SaveAndClose();
             this.Dispose();
         }
         private void MainWindow_Resize(object sender, EventArgs e)
@@ -202,7 +243,7 @@ namespace CSL_Test__1
         }
         private void uTorrentSendAllButton_Click(object sender, EventArgs e)
         {
-            uTorrentHandler.SendAllTorrents();
+            //uTorrentHandler.SendAllTorrents();
             dgvh.dv.Update();
         }
         private void PerformClickProcessTorrents()
@@ -348,5 +389,11 @@ namespace CSL_Test__1
             dataGridViewProgressBar.Value = progress;
         }
         #endregion
+
+        private void MainWindow_Load(object sender, EventArgs e)
+        {
+            // TODO: This line of code loads data into the 'cSLDataSet.CSLDataTable' table. You can move, or remove it, as needed.
+            this.cSLDataTableTableAdapter.Fill(this.cSLDataSet.CSLDataTable);
+        }
     }
 }

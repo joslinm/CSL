@@ -8,28 +8,24 @@ using System.Xml;
 using System.ComponentModel;
 using System.Windows.Forms;
 using System.Reflection;
+using System.Data.SqlClient;
 
 namespace CSL_Test__1
 {
     public class TorrentXMLHandler : BackgroundWorker
     {
-        public static DataSet dataset;
-        public static DataTable table;
-        private static FileStream xmlStream;
-        private Object obj = new Object();
-        static string xmlDataName = "torrents.xml";
-        static string xmlSchemaName = "torrentschema.xml";
-        static string xmlDataPath = Directory.GetCurrentDirectory() + @"\" + xmlDataName;
-        static string xmlSchemaPath = Directory.GetCurrentDirectory() + @"\" + xmlSchemaName;
-        private BindingSource bs = new BindingSource();
-
+        CSLDataSetTableAdapters.CSLDataTableTableAdapter adapter = new CSLDataSetTableAdapters.CSLDataTableTableAdapter();
+        CSLDataSet dataset = new CSLDataSet();
+        public static DataTable table = new DataTable();
         public TorrentXMLHandler()
         {
             WorkerReportsProgress = true;
             WorkerSupportsCancellation = true;
         }
+        /*
         static public void Initialize()
         {
+            
             DataColumn column;
 
             if (File.Exists(xmlSchemaName))
@@ -153,11 +149,12 @@ namespace CSL_Test__1
             dataset.WriteXmlSchema(xmlStream);
             xmlStream.Close();
         }
-
+            */
+        /*
         public void Save()
         {
-            lock (obj)
-            {
+            //lock (obj)
+            //{
                 dataset.AcceptChanges();
 
                 if (xmlStream.Name.Equals(xmlDataName))
@@ -170,7 +167,7 @@ namespace CSL_Test__1
                 }
 
                 xmlStream.Close();
-            }
+            //}
         }
         static public void SaveAndClose()
         {
@@ -186,7 +183,7 @@ namespace CSL_Test__1
             }
 
             xmlStream.Close();
-        }
+        }*/
         public void AddTorrent(Torrent torrent)
         {
             #region Information Contents
@@ -210,42 +207,41 @@ namespace CSL_Test__1
          * */
             #endregion
 
+            CSLDataSet.CSLDataTableRow row = dataset.CSLDataTable.NewCSLDataTableRow();
+            string[] information = torrent.GetInformation();
+
             try
             {
-                string[] information = torrent.GetInformation();
-                DataRow row;
-                row = table.NewRow();
-                row["File"] = information[11];
-                row["Artist"] = information[0];
-                row["Album"] = information[1];
-                row["Save Structure"] = information[13];
-                row["Handled"] = false;
-                row["Error"] = (information[14] == "true") ? true : false;
-                row["Release Format"] = information[2];
-                row["Bitrate"] = information[3];
-                row["Year"] = information[4];
-                row["Physical Format"] = information[5];
-                row["Bit Format"] = information[6];
-                row["File Path"] = information[10];
-                row["Site Origin"] = (information[14] == "true") ? "Discarded" : information[12];
-                row["Processed"] = true;
+                row.File_ = "file";
+                row.Artist = "artist11";
+                row.Album = "album";
+                row.Save_Structure = information[13];
+                row.Sent = false;
+                row.Error = false;
+                row.Release_Format = information[2];
+                row.Bit_Rate = information[3];
+                row.Year = information[4];
+                row.Physical_Format = information[5];
+                row.Bit_Format = information[6];
+                row.File_Path = information[10];
+                row.Site_Origin = "what";
 
                 string currentfilename = torrent.GetFileName();
-                lock (obj)
-                {
-                    DataRow dr = table.Rows.Find(currentfilename);
-                    if (dr != null)
-                        table.Rows[table.Rows.IndexOf(dr)].Delete();
 
-                    table.Rows.Add(row);
-                }
+                DataRow dr = dataset.CSLDataTable.Rows.Find(currentfilename);
+                if (dr != null)
+                    dataset.CSLDataTable.Rows[table.Rows.IndexOf(dr)].Delete();
 
+                dataset.CSLDataTable.AddCSLDataTableRow(row);
+                adapter.Update(dataset);
+                dataset.AcceptChanges();
             }
             catch (Exception e)
             {
                 DirectoryHandler.LogError(e.Message + "\n" + e.StackTrace);
             }
         }
+        /*
         static public DataTable GetProcessedRows()
         {
             DataTable dt = table.Clone();
@@ -257,6 +253,6 @@ namespace CSL_Test__1
                 dt.ImportRow(dr); 
             }
             return dt;
-        }          
+        }*/          
     }
 }

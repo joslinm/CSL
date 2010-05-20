@@ -446,10 +446,10 @@ namespace CSL_Test__1
 
             while (true)
             {
-                DataTable copytable;
+                DataTable copytable= null;
                 if (this.CancellationPending)
                 {
-                    lock (locker) { copytable = TorrentXMLHandler.GetProcessedRows(); }
+                    //lock (locker) { copytable = TorrentXMLHandler.GetProcessedRows(); }
                 }
                 //GET A COPY OF ALL NEWLY ADDED TORRENTS 
                 //and work with the copied table to allow TorrentXMLHandler to properly add/remove
@@ -557,7 +557,7 @@ namespace CSL_Test__1
                 }
                 if (this.CancellationPending)
                 {
-                    copytable = TorrentXMLHandler.GetProcessedRows();
+                    //copytable = TorrentXMLHandler.GetProcessedRows();
                     if (copytable.Rows.Count == 0)
                         break; //Break out of while
                 }

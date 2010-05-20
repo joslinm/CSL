@@ -50,8 +50,29 @@
             this.ArrowText = new System.Windows.Forms.Label();
             this.Arrow = new System.Windows.Forms.Label();
             this.StatusLabel = new System.Windows.Forms.Label();
+            this.cSLDataTableBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.cSLDataSetBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.cSLDataSet = new CSL_Test__1.CSLDataSet();
+            this.cSLDataTableTableAdapter = new CSL_Test__1.CSLDataSetTableAdapters.CSLDataTableTableAdapter();
+            this.siteOriginDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.artistDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.albumDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.saveStructureDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.yearDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.bitRateDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.bitFormatDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.physicalFormatDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.sentDataGridViewCheckBoxColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.fileDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.filePathDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.indexDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.errorDataGridViewCheckBoxColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.releaseFormatDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.MainMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cSLDataTableBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cSLDataSetBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cSLDataSet)).BeginInit();
             this.SuspendLayout();
             // 
             // MainMenu
@@ -116,9 +137,9 @@
             this.DeleteButton.TabIndex = 4;
             this.DeleteButton.Text = "Delete";
             this.DeleteButton.UseVisualStyleBackColor = false;
-            this.DeleteButton.MouseLeave += new System.EventHandler(this.DeleteButton_MouseLeave);
             this.DeleteButton.Click += new System.EventHandler(this.DeleteButton_Click);
             this.DeleteButton.MouseEnter += new System.EventHandler(this.DeleteButton_MouseEnter);
+            this.DeleteButton.MouseLeave += new System.EventHandler(this.DeleteButton_MouseLeave);
             // 
             // uTorrentSendAllButton
             // 
@@ -142,10 +163,27 @@
             dataGridViewCellStyle1.ForeColor = System.Drawing.Color.Black;
             this.dataGridView.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
             this.dataGridView.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.dataGridView.AutoGenerateColumns = false;
             this.dataGridView.BackgroundColor = System.Drawing.Color.LightCyan;
             this.dataGridView.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.siteOriginDataGridViewTextBoxColumn,
+            this.artistDataGridViewTextBoxColumn,
+            this.albumDataGridViewTextBoxColumn,
+            this.saveStructureDataGridViewTextBoxColumn,
+            this.yearDataGridViewTextBoxColumn,
+            this.bitRateDataGridViewTextBoxColumn,
+            this.bitFormatDataGridViewTextBoxColumn,
+            this.physicalFormatDataGridViewTextBoxColumn,
+            this.sentDataGridViewCheckBoxColumn,
+            this.fileDataGridViewTextBoxColumn,
+            this.filePathDataGridViewTextBoxColumn,
+            this.indexDataGridViewTextBoxColumn,
+            this.errorDataGridViewCheckBoxColumn,
+            this.releaseFormatDataGridViewTextBoxColumn});
             this.dataGridView.Cursor = System.Windows.Forms.Cursors.Default;
+            this.dataGridView.DataSource = this.cSLDataTableBindingSource;
             this.dataGridView.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnKeystroke;
             this.dataGridView.GridColor = System.Drawing.Color.WhiteSmoke;
             this.dataGridView.Location = new System.Drawing.Point(0, 187);
@@ -155,9 +193,9 @@
             this.dataGridView.RowsDefaultCellStyle = dataGridViewCellStyle2;
             this.dataGridView.Size = new System.Drawing.Size(1077, 233);
             this.dataGridView.TabIndex = 0;
+            this.dataGridView.DragDrop += new System.Windows.Forms.DragEventHandler(this.dataGridView_DragDrop);
             this.dataGridView.DragEnter += new System.Windows.Forms.DragEventHandler(this.dataGridView_DragEnter);
             this.dataGridView.KeyUp += new System.Windows.Forms.KeyEventHandler(this.dataGridView_KeyUp);
-            this.dataGridView.DragDrop += new System.Windows.Forms.DragEventHandler(this.dataGridView_DragDrop);
             // 
             // dataGridViewProgressBar
             // 
@@ -258,6 +296,109 @@
             this.StatusLabel.TabIndex = 13;
             this.StatusLabel.Text = "Status";
             // 
+            // cSLDataTableBindingSource
+            // 
+            this.cSLDataTableBindingSource.DataMember = "CSLDataTable";
+            this.cSLDataTableBindingSource.DataSource = this.cSLDataSetBindingSource;
+            // 
+            // cSLDataSetBindingSource
+            // 
+            this.cSLDataSetBindingSource.DataSource = this.cSLDataSet;
+            this.cSLDataSetBindingSource.Position = 0;
+            // 
+            // cSLDataSet
+            // 
+            this.cSLDataSet.DataSetName = "CSLDataSet";
+            this.cSLDataSet.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
+            // 
+            // cSLDataTableTableAdapter
+            // 
+            this.cSLDataTableTableAdapter.ClearBeforeFill = true;
+            // 
+            // siteOriginDataGridViewTextBoxColumn
+            // 
+            this.siteOriginDataGridViewTextBoxColumn.DataPropertyName = "Site Origin";
+            this.siteOriginDataGridViewTextBoxColumn.HeaderText = "Site Origin";
+            this.siteOriginDataGridViewTextBoxColumn.Name = "siteOriginDataGridViewTextBoxColumn";
+            // 
+            // artistDataGridViewTextBoxColumn
+            // 
+            this.artistDataGridViewTextBoxColumn.DataPropertyName = "Artist";
+            this.artistDataGridViewTextBoxColumn.HeaderText = "Artist";
+            this.artistDataGridViewTextBoxColumn.Name = "artistDataGridViewTextBoxColumn";
+            // 
+            // albumDataGridViewTextBoxColumn
+            // 
+            this.albumDataGridViewTextBoxColumn.DataPropertyName = "Album";
+            this.albumDataGridViewTextBoxColumn.HeaderText = "Album";
+            this.albumDataGridViewTextBoxColumn.Name = "albumDataGridViewTextBoxColumn";
+            // 
+            // saveStructureDataGridViewTextBoxColumn
+            // 
+            this.saveStructureDataGridViewTextBoxColumn.DataPropertyName = "Save Structure";
+            this.saveStructureDataGridViewTextBoxColumn.HeaderText = "Save Structure";
+            this.saveStructureDataGridViewTextBoxColumn.Name = "saveStructureDataGridViewTextBoxColumn";
+            // 
+            // yearDataGridViewTextBoxColumn
+            // 
+            this.yearDataGridViewTextBoxColumn.DataPropertyName = "Year";
+            this.yearDataGridViewTextBoxColumn.HeaderText = "Year";
+            this.yearDataGridViewTextBoxColumn.Name = "yearDataGridViewTextBoxColumn";
+            // 
+            // bitRateDataGridViewTextBoxColumn
+            // 
+            this.bitRateDataGridViewTextBoxColumn.DataPropertyName = "Bit Rate";
+            this.bitRateDataGridViewTextBoxColumn.HeaderText = "Bit Rate";
+            this.bitRateDataGridViewTextBoxColumn.Name = "bitRateDataGridViewTextBoxColumn";
+            // 
+            // bitFormatDataGridViewTextBoxColumn
+            // 
+            this.bitFormatDataGridViewTextBoxColumn.DataPropertyName = "Bit Format";
+            this.bitFormatDataGridViewTextBoxColumn.HeaderText = "Bit Format";
+            this.bitFormatDataGridViewTextBoxColumn.Name = "bitFormatDataGridViewTextBoxColumn";
+            // 
+            // physicalFormatDataGridViewTextBoxColumn
+            // 
+            this.physicalFormatDataGridViewTextBoxColumn.DataPropertyName = "Physical Format";
+            this.physicalFormatDataGridViewTextBoxColumn.HeaderText = "Physical Format";
+            this.physicalFormatDataGridViewTextBoxColumn.Name = "physicalFormatDataGridViewTextBoxColumn";
+            // 
+            // sentDataGridViewCheckBoxColumn
+            // 
+            this.sentDataGridViewCheckBoxColumn.DataPropertyName = "Sent";
+            this.sentDataGridViewCheckBoxColumn.HeaderText = "Sent";
+            this.sentDataGridViewCheckBoxColumn.Name = "sentDataGridViewCheckBoxColumn";
+            // 
+            // fileDataGridViewTextBoxColumn
+            // 
+            this.fileDataGridViewTextBoxColumn.DataPropertyName = "File ";
+            this.fileDataGridViewTextBoxColumn.HeaderText = "File ";
+            this.fileDataGridViewTextBoxColumn.Name = "fileDataGridViewTextBoxColumn";
+            // 
+            // filePathDataGridViewTextBoxColumn
+            // 
+            this.filePathDataGridViewTextBoxColumn.DataPropertyName = "File Path";
+            this.filePathDataGridViewTextBoxColumn.HeaderText = "File Path";
+            this.filePathDataGridViewTextBoxColumn.Name = "filePathDataGridViewTextBoxColumn";
+            // 
+            // indexDataGridViewTextBoxColumn
+            // 
+            this.indexDataGridViewTextBoxColumn.DataPropertyName = "Index";
+            this.indexDataGridViewTextBoxColumn.HeaderText = "Index";
+            this.indexDataGridViewTextBoxColumn.Name = "indexDataGridViewTextBoxColumn";
+            // 
+            // errorDataGridViewCheckBoxColumn
+            // 
+            this.errorDataGridViewCheckBoxColumn.DataPropertyName = "Error";
+            this.errorDataGridViewCheckBoxColumn.HeaderText = "Error";
+            this.errorDataGridViewCheckBoxColumn.Name = "errorDataGridViewCheckBoxColumn";
+            // 
+            // releaseFormatDataGridViewTextBoxColumn
+            // 
+            this.releaseFormatDataGridViewTextBoxColumn.DataPropertyName = "Release Format";
+            this.releaseFormatDataGridViewTextBoxColumn.HeaderText = "Release Format";
+            this.releaseFormatDataGridViewTextBoxColumn.Name = "releaseFormatDataGridViewTextBoxColumn";
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -284,10 +425,14 @@
             this.Name = "MainWindow";
             this.Text = "CSL";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainWindow_FormClosing);
+            this.Load += new System.EventHandler(this.MainWindow_Load);
             this.Resize += new System.EventHandler(this.MainWindow_Resize);
             this.MainMenu.ResumeLayout(false);
             this.MainMenu.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cSLDataTableBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cSLDataSetBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cSLDataSet)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -313,6 +458,24 @@
         private System.Windows.Forms.Label ArrowText;
         private System.Windows.Forms.Label Arrow;
         private System.Windows.Forms.Label StatusLabel;
+        private System.Windows.Forms.BindingSource cSLDataSetBindingSource;
+        private CSLDataSet cSLDataSet;
+        private System.Windows.Forms.BindingSource cSLDataTableBindingSource;
+        private CSLDataSetTableAdapters.CSLDataTableTableAdapter cSLDataTableTableAdapter;
+        private System.Windows.Forms.DataGridViewTextBoxColumn siteOriginDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn artistDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn albumDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn saveStructureDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn yearDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn bitRateDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn bitFormatDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn physicalFormatDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn sentDataGridViewCheckBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn fileDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn filePathDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn indexDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn errorDataGridViewCheckBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn releaseFormatDataGridViewTextBoxColumn;
 
     }
 }

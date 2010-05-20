@@ -35,7 +35,7 @@ namespace CSL_Test__1
             dv.Columns["Error"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
             dv.Columns["File Path"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
             if (dv.Columns["Processed"]  == null)
-                TorrentXMLHandler.InitializeFresh();
+                //TorrentXMLHandler.InitializeFresh();
             dv.Columns["Processed"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
         }
 
@@ -157,7 +157,7 @@ namespace CSL_Test__1
                     }
                 }
 
-                Save();
+                //Save();
             }
             else if (dc.Count > 0)
             {
@@ -169,7 +169,7 @@ namespace CSL_Test__1
                     }
                 }
 
-                Save();
+                //Save();
             }
         }
         public void SendIndividualTorrent()
@@ -186,8 +186,8 @@ namespace CSL_Test__1
                         string save = (string)r.Cells["Save Structure"].Value;
                         string path = (string)r.Cells["File Path"].Value;
 
-                        string success = uTorrentHandler.SendTorrent(save, path);
-
+                        //string success = uTorrentHandler.SendTorrent(save, path);
+                        string success = "nothing";
                         if (success.Equals("SUCCESS"))
                         {
                             TorrentXMLHandler.table.Columns["Handled"].ReadOnly = false;
@@ -215,7 +215,8 @@ namespace CSL_Test__1
                         string save = (string)c.OwningRow.Cells["Save Structure"].Value;
                         string path = (string)c.OwningRow.Cells["File Path"].Value;
 
-                        string success = uTorrentHandler.SendTorrent(save, path);
+                        string success = "nothing";
+                        //string success = uTorrentHandler.SendTorrent(save, path);
                         if (success.Equals("SUCCESS"))
                         {
                             TorrentXMLHandler.table.Columns["Handled"].ReadOnly = false;

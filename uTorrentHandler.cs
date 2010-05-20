@@ -12,7 +12,7 @@ namespace CSL_Test__1
     {
         ErrorWindow ew = new ErrorWindow();
         private Object locker = new Object();
-
+        /*
         public static void SendAllTorrents()
         {
             try
@@ -152,6 +152,6 @@ namespace CSL_Test__1
 
                 return "SUCCESS";
             }
-        }
+        }*/
     }
 }
