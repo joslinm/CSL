@@ -65,7 +65,7 @@ namespace CSL_Test__1
 
         public void Build(object files)
         {
-            TorrentXMLHandler data = new TorrentXMLHandler();
+            TorrentDataHandler data = new TorrentDataHandler();
             List<Torrent> torrents = new List<Torrent>();
             List<FileInfo> items = null;
             Torrent torrent;
@@ -88,6 +88,7 @@ namespace CSL_Test__1
                     {
                         torrent = VerifyTorrent();
                         torrents.Add(torrent);
+                        torrent.SetPath(DirectoryHandler.MoveTorrentFile(torrent));
                         data.AddTorrent(torrent);
                     }
                 }
@@ -162,7 +163,7 @@ namespace CSL_Test__1
 
                             case ('a'):
                                 {
-                                    string artist = ExtractArtist(birth, file);
+                                    string artist = (information[0] == null) ? ExtractArtist(birth, file) : information[0]; //May get called from 'i'
                                     artist = DirectoryHandler.GetHTMLLookUp(artist);
                                     information[0] = artist;
 
@@ -370,7 +371,55 @@ namespace CSL_Test__1
                                 } break;
                             case ('i'):
                                 {
-                                    directoryName += (information[0] == null) ? ExtractArtist(birth, file)[0] : information[0][0];
+                                    if (information[0] == null)
+                                        information[0] = ExtractArtist(birth, file);
+
+                                    string artist;
+
+                                    if (SettingsHandler.GetArtistFlip() && information != null)
+                                    {
+                                        if (information[0].StartsWith("The") || information[0].StartsWith("A "))
+                                        {
+                                            string[] modifiedArtist = information[0].Split(' ');
+                                            artist = "";
+                                            for (int b = 1; b < modifiedArtist.Length; b++)
+                                            {
+                                                artist += modifiedArtist[b];
+                                                if (!((b + 1) == modifiedArtist.Length))
+                                                {
+                                                    artist += " ";
+                                                }
+                                            }
+                                            artist += ", " + modifiedArtist[0];
+                                            information[0] = artist;
+                                        }
+                                    }
+                                    else if (SettingsHandler.GetDeleteThe())
+                                    {
+                                        if (information[0].StartsWith("The"))
+                                        {
+                                            string[] modifiedArtist = information[0].Split(' ');
+                                            artist = "";
+                                            for (int b = 1; b < modifiedArtist.Length; b++)
+                                            {
+                                                artist += modifiedArtist[b];
+                                                if (!((b + 1) == modifiedArtist.Length))
+                                                {
+                                                    artist += " ";
+                                                }
+                                            }
+                                            information[0] = artist;
+                                        }
+                                    }
+
+                                    int counter = -1;
+                                    Match match;
+
+                                    do { match = Regex.Match(information[0][++counter].ToString(), "[a-z]|[A-Z]"); }
+                                    while (!match.Success);
+
+                                    directoryName += match.Value;
+
                                     a++;
                                 } break;
                         }
@@ -569,10 +618,42 @@ namespace CSL_Test__1
 
                         case ('a'):
                             {
-
                                 string artist = information[0];
-                                directoryName += artist;
 
+                                if (SettingsHandler.GetArtistFlip() && information != null)
+                                {
+                                    if (artist.StartsWith("The") || artist.StartsWith("A "))
+                                    {
+                                        string[] modifiedArtist = artist.Split(' ');
+                                        artist = "";
+                                        for (int b = 1; b < modifiedArtist.Length; b++)
+                                        {
+                                            artist += modifiedArtist[b];
+                                            if (!((b + 1) == modifiedArtist.Length))
+                                            {
+                                                artist += " ";
+                                            }
+                                        }
+                                        artist += ", " + modifiedArtist[0];
+                                    }
+                                }
+                                else if (SettingsHandler.GetDeleteThe())
+                                {
+                                    if (artist.StartsWith("The"))
+                                    {
+                                        string[] modifiedArtist = artist.Split(' ');
+                                        artist = "";
+                                        for (int b = 1; b < modifiedArtist.Length; b++)
+                                        {
+                                            artist += modifiedArtist[b];
+                                            if (!((b + 1) == modifiedArtist.Length))
+                                            {
+                                                artist += " ";
+                                            }
+                                        }
+                                    }
+                                }
+                                directoryName += artist;
                                 a++;
                             } break;
                         case ('y'):
@@ -749,10 +830,50 @@ namespace CSL_Test__1
                             } break;
                         case ('i'):
                             {
+                                string artist;
 
-                                directoryName += information[0][0];
+                                if (SettingsHandler.GetArtistFlip() && information != null)
+                                {
+                                    if (information[0].StartsWith("The") || information[0].StartsWith("A "))
+                                    {
+                                        string[] modifiedArtist = information[0].Split(' ');
+                                        artist = "";
+                                        for (int b = 1; b < modifiedArtist.Length; b++)
+                                        {
+                                            artist += modifiedArtist[b];
+                                            if (!((b + 1) == modifiedArtist.Length))
+                                            {
+                                                artist += " ";
+                                            }
+                                        }
+                                        artist += ", " + modifiedArtist[0];
+                                        information[0] = artist;
+                                    }
+                                }
+                                else if (SettingsHandler.GetDeleteThe())
+                                {
+                                    if (information[0].StartsWith("The"))
+                                    {
+                                        string[] modifiedArtist = information[0].Split(' ');
+                                        artist = "";
+                                        for (int b = 1; b < modifiedArtist.Length; b++)
+                                        {
+                                            artist += modifiedArtist[b];
+                                            if (!((b + 1) == modifiedArtist.Length))
+                                            {
+                                                artist += " ";
+                                            }
+                                        }
+                                        information[0] = artist;
+                                    }
+                                }
+
+                                try
+                                {
+                                    directoryName += information[0][0]; //Will throw an index out of bounds error once if "Remove Artist". OK to ignore
+                                }
+                                catch { }
                                 a++;
-
                             } break;
                     }
                 }

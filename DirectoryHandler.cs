@@ -35,11 +35,6 @@ namespace CSL_Test__1
                     e.Result = list;
                 }
             }
-            else
-            {
-                MoveProcessedFiles();
-                e.Result = null;
-            }
         }
         public static void LogError(string error)
         {
@@ -386,11 +381,13 @@ namespace CSL_Test__1
             //DELETE TEMP FOLDER
             DirectoryHandler.DeleteTempFolder();
         }
-        public static string MoveTorrentFile(string file, string where)
+        public static string MoveTorrentFile(Torrent t)
         {
             FileInfo fi;
             DirectoryInfo cslSaveFolder = null;
             string filename;
+            string file = t.GetPath();
+            string where = (t.GetDiscard()) ? "unhandled" : "handled";
 
             try
             {
@@ -433,13 +430,15 @@ namespace CSL_Test__1
                 return null;
             }
         }
+
+        #region Dead Methods (for reference)
+        /****DEAD
         //To be called only from DoWork
         public void MoveProcessedFiles()
         {
             string filepath;
-            TorrentXMLHandler xml = new TorrentXMLHandler();
             bool skip = false;
-            int total = TorrentXMLHandler.table.Rows.Count;
+            int total = TorrentDataHandler.table.Rows.Count;
             double progress = 0;
             double count = 0;
             List<DataRow> items = new List<DataRow>();
@@ -455,7 +454,7 @@ namespace CSL_Test__1
                 //and work with the copied table to allow TorrentXMLHandler to properly add/remove
                 else
                 {
-                    lock (locker) { copytable = TorrentXMLHandler.table.GetChanges(DataRowState.Added); }
+                    lock (locker) { copytable = TorrentDataHandler.table.GetChanges(DataRowState.Added); }
                 }
                 
                 if (copytable != null && copytable.Rows.Count > 0)
@@ -493,7 +492,7 @@ namespace CSL_Test__1
                                         case false:
                                             try
                                             {
-                                                filepath = MoveTorrentFile((string)dr["File Path"], "handled");
+                                                filepath = MoveTorrentFile((string)dr["File Path"], "Sent");
                                                 if (filepath == null)
                                                 {
                                                     copytable.Rows[index]["File Path"] = "Problem moving file..";
@@ -507,7 +506,7 @@ namespace CSL_Test__1
                                             catch (Exception e) { LogError(e.Message + "\n" + e.StackTrace); }
                                             break;
                                         default:
-                                            filepath = MoveTorrentFile((string)dr["File Path"], "handled");
+                                            filepath = MoveTorrentFile((string)dr["File Path"], "Sent");
                                             if (filepath == null)
                                             {
                                                 copytable.Rows[index]["File Path"] = "Problem moving file..";
@@ -530,27 +529,27 @@ namespace CSL_Test__1
                     //Load the copytable back into TorrentXMLHandler
                     lock (locker)
                     {
-                        TorrentXMLHandler.table.Columns["Error"].ReadOnly = false;
+                        TorrentDataHandler.table.Columns["Error"].ReadOnly = false;
 
                         foreach (DataRow dr in copytable.Rows)
                         {
-                            DataRow find = TorrentXMLHandler.table.Rows.Find(dr["File"]);
+                            DataRow find = TorrentDataHandler.table.Rows.Find(dr["File"]);
                             if (find != null)
                             {
-                                int index = TorrentXMLHandler.table.Rows.IndexOf(find);
+                                int index = TorrentDataHandler.table.Rows.IndexOf(find);
                                 try
                                 {
-                                    TorrentXMLHandler.table.Rows[index]["File Path"] = dr["File Path"];
-                                    TorrentXMLHandler.table.Rows[index]["Error"] = dr["Error"];
+                                    TorrentDataHandler.table.Rows[index]["File Path"] = dr["File Path"];
+                                    TorrentDataHandler.table.Rows[index]["Error"] = dr["Error"];
                                 }
                                 catch (Exception e) { DirectoryHandler.LogError(e.Message + "\n" + e.StackTrace); }
                             }
                         }
 
-                        TorrentXMLHandler.table.Columns["Error"].ReadOnly = true;
+                        TorrentDataHandler.table.Columns["Error"].ReadOnly = true;
                         try
                         {
-                            TorrentXMLHandler.table.AcceptChanges();
+                            TorrentDataHandler.table.AcceptChanges();
                         }
                         catch (Exception e) { DirectoryHandler.LogError(e.Message + "\n" + e.StackTrace); }
                     }
@@ -564,7 +563,9 @@ namespace CSL_Test__1
                 else
                     Thread.Sleep(150); 
             }
-        }
+         * */
+        ////
+        #endregion
     }
 }
             

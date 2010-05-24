@@ -59,5 +59,12 @@ namespace CSL_Test__1.Properties {
                 resourceCulture = value;
             }
         }
+        
+        internal static System.Drawing.Bitmap loading {
+            get {
+                object obj = ResourceManager.GetObject("loading", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
     }
 }

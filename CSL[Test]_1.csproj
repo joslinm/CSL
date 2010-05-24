@@ -105,19 +105,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BWHandler.cs">
-    </Compile>
-    <Compile Include="CSLDataSet.cs">
-      <DependentUpon>CSLDataSet.xsd</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="CSLDataSet.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>CSLDataSet.xsd</DependentUpon>
-    </Compile>
     <Compile Include="DataGridViewHandler.cs">
       <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="dataset.cs">
+      <DependentUpon>dataset.xsd</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="dataset.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>dataset.xsd</DependentUpon>
     </Compile>
     <Compile Include="DirectoryHandler.cs">
       <SubType>Component</SubType>
@@ -189,18 +187,17 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <None Include="app.config" />
-    <None Include="CSLDataSet.xsc">
-      <DependentUpon>CSLDataSet.xsd</DependentUpon>
+    <None Include="dataset.xsc">
+      <DependentUpon>dataset.xsd</DependentUpon>
     </None>
-    <None Include="CSLDataSet.xsd">
+    <None Include="dataset.xsd">
       <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>CSLDataSet.Designer.cs</LastGenOutput>
+      <LastGenOutput>dataset.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </None>
-    <None Include="CSLDataSet.xss">
-      <DependentUpon>CSLDataSet.xsd</DependentUpon>
+    <None Include="dataset.xss">
+      <DependentUpon>dataset.xsd</DependentUpon>
     </None>
-    <None Include="CSL[Test]_1_TemporaryKey.pfx" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -217,7 +214,7 @@
     <Compile Include="TorrentBuilder.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="TorrentXMLHandler.cs">
+    <Compile Include="TorrentDataHandler.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="UpdatedInformationWindow.cs">
@@ -271,10 +268,12 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="CSLDataBase.sdf">
+    <Content Include="Database1.sdf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="HTML-Look-Up.txt" />
+    <None Include="Resources\loading.gif" />
+    <EmbeddedResource Include="loading.gif" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

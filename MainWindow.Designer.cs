@@ -29,9 +29,8 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.MainMenu = new System.Windows.Forms.MenuStrip();
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.optionsToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
@@ -39,7 +38,6 @@
             this.ProcessTorrentsButton = new System.Windows.Forms.Button();
             this.DeleteButton = new System.Windows.Forms.Button();
             this.uTorrentSendAllButton = new System.Windows.Forms.Button();
-            this.dataGridView = new System.Windows.Forms.DataGridView();
             this.dataGridViewProgressBar = new System.Windows.Forms.ProgressBar();
             this.panel1 = new System.Windows.Forms.Panel();
             this.uTorrentSendIndividualButton = new System.Windows.Forms.Button();
@@ -50,29 +48,29 @@
             this.ArrowText = new System.Windows.Forms.Label();
             this.Arrow = new System.Windows.Forms.Label();
             this.StatusLabel = new System.Windows.Forms.Label();
-            this.cSLDataTableBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.cSLDataSetBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.cSLDataSet = new CSL_Test__1.CSLDataSet();
-            this.cSLDataTableTableAdapter = new CSL_Test__1.CSLDataSetTableAdapters.CSLDataTableTableAdapter();
-            this.siteOriginDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.artistDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.albumDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.saveStructureDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.yearDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.bitRateDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.bitFormatDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.physicalFormatDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.sentDataGridViewCheckBoxColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.fileDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.filePathDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.indexDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.errorDataGridViewCheckBoxColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.releaseFormatDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.torrentsTableBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.dataset = new CSL_Test__1.dataset();
+            this.torrentsTableTableAdapter = new CSL_Test__1.datasetTableAdapters.TorrentsTableTableAdapter();
+            this.tableAdapterManager = new CSL_Test__1.datasetTableAdapters.TableAdapterManager();
+            this.torrentsTableDataGridView = new System.Windows.Forms.DataGridView();
+            this.Sent = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.Artist = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Album = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Save_Structure = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Year = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Bit_Rate = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Bit_Format = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Physical_Format = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Release_Format = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.File = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.File_Path = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Site_Origin = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.HideSentTorrentsCheckBox = new System.Windows.Forms.CheckBox();
             this.MainMenu.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.cSLDataTableBindingSource)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.cSLDataSetBindingSource)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.cSLDataSet)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.torrentsTableBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataset)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.torrentsTableDataGridView)).BeginInit();
             this.SuspendLayout();
             // 
             // MainMenu
@@ -82,7 +80,7 @@
             this.optionsToolStripMenuItem});
             this.MainMenu.Location = new System.Drawing.Point(0, 0);
             this.MainMenu.Name = "MainMenu";
-            this.MainMenu.Size = new System.Drawing.Size(1072, 26);
+            this.MainMenu.Size = new System.Drawing.Size(1132, 26);
             this.MainMenu.TabIndex = 1;
             this.MainMenu.Text = "menuStrip1";
             // 
@@ -131,7 +129,7 @@
             this.DeleteButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
             this.DeleteButton.Font = new System.Drawing.Font("Courier New", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.DeleteButton.ForeColor = System.Drawing.Color.Maroon;
-            this.DeleteButton.Location = new System.Drawing.Point(983, 113);
+            this.DeleteButton.Location = new System.Drawing.Point(1043, 117);
             this.DeleteButton.Name = "DeleteButton";
             this.DeleteButton.Size = new System.Drawing.Size(77, 31);
             this.DeleteButton.TabIndex = 4;
@@ -154,54 +152,11 @@
             this.uTorrentSendAllButton.UseVisualStyleBackColor = false;
             this.uTorrentSendAllButton.Click += new System.EventHandler(this.uTorrentSendAllButton_Click);
             // 
-            // dataGridView
-            // 
-            this.dataGridView.AllowDrop = true;
-            this.dataGridView.AllowUserToAddRows = false;
-            this.dataGridView.AllowUserToOrderColumns = true;
-            dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.Color.Black;
-            this.dataGridView.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
-            this.dataGridView.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.dataGridView.AutoGenerateColumns = false;
-            this.dataGridView.BackgroundColor = System.Drawing.Color.LightCyan;
-            this.dataGridView.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.siteOriginDataGridViewTextBoxColumn,
-            this.artistDataGridViewTextBoxColumn,
-            this.albumDataGridViewTextBoxColumn,
-            this.saveStructureDataGridViewTextBoxColumn,
-            this.yearDataGridViewTextBoxColumn,
-            this.bitRateDataGridViewTextBoxColumn,
-            this.bitFormatDataGridViewTextBoxColumn,
-            this.physicalFormatDataGridViewTextBoxColumn,
-            this.sentDataGridViewCheckBoxColumn,
-            this.fileDataGridViewTextBoxColumn,
-            this.filePathDataGridViewTextBoxColumn,
-            this.indexDataGridViewTextBoxColumn,
-            this.errorDataGridViewCheckBoxColumn,
-            this.releaseFormatDataGridViewTextBoxColumn});
-            this.dataGridView.Cursor = System.Windows.Forms.Cursors.Default;
-            this.dataGridView.DataSource = this.cSLDataTableBindingSource;
-            this.dataGridView.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnKeystroke;
-            this.dataGridView.GridColor = System.Drawing.Color.WhiteSmoke;
-            this.dataGridView.Location = new System.Drawing.Point(0, 187);
-            this.dataGridView.Name = "dataGridView";
-            dataGridViewCellStyle2.BackColor = System.Drawing.Color.Azure;
-            dataGridViewCellStyle2.ForeColor = System.Drawing.Color.Black;
-            this.dataGridView.RowsDefaultCellStyle = dataGridViewCellStyle2;
-            this.dataGridView.Size = new System.Drawing.Size(1077, 233);
-            this.dataGridView.TabIndex = 0;
-            this.dataGridView.DragDrop += new System.Windows.Forms.DragEventHandler(this.dataGridView_DragDrop);
-            this.dataGridView.DragEnter += new System.Windows.Forms.DragEventHandler(this.dataGridView_DragEnter);
-            this.dataGridView.KeyUp += new System.Windows.Forms.KeyEventHandler(this.dataGridView_KeyUp);
-            // 
             // dataGridViewProgressBar
             // 
-            this.dataGridViewProgressBar.Location = new System.Drawing.Point(0, 381);
+            this.dataGridViewProgressBar.Location = new System.Drawing.Point(0, 440);
             this.dataGridViewProgressBar.Name = "dataGridViewProgressBar";
-            this.dataGridViewProgressBar.Size = new System.Drawing.Size(1072, 39);
+            this.dataGridViewProgressBar.Size = new System.Drawing.Size(1132, 40);
             this.dataGridViewProgressBar.TabIndex = 1;
             this.dataGridViewProgressBar.Visible = false;
             // 
@@ -211,7 +166,7 @@
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.panel1.AutoSize = true;
             this.panel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.panel1.Location = new System.Drawing.Point(-2, 430);
+            this.panel1.Location = new System.Drawing.Point(-2, 491);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(0, 0);
             this.panel1.TabIndex = 0;
@@ -222,7 +177,7 @@
             this.uTorrentSendIndividualButton.BackColor = System.Drawing.Color.Snow;
             this.uTorrentSendIndividualButton.Font = new System.Drawing.Font("Franklin Gothic Medium", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.uTorrentSendIndividualButton.ForeColor = System.Drawing.Color.SteelBlue;
-            this.uTorrentSendIndividualButton.Location = new System.Drawing.Point(943, 150);
+            this.uTorrentSendIndividualButton.Location = new System.Drawing.Point(1003, 154);
             this.uTorrentSendIndividualButton.Name = "uTorrentSendIndividualButton";
             this.uTorrentSendIndividualButton.Size = new System.Drawing.Size(117, 31);
             this.uTorrentSendIndividualButton.TabIndex = 7;
@@ -247,7 +202,7 @@
             this.RefreshButton.BackColor = System.Drawing.Color.Snow;
             this.RefreshButton.Font = new System.Drawing.Font("Franklin Gothic Medium", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.RefreshButton.ForeColor = System.Drawing.Color.SteelBlue;
-            this.RefreshButton.Location = new System.Drawing.Point(0, 151);
+            this.RefreshButton.Location = new System.Drawing.Point(0, 154);
             this.RefreshButton.Name = "RefreshButton";
             this.RefreshButton.Size = new System.Drawing.Size(67, 31);
             this.RefreshButton.TabIndex = 10;
@@ -267,7 +222,7 @@
             this.ArrowText.AutoSize = true;
             this.ArrowText.Font = new System.Drawing.Font("Franklin Gothic Medium", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ArrowText.ForeColor = System.Drawing.Color.DarkRed;
-            this.ArrowText.Location = new System.Drawing.Point(34, 153);
+            this.ArrowText.Location = new System.Drawing.Point(53, 161);
             this.ArrowText.Name = "ArrowText";
             this.ArrowText.Size = new System.Drawing.Size(236, 24);
             this.ArrowText.TabIndex = 11;
@@ -278,7 +233,7 @@
             this.Arrow.AutoSize = true;
             this.Arrow.Font = new System.Drawing.Font("Franklin Gothic Medium", 48F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Arrow.ForeColor = System.Drawing.Color.DarkRed;
-            this.Arrow.Location = new System.Drawing.Point(-14, 101);
+            this.Arrow.Location = new System.Drawing.Point(-5, 104);
             this.Arrow.Name = "Arrow";
             this.Arrow.Size = new System.Drawing.Size(68, 81);
             this.Arrow.TabIndex = 12;
@@ -290,121 +245,158 @@
             this.StatusLabel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(192)))));
             this.StatusLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.StatusLabel.ForeColor = System.Drawing.Color.Yellow;
-            this.StatusLabel.Location = new System.Drawing.Point(5, 358);
+            this.StatusLabel.Location = new System.Drawing.Point(1, 417);
             this.StatusLabel.Name = "StatusLabel";
             this.StatusLabel.Size = new System.Drawing.Size(62, 20);
             this.StatusLabel.TabIndex = 13;
             this.StatusLabel.Text = "Status";
             // 
-            // cSLDataTableBindingSource
+            // torrentsTableBindingSource
             // 
-            this.cSLDataTableBindingSource.DataMember = "CSLDataTable";
-            this.cSLDataTableBindingSource.DataSource = this.cSLDataSetBindingSource;
+            this.torrentsTableBindingSource.DataMember = "TorrentsTable";
+            this.torrentsTableBindingSource.DataSource = this.dataset;
             // 
-            // cSLDataSetBindingSource
+            // dataset
             // 
-            this.cSLDataSetBindingSource.DataSource = this.cSLDataSet;
-            this.cSLDataSetBindingSource.Position = 0;
+            this.dataset.DataSetName = "dataset";
+            this.dataset.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
             // 
-            // cSLDataSet
+            // torrentsTableTableAdapter
             // 
-            this.cSLDataSet.DataSetName = "CSLDataSet";
-            this.cSLDataSet.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
+            this.torrentsTableTableAdapter.ClearBeforeFill = true;
             // 
-            // cSLDataTableTableAdapter
+            // tableAdapterManager
             // 
-            this.cSLDataTableTableAdapter.ClearBeforeFill = true;
+            this.tableAdapterManager.BackupDataSetBeforeUpdate = false;
+            this.tableAdapterManager.TorrentsTableTableAdapter = this.torrentsTableTableAdapter;
+            this.tableAdapterManager.UpdateOrder = CSL_Test__1.datasetTableAdapters.TableAdapterManager.UpdateOrderOption.InsertUpdateDelete;
             // 
-            // siteOriginDataGridViewTextBoxColumn
+            // torrentsTableDataGridView
             // 
-            this.siteOriginDataGridViewTextBoxColumn.DataPropertyName = "Site Origin";
-            this.siteOriginDataGridViewTextBoxColumn.HeaderText = "Site Origin";
-            this.siteOriginDataGridViewTextBoxColumn.Name = "siteOriginDataGridViewTextBoxColumn";
+            this.torrentsTableDataGridView.AllowUserToAddRows = false;
+            dataGridViewCellStyle3.BackColor = System.Drawing.Color.LightCyan;
+            this.torrentsTableDataGridView.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle3;
+            this.torrentsTableDataGridView.AutoGenerateColumns = false;
+            this.torrentsTableDataGridView.BackgroundColor = System.Drawing.SystemColors.Window;
+            this.torrentsTableDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.torrentsTableDataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.Sent,
+            this.Artist,
+            this.Album,
+            this.Save_Structure,
+            this.Year,
+            this.Bit_Rate,
+            this.Bit_Format,
+            this.Physical_Format,
+            this.Release_Format,
+            this.File,
+            this.File_Path,
+            this.Site_Origin,
+            this.ID});
+            this.torrentsTableDataGridView.DataSource = this.torrentsTableBindingSource;
+            this.torrentsTableDataGridView.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.torrentsTableDataGridView.Location = new System.Drawing.Point(0, 191);
+            this.torrentsTableDataGridView.Name = "torrentsTableDataGridView";
+            this.torrentsTableDataGridView.Size = new System.Drawing.Size(1132, 289);
+            this.torrentsTableDataGridView.TabIndex = 13;
             // 
-            // artistDataGridViewTextBoxColumn
+            // Sent
             // 
-            this.artistDataGridViewTextBoxColumn.DataPropertyName = "Artist";
-            this.artistDataGridViewTextBoxColumn.HeaderText = "Artist";
-            this.artistDataGridViewTextBoxColumn.Name = "artistDataGridViewTextBoxColumn";
+            this.Sent.DataPropertyName = "Sent";
+            this.Sent.HeaderText = "Sent";
+            this.Sent.Name = "Sent";
             // 
-            // albumDataGridViewTextBoxColumn
+            // Artist
             // 
-            this.albumDataGridViewTextBoxColumn.DataPropertyName = "Album";
-            this.albumDataGridViewTextBoxColumn.HeaderText = "Album";
-            this.albumDataGridViewTextBoxColumn.Name = "albumDataGridViewTextBoxColumn";
+            this.Artist.DataPropertyName = "Artist";
+            this.Artist.HeaderText = "Artist";
+            this.Artist.Name = "Artist";
             // 
-            // saveStructureDataGridViewTextBoxColumn
+            // Album
             // 
-            this.saveStructureDataGridViewTextBoxColumn.DataPropertyName = "Save Structure";
-            this.saveStructureDataGridViewTextBoxColumn.HeaderText = "Save Structure";
-            this.saveStructureDataGridViewTextBoxColumn.Name = "saveStructureDataGridViewTextBoxColumn";
+            this.Album.DataPropertyName = "Album";
+            this.Album.HeaderText = "Album";
+            this.Album.Name = "Album";
             // 
-            // yearDataGridViewTextBoxColumn
+            // Save_Structure
             // 
-            this.yearDataGridViewTextBoxColumn.DataPropertyName = "Year";
-            this.yearDataGridViewTextBoxColumn.HeaderText = "Year";
-            this.yearDataGridViewTextBoxColumn.Name = "yearDataGridViewTextBoxColumn";
+            this.Save_Structure.DataPropertyName = "Save Structure";
+            this.Save_Structure.HeaderText = "Save Structure";
+            this.Save_Structure.Name = "Save_Structure";
             // 
-            // bitRateDataGridViewTextBoxColumn
+            // Year
             // 
-            this.bitRateDataGridViewTextBoxColumn.DataPropertyName = "Bit Rate";
-            this.bitRateDataGridViewTextBoxColumn.HeaderText = "Bit Rate";
-            this.bitRateDataGridViewTextBoxColumn.Name = "bitRateDataGridViewTextBoxColumn";
+            this.Year.DataPropertyName = "Year";
+            this.Year.HeaderText = "Year";
+            this.Year.Name = "Year";
             // 
-            // bitFormatDataGridViewTextBoxColumn
+            // Bit_Rate
             // 
-            this.bitFormatDataGridViewTextBoxColumn.DataPropertyName = "Bit Format";
-            this.bitFormatDataGridViewTextBoxColumn.HeaderText = "Bit Format";
-            this.bitFormatDataGridViewTextBoxColumn.Name = "bitFormatDataGridViewTextBoxColumn";
+            this.Bit_Rate.DataPropertyName = "Bit Rate";
+            this.Bit_Rate.HeaderText = "Bit Rate";
+            this.Bit_Rate.Name = "Bit_Rate";
             // 
-            // physicalFormatDataGridViewTextBoxColumn
+            // Bit_Format
             // 
-            this.physicalFormatDataGridViewTextBoxColumn.DataPropertyName = "Physical Format";
-            this.physicalFormatDataGridViewTextBoxColumn.HeaderText = "Physical Format";
-            this.physicalFormatDataGridViewTextBoxColumn.Name = "physicalFormatDataGridViewTextBoxColumn";
+            this.Bit_Format.DataPropertyName = "Bit Format";
+            this.Bit_Format.HeaderText = "Bit Format";
+            this.Bit_Format.Name = "Bit_Format";
             // 
-            // sentDataGridViewCheckBoxColumn
+            // Physical_Format
             // 
-            this.sentDataGridViewCheckBoxColumn.DataPropertyName = "Sent";
-            this.sentDataGridViewCheckBoxColumn.HeaderText = "Sent";
-            this.sentDataGridViewCheckBoxColumn.Name = "sentDataGridViewCheckBoxColumn";
+            this.Physical_Format.DataPropertyName = "Physical Format";
+            this.Physical_Format.HeaderText = "Physical Format";
+            this.Physical_Format.Name = "Physical_Format";
             // 
-            // fileDataGridViewTextBoxColumn
+            // Release_Format
             // 
-            this.fileDataGridViewTextBoxColumn.DataPropertyName = "File ";
-            this.fileDataGridViewTextBoxColumn.HeaderText = "File ";
-            this.fileDataGridViewTextBoxColumn.Name = "fileDataGridViewTextBoxColumn";
+            this.Release_Format.DataPropertyName = "Release Format";
+            this.Release_Format.HeaderText = "Release Format";
+            this.Release_Format.Name = "Release_Format";
             // 
-            // filePathDataGridViewTextBoxColumn
+            // File
             // 
-            this.filePathDataGridViewTextBoxColumn.DataPropertyName = "File Path";
-            this.filePathDataGridViewTextBoxColumn.HeaderText = "File Path";
-            this.filePathDataGridViewTextBoxColumn.Name = "filePathDataGridViewTextBoxColumn";
+            this.File.DataPropertyName = "File";
+            this.File.HeaderText = "File";
+            this.File.Name = "File";
             // 
-            // indexDataGridViewTextBoxColumn
+            // File_Path
             // 
-            this.indexDataGridViewTextBoxColumn.DataPropertyName = "Index";
-            this.indexDataGridViewTextBoxColumn.HeaderText = "Index";
-            this.indexDataGridViewTextBoxColumn.Name = "indexDataGridViewTextBoxColumn";
+            this.File_Path.DataPropertyName = "File Path";
+            this.File_Path.HeaderText = "File Path";
+            this.File_Path.Name = "File_Path";
             // 
-            // errorDataGridViewCheckBoxColumn
+            // Site_Origin
             // 
-            this.errorDataGridViewCheckBoxColumn.DataPropertyName = "Error";
-            this.errorDataGridViewCheckBoxColumn.HeaderText = "Error";
-            this.errorDataGridViewCheckBoxColumn.Name = "errorDataGridViewCheckBoxColumn";
+            this.Site_Origin.DataPropertyName = "Site Origin";
+            this.Site_Origin.HeaderText = "Site Origin";
+            this.Site_Origin.Name = "Site_Origin";
             // 
-            // releaseFormatDataGridViewTextBoxColumn
+            // ID
             // 
-            this.releaseFormatDataGridViewTextBoxColumn.DataPropertyName = "Release Format";
-            this.releaseFormatDataGridViewTextBoxColumn.HeaderText = "Release Format";
-            this.releaseFormatDataGridViewTextBoxColumn.Name = "releaseFormatDataGridViewTextBoxColumn";
+            this.ID.DataPropertyName = "ID";
+            this.ID.HeaderText = "ID";
+            this.ID.Name = "ID";
+            // 
+            // HideSentTorrentsCheckBox
+            // 
+            this.HideSentTorrentsCheckBox.AutoSize = true;
+            this.HideSentTorrentsCheckBox.Checked = true;
+            this.HideSentTorrentsCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.HideSentTorrentsCheckBox.Location = new System.Drawing.Point(69, 168);
+            this.HideSentTorrentsCheckBox.Name = "HideSentTorrentsCheckBox";
+            this.HideSentTorrentsCheckBox.Size = new System.Drawing.Size(109, 17);
+            this.HideSentTorrentsCheckBox.TabIndex = 14;
+            this.HideSentTorrentsCheckBox.Text = "Hide sent torrents";
+            this.HideSentTorrentsCheckBox.UseVisualStyleBackColor = true;
+            this.HideSentTorrentsCheckBox.CheckedChanged += new System.EventHandler(this.HideSentTorrentsCheckBox_CheckedChanged);
             // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Azure;
-            this.ClientSize = new System.Drawing.Size(1072, 419);
+            this.ClientSize = new System.Drawing.Size(1132, 480);
             this.Controls.Add(this.StatusLabel);
             this.Controls.Add(this.ArrowText);
             this.Controls.Add(this.RefreshButton);
@@ -412,27 +404,26 @@
             this.Controls.Add(this.MainMenu);
             this.Controls.Add(this.uTorrentSendIndividualButton);
             this.Controls.Add(this.dataGridViewProgressBar);
-            this.Controls.Add(this.dataGridView);
             this.Controls.Add(this.uTorrentSendAllButton);
             this.Controls.Add(this.DeleteButton);
             this.Controls.Add(this.ProcessTorrentsButton);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.Arrow);
-            this.ForeColor = System.Drawing.Color.WhiteSmoke;
+            this.Controls.Add(this.torrentsTableDataGridView);
+            this.Controls.Add(this.HideSentTorrentsCheckBox);
+            this.ForeColor = System.Drawing.SystemColors.ControlText;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.MainMenu;
             this.MinimumSize = new System.Drawing.Size(1088, 457);
             this.Name = "MainWindow";
             this.Text = "CSL";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainWindow_FormClosing);
-            this.Load += new System.EventHandler(this.MainWindow_Load);
             this.Resize += new System.EventHandler(this.MainWindow_Resize);
             this.MainMenu.ResumeLayout(false);
             this.MainMenu.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.cSLDataTableBindingSource)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.cSLDataSetBindingSource)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.cSLDataSet)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.torrentsTableBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataset)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.torrentsTableDataGridView)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -446,7 +437,6 @@
         private System.Windows.Forms.Button DeleteButton;
         private System.Windows.Forms.Button uTorrentSendAllButton;
         private System.Windows.Forms.MenuStrip MainMenu;
-        private System.Windows.Forms.DataGridView dataGridView;
         private System.Windows.Forms.ProgressBar dataGridViewProgressBar;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Button uTorrentSendIndividualButton;
@@ -458,24 +448,25 @@
         private System.Windows.Forms.Label ArrowText;
         private System.Windows.Forms.Label Arrow;
         private System.Windows.Forms.Label StatusLabel;
-        private System.Windows.Forms.BindingSource cSLDataSetBindingSource;
-        private CSLDataSet cSLDataSet;
-        private System.Windows.Forms.BindingSource cSLDataTableBindingSource;
-        private CSLDataSetTableAdapters.CSLDataTableTableAdapter cSLDataTableTableAdapter;
-        private System.Windows.Forms.DataGridViewTextBoxColumn siteOriginDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn artistDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn albumDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn saveStructureDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn yearDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn bitRateDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn bitFormatDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn physicalFormatDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn sentDataGridViewCheckBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn fileDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn filePathDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn indexDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn errorDataGridViewCheckBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn releaseFormatDataGridViewTextBoxColumn;
+        private dataset dataset;
+        private System.Windows.Forms.BindingSource torrentsTableBindingSource;
+        private datasetTableAdapters.TorrentsTableTableAdapter torrentsTableTableAdapter;
+        private datasetTableAdapters.TableAdapterManager tableAdapterManager;
+        private System.Windows.Forms.DataGridView torrentsTableDataGridView;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn Sent;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Artist;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Album;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Save_Structure;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Year;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Bit_Rate;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Bit_Format;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Physical_Format;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Release_Format;
+        private System.Windows.Forms.DataGridViewTextBoxColumn File;
+        private System.Windows.Forms.DataGridViewTextBoxColumn File_Path;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Site_Origin;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ID;
+        private System.Windows.Forms.CheckBox HideSentTorrentsCheckBox;
 
     }
 }

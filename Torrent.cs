@@ -135,6 +135,10 @@ namespace CSL_Test__1
         }
 #endregion
         #region Set Methods
+        public void SetPath(string path)
+        {
+            this.path = path;
+        }
         public void SetArtist(string artist)
         {
             this.artist = artist;
