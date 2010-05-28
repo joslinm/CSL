@@ -62,7 +62,6 @@ namespace CSL_Test__1
             WorkerReportsProgress = true;
             WorkerSupportsCancellation = true;
         }
-
         public void Build(object files)
         {
             TorrentDataHandler data = new TorrentDataHandler();
@@ -80,16 +79,26 @@ namespace CSL_Test__1
             foreach(FileInfo item in items)
             {
                 string birth = GetTorrentBirth(item);
-                ProcessTorrent(item, birth);
-
-                if (information[14] != "true")
+                if (birth == "ptp")
                 {
-                    if (SettingsHandler.GetDownloadFormatExists(information[2]))
+                    ProcessMovieTorrent(item, birth);
+                    Movie tm = new Movie(information);
+                    tm.SetPath(DirectoryHandler.MoveTorrentFile(tm));
+                    data.AddMovieTorrent(tm);
+                }
+                else
+                {
+                    ProcessMusicTorrent(item, birth);
+
+                    if (information[14] != "true")
                     {
-                        torrent = VerifyTorrent();
-                        torrents.Add(torrent);
-                        torrent.SetPath(DirectoryHandler.MoveTorrentFile(torrent));
-                        data.AddTorrent(torrent);
+                        if (SettingsHandler.GetDownloadFormatExists(information[2]))
+                        {
+                            torrent = VerifyMusicTorrent();
+                            torrents.Add(torrent);
+                            torrent.SetPath(DirectoryHandler.MoveTorrentFile(torrent));
+                            data.AddTorrent(torrent);
+                        }
                     }
                 }
 
@@ -106,7 +115,70 @@ namespace CSL_Test__1
             ew.ClearApplyToAll();
         }
 
-        public void ProcessTorrent(FileInfo file, string birth)
+        public void ProcessMovieTorrent(FileInfo file, string birth)
+        {
+            string directoryName = null;
+            char[] customswitch = SettingsHandler.GetMovieCustomDirectory().ToCharArray();
+            if (!SettingsHandler.GetDownloadDirectory().EndsWith("\\"))
+                SettingsHandler.SetDownloadFolder(SettingsHandler.GetDownloadDirectory() + "\\");
+
+            string[] info = ExtractPTPMovieInfo(file);
+
+            for (int a = 0; a < customswitch.Length; a++)
+            {
+                if (customswitch[a] == ('%'))
+                {
+                    switch (customswitch[a + 1])
+                    {
+                        case ('m'):
+                            {
+                                directoryName += info[0];
+                                a++;
+                            } break;
+                        case ('y'):
+                            {
+                                directoryName += info[1];
+                                a++;
+                            } break;
+                        case ('s'):
+                            {
+                                directoryName += info[2];
+                                a++;
+                            } break;
+                        case ('c'):
+                            {
+                                directoryName += info[3];
+                                a++;
+                            } break;
+                        case ('f'):
+                            {
+                                directoryName += info[4];
+                                a++;
+                            } break;
+                    }
+                }
+                else
+                {
+                    directoryName += customswitch[a];
+                }
+            }
+
+            for(int a = 0; a < 5; a++)
+            information[a] = info[a];
+
+            information[13] = SettingsHandler.GetDownloadDirectory().Trim() + directoryName.Trim();
+
+            if (SettingsHandler.GetUppercaseAllFolderNames())
+                information[13] = information[13].ToUpper();
+            else if (SettingsHandler.GetLowercaseAllFolderNames())
+                information[13] = information[13].ToLower();
+
+            information[10] = file.FullName;
+            information[11] = file.Name;
+            information[12] = birth;
+
+        }
+        public void ProcessMusicTorrent(FileInfo file, string birth)
         {
             /*Directory Switches:
            ***********************************
@@ -451,7 +523,7 @@ namespace CSL_Test__1
                 information[14] = "true";
             }
         }
-        public Torrent VerifyTorrent()
+        public Torrent VerifyMusicTorrent()
         {
             for (int a = 0; a < information.Length; a++)
             {
@@ -903,6 +975,8 @@ namespace CSL_Test__1
                     value = "waffles";
                 else if (fileContents.Contains("what"))
                     value = "what";
+                else if (fileContents.Contains("passthepopcorn.me"))
+                    value = "ptp";
             }
             catch(Exception e)
             {
@@ -1663,6 +1737,44 @@ namespace CSL_Test__1
                 ew.IssueGeneralWarning("Error parsing release format", "Please report", e.Message + "\n" + e.StackTrace);
                 return IssueError("Can't parse release format", file);
             }
+        }
+
+        //BETA PTP SUPPORT
+        /*Get it all in one shot.. no need to split up the methods*/
+        public string[] ExtractPTPMovieInfo(FileInfo file)
+        {
+            string filename;
+            string[] info;
+            string[] result = new string[6];
+            int counter = 5;
+            int filecounter;
+
+            /*string[] result:
+             * 0: movie title
+             * 1: year
+             * 2: source media
+             * 3: codec format
+             * 4: file format
+             * */
+
+            filename = file.Name;
+            if (filename.Contains(".torrent"))
+                filename = filename.Remove(filename.IndexOf(".torrent"));
+
+            info = filename.Split('.');
+            filecounter = info.Length - 1;
+
+            for (int a = 0; a < 4; a++)
+                result[--counter] = info[--filecounter]; //Up until movie title, they will match up
+
+            filecounter--;
+            for (int a = 0; a <= filecounter; a++)
+            {
+                result[0] += " " + info[a];
+            }
+            result[0] = result[0].Remove(0, 1);
+
+            return result;
         }
 
         private bool SkipReleaseFormatCheck()

@@ -99,5 +99,11 @@
     <Setting Name="TimeFormat" Type="System.String" Scope="User">
       <Value Profile="(Default)">Seconds</Value>
     </Setting>
+    <Setting Name="MovieCustomDirectory" Type="System.String" Scope="User">
+      <Value Profile="(Default)">%m [%y] [%s] [%f] [%c]</Value>
+    </Setting>
+    <Setting Name="MovieDownloadDirectory" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
   </Settings>
 </SettingsFile>

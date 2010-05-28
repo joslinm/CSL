@@ -17,6 +17,10 @@ namespace CSL_Test__1
         DataGridViewHandler dgvh;
         List<FileInfo> items;
         TorrentDataHandler data;
+        
+        //Timing
+        DateTime startime;
+        DateTime endtime;
 
         static System.Timers.Timer timer = new System.Timers.Timer();
         static public bool HideSent;
@@ -152,9 +156,9 @@ namespace CSL_Test__1
                 }
             }
             //DATAGRIDVIEW
-            torrentsTableDataGridView.Location = new System.Drawing.Point(0, 187);
-            torrentsTableDataGridView.Size = new System.Drawing.Size(this.Width - 15, this.Height - 225);
-            torrentsTableDataGridView.ScrollBars = ScrollBars.Both;
+            TabbedContainer.Location = new System.Drawing.Point(0, 187);
+            TabbedContainer.Size = new System.Drawing.Size(this.Width - 15, this.Height - 225);
+            //torrentsTableDataGridView.ScrollBars = ScrollBars.Both;
             //DELETE BUTTON
             DeleteButton.Location = new System.Drawing.Point(this.Width - 105, 113);
             //uTORRENT SEND BUTTON
@@ -172,6 +176,19 @@ namespace CSL_Test__1
             Show();
             WindowState = FormWindowState.Normal;
             notifyIcon.Visible = false;
+        }
+        private void HideSentTorrentsCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (HideSentTorrentsCheckBox.Checked)
+            {
+                HideSent = true;
+                dgvh.HideSentTorrents();
+            }
+            else
+            {
+                HideSent = false;
+                dgvh.ShowSentTorrents();
+            }
         }
         #endregion
         #region Buttons
@@ -204,6 +221,8 @@ namespace CSL_Test__1
             if (torrents != null || zips != null)
             {
                 //Prevent anything complicated from happening..
+                startime = DateTime.Now;
+
                 dgvh.SuspendLayout();
                 ProcessTorrentsButton.Enabled = false;
                 RefreshButton.Enabled = false;
@@ -314,7 +333,6 @@ namespace CSL_Test__1
             DirectoryHandler.DeleteZipFiles();
 
             dgvh.ResumeLayout();
-            tableAdapterManager.UpdateAll(this.dataset);
 
             ProcessTorrentsButton.Enabled = true;
             RefreshButton.Enabled = true;
@@ -327,7 +345,14 @@ namespace CSL_Test__1
 
             torrentsTableTableAdapter.Update(dataset.TorrentsTable);
             torrentsTableBindingSource.EndEdit();
+            moviesTableTableAdapter.Update(dataset.MoviesTable);
+            moviesTableBindingSource.EndEdit();
+
             tableAdapterManager.UpdateAll(dataset);
+
+            endtime = DateTime.Now;
+            TimeSpan duration = endtime - startime;
+            ProcessTimer.Text = duration.Seconds + " secs";
         }
         void ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
@@ -387,18 +412,13 @@ namespace CSL_Test__1
         }
         #endregion
 
-        private void HideSentTorrentsCheckBox_CheckedChanged(object sender, EventArgs e)
+        private void MainWindow_Load(object sender, EventArgs e)
         {
-            if (HideSentTorrentsCheckBox.Checked)
-            {
-                HideSent = true;
-                dgvh.HideSentTorrents();
-            }
-            else
-            {
-                HideSent = false;
-                dgvh.ShowSentTorrents();
-            }
+            // TODO: This line of code loads data into the 'dataset.MoviesTable' table. You can move, or remove it, as needed.
+            this.moviesTableTableAdapter.Fill(this.dataset.MoviesTable);
+
         }
+
+        
     }
 }

@@ -18,6 +18,11 @@ namespace CSL_Test__1
         }
 
         #region Set Options
+        public static void SetMovieCustomDirectory(string value)
+        {
+            settings.MovieCustomDirectory = value;
+            settings.Save();
+        }
         public static void SetCurrentVersion(string value)
         {
             settings.CurrentVersion = value;
@@ -176,6 +181,10 @@ namespace CSL_Test__1
         }
         #endregion
         #region Get Options
+        public static string GetMovieCustomDirectory()
+        {
+            return settings.MovieCustomDirectory;
+        }
         public static string GetCurrentVersion()
         {
             return settings.CurrentVersion;

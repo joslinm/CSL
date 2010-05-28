@@ -8,20 +8,20 @@ namespace CSL_Test__1
     public class Torrent
     {
         /*Main music information*/
-        string artist = null;
-        string album = null;
-        string albumType = null;
-        string bitrate = null;
-        string year = null;
-        string physicalFormat = null;
-        string bitFormat = null;
+        public string artist = null;
+        public string album = null;
+        public string albumType = null;
+        public string bitrate = null;
+        public string year = null;
+        public string physicalFormat = null;
+        public string bitFormat = null;
         
         /*Torrent file information*/
-        string path;
-        string fileName;
-        string birth; //Waffles | What.CD
-        string destPath;
-        bool discard;
+        public string path;
+        public string fileName;
+        public string birth; //Waffles | What.CD
+        public string destPath;
+        public bool discard;
 
 
         /*Information[] will hold all values that the user wishes to use for 
@@ -44,6 +44,7 @@ namespace CSL_Test__1
          * information[13] --> destination path
          * information[14] --> discard
          * */
+        public Torrent() { }
         public Torrent(string[] information)
         {
             if (information.Length >= 13)

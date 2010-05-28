@@ -344,5 +344,29 @@ namespace CSL_Test__1 {
                 this["TimeFormat"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("%m [%y] [%s] [%f] [%c]")]
+        public string MovieCustomDirectory {
+            get {
+                return ((string)(this["MovieCustomDirectory"]));
+            }
+            set {
+                this["MovieCustomDirectory"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string MovieDownloadDirectory {
+            get {
+                return ((string)(this["MovieDownloadDirectory"]));
+            }
+            set {
+                this["MovieDownloadDirectory"] = value;
+            }
+        }
     }
 }

@@ -11,7 +11,6 @@ namespace CSL_Test__1
     {
         public DataGridView dv;
         BindingSource bs;
-        private Object obj = new Object();
         delegate void SuspendLayoutInvoker();
 
         public DataGridViewHandler() { }
@@ -138,24 +137,18 @@ namespace CSL_Test__1
                 double progress = 0;
                 double count = 0;
 
-                lock (obj)
+                foreach (DataGridViewRow r in dr)
                 {
-                    foreach (DataGridViewRow r in dr)
+                    try
                     {
-                            try
-                            {
-                                TorrentDataHandler.RemoveTorrent((int)r.Cells["ID"].Value);
-                            }
-                            catch (Exception rowremoveerror)
-                            {
-                                string message = rowremoveerror.Message;
-                            }
-                        }
-
-                        progress = (++count / total) * 100;
-                        if (progress <= 100 && progress >= 0)
-                            this.ReportProgress((int)progress);
+                        TorrentDataHandler.RemoveTorrent((int)r.Cells["ID"].Value);
                     }
+                    catch (Exception rowremoveerror) { DirectoryHandler.LogError(rowremoveerror.Message + "\n" + rowremoveerror.StackTrace); }
+                }
+
+                progress = (++count / total) * 100;
+                if (progress <= 100 && progress >= 0)
+                    this.ReportProgress((int)progress);
             }
             else if (dc.Count > 0)
             {
@@ -192,6 +185,5 @@ namespace CSL_Test__1
             if (MainWindow.HideSent)
                 HideSentTorrents();
         }
-
     }
 }

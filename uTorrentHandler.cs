@@ -11,7 +11,6 @@ namespace CSL_Test__1
     class uTorrentHandler : DataGridViewHandler
     {
         ErrorWindow ew = new ErrorWindow();
-        private Object locker = new Object();
 
         public static void SendTorrent(int index)
         {

@@ -28,7 +28,7 @@
             this.FolderBrowser = new System.Windows.Forms.FolderBrowserDialog();
             this.ErrorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.MusicOptionsTab = new System.Windows.Forms.TabPage();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.TrackZipsCheck = new System.Windows.Forms.CheckBox();
             this.TrackTorrentsCheck = new System.Windows.Forms.CheckBox();
@@ -66,7 +66,8 @@
             this.label12 = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
-            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.MoviesOptionsTab = new System.Windows.Forms.TabPage();
+            this.MusicDirectoryTab = new System.Windows.Forms.TabPage();
             this.panel1 = new System.Windows.Forms.Panel();
             this.label2 = new System.Windows.Forms.Label();
             this.TextCaseOptions = new System.Windows.Forms.ComboBox();
@@ -118,12 +119,12 @@
             this.label4 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.ErrorProvider)).BeginInit();
             this.tabControl1.SuspendLayout();
-            this.tabPage1.SuspendLayout();
+            this.MusicOptionsTab.SuspendLayout();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.AutoCheckTime)).BeginInit();
-            this.tabPage3.SuspendLayout();
+            this.MusicDirectoryTab.SuspendLayout();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -137,24 +138,25 @@
             // 
             // tabControl1
             // 
-            this.tabControl1.Controls.Add(this.tabPage1);
-            this.tabControl1.Controls.Add(this.tabPage3);
+            this.tabControl1.Controls.Add(this.MusicOptionsTab);
+            this.tabControl1.Controls.Add(this.MoviesOptionsTab);
+            this.tabControl1.Controls.Add(this.MusicDirectoryTab);
             this.tabControl1.Location = new System.Drawing.Point(0, 2);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(695, 513);
             this.tabControl1.TabIndex = 38;
             // 
-            // tabPage1
+            // MusicOptionsTab
             // 
-            this.tabPage1.Controls.Add(this.splitContainer2);
-            this.tabPage1.Location = new System.Drawing.Point(4, 22);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(687, 487);
-            this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "General Options";
-            this.tabPage1.UseVisualStyleBackColor = true;
+            this.MusicOptionsTab.Controls.Add(this.splitContainer2);
+            this.MusicOptionsTab.Location = new System.Drawing.Point(4, 22);
+            this.MusicOptionsTab.Name = "MusicOptionsTab";
+            this.MusicOptionsTab.Padding = new System.Windows.Forms.Padding(3);
+            this.MusicOptionsTab.Size = new System.Drawing.Size(687, 487);
+            this.MusicOptionsTab.TabIndex = 0;
+            this.MusicOptionsTab.Text = "Music Options";
+            this.MusicOptionsTab.UseVisualStyleBackColor = true;
             // 
             // splitContainer2
             // 
@@ -636,15 +638,24 @@
             this.label14.TabIndex = 11;
             this.label14.Text = "Program Options";
             // 
-            // tabPage3
+            // MoviesOptionsTab
             // 
-            this.tabPage3.Controls.Add(this.panel1);
-            this.tabPage3.Location = new System.Drawing.Point(4, 22);
-            this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(687, 487);
-            this.tabPage3.TabIndex = 2;
-            this.tabPage3.Text = "Advanced Directory";
-            this.tabPage3.UseVisualStyleBackColor = true;
+            this.MoviesOptionsTab.Location = new System.Drawing.Point(4, 22);
+            this.MoviesOptionsTab.Name = "MoviesOptionsTab";
+            this.MoviesOptionsTab.Size = new System.Drawing.Size(687, 487);
+            this.MoviesOptionsTab.TabIndex = 3;
+            this.MoviesOptionsTab.Text = "Movies Options";
+            this.MoviesOptionsTab.UseVisualStyleBackColor = true;
+            // 
+            // MusicDirectoryTab
+            // 
+            this.MusicDirectoryTab.Controls.Add(this.panel1);
+            this.MusicDirectoryTab.Location = new System.Drawing.Point(4, 22);
+            this.MusicDirectoryTab.Name = "MusicDirectoryTab";
+            this.MusicDirectoryTab.Size = new System.Drawing.Size(687, 487);
+            this.MusicDirectoryTab.TabIndex = 2;
+            this.MusicDirectoryTab.Text = "Music Directory Options";
+            this.MusicDirectoryTab.UseVisualStyleBackColor = true;
             // 
             // panel1
             // 
@@ -1169,14 +1180,14 @@
             this.Load += new System.EventHandler(this.OptionsWindow_Load);
             ((System.ComponentModel.ISupportInitialize)(this.ErrorProvider)).EndInit();
             this.tabControl1.ResumeLayout(false);
-            this.tabPage1.ResumeLayout(false);
+            this.MusicOptionsTab.ResumeLayout(false);
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel1.PerformLayout();
             this.splitContainer2.Panel2.ResumeLayout(false);
             this.splitContainer2.Panel2.PerformLayout();
             this.splitContainer2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.AutoCheckTime)).EndInit();
-            this.tabPage3.ResumeLayout(false);
+            this.MusicDirectoryTab.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.ResumeLayout(false);
@@ -1188,7 +1199,7 @@
         private System.Windows.Forms.FolderBrowserDialog FolderBrowser;
         private System.Windows.Forms.ErrorProvider ErrorProvider;
         private System.Windows.Forms.TabControl tabControl1;
-        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.TabPage MusicOptionsTab;
         private System.Windows.Forms.SplitContainer splitContainer2;
         private System.Windows.Forms.CheckBox TrackZipsCheck;
         private System.Windows.Forms.CheckBox TrackTorrentsCheck;
@@ -1221,7 +1232,7 @@
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.Label label14;
-        private System.Windows.Forms.TabPage tabPage3;
+        private System.Windows.Forms.TabPage MusicDirectoryTab;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.TextBox Bitrate24bitTextBox;
         private System.Windows.Forms.Label label40;
@@ -1276,6 +1287,7 @@
         private System.Windows.Forms.CheckBox DoubleSpaceRemoverCheckBox;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ComboBox TextCaseOptions;
+        private System.Windows.Forms.TabPage MoviesOptionsTab;
 
 
     }
