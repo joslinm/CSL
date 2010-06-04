@@ -10,8 +10,9 @@ using System.Collections;
 using System.Data;
 using MusicBrainzXML;
 using System.Windows.Forms;
+using System.Collections.Specialized;
 
-namespace CSL_Test__1
+namespace CSL
 {
     class TorrentBuilder : BackgroundWorker
     {
@@ -79,14 +80,36 @@ namespace CSL_Test__1
             foreach(FileInfo item in items)
             {
                 string birth = GetTorrentBirth(item);
-                if (birth == "ptp")
+                if (birth == null)
+                {
+                    string savefolder = null;
+                    string announce = null;
+
+                    try
+                    {
+                        object torrentdata = BEncoding.Decode(item);
+                        savefolder = (string)(((ListDictionary)((ListDictionary)torrentdata)["info"])["name"]); //Torrentdata is a LD containing LD, which contains name
+                        announce = (string)(((ListDictionary)torrentdata)["announce"]);
+                        announce = announce.Replace("http://", "");
+                        announce = announce.Substring(0, announce.IndexOf(":"));
+                    }
+                    catch { savefolder = item.Name; }
+                    information[12] = (announce == null) ? "???" : announce;
+                    information[11] = item.Name;
+                    information[10] = item.FullName;
+                    information[13] = SettingsHandler.GetOtherDownloadDirectory() + savefolder;
+                    torrent = new Torrent(information);
+                    torrent.SetPath(DirectoryHandler.MoveTorrentFile(torrent));
+                    data.AddOtherTorrent(torrent);
+                }
+                else if (birth == "ptp")
                 {
                     ProcessMovieTorrent(item, birth);
                     Movie tm = new Movie(information);
                     tm.SetPath(DirectoryHandler.MoveTorrentFile(tm));
                     data.AddMovieTorrent(tm);
                 }
-                else
+                else if (birth.Equals("waffles") || birth.Equals("what"))
                 {
                     ProcessMusicTorrent(item, birth);
 
@@ -101,7 +124,6 @@ namespace CSL_Test__1
                         }
                     }
                 }
-
                 //Clear out information for this run to avoid misinformation on the next run
                 for (int b = 0; b < information.Length; b++)
                     information[b] = null;
@@ -119,8 +141,8 @@ namespace CSL_Test__1
         {
             string directoryName = null;
             char[] customswitch = SettingsHandler.GetMovieCustomDirectory().ToCharArray();
-            if (!SettingsHandler.GetDownloadDirectory().EndsWith("\\"))
-                SettingsHandler.SetDownloadFolder(SettingsHandler.GetDownloadDirectory() + "\\");
+            if (!SettingsHandler.GetMovieDownloadDirectory().EndsWith("\\"))
+                SettingsHandler.SetMovieDownloadDirectory(SettingsHandler.GetMovieDownloadDirectory() + "\\");
 
             string[] info = ExtractPTPMovieInfo(file);
 
@@ -163,10 +185,10 @@ namespace CSL_Test__1
                 }
             }
 
-            for(int a = 0; a < 5; a++)
-            information[a] = info[a];
+            for (int a = 0; a < 5; a++)
+                information[a] = info[a];
 
-            information[13] = SettingsHandler.GetDownloadDirectory().Trim() + directoryName.Trim();
+            information[13] = SettingsHandler.GetMovieDownloadDirectory().Trim() + directoryName.Trim();
 
             if (SettingsHandler.GetUppercaseAllFolderNames())
                 information[13] = information[13].ToUpper();
@@ -206,7 +228,10 @@ namespace CSL_Test__1
                 {
                     SettingsHandler.SetDownloadFolder(SettingsHandler.GetDownloadDirectory() + "\\");
                 }
-
+                if (!SettingsHandler.GetVariousArtistsDownloadDirectory().EndsWith("\\"))
+                {
+                    SettingsHandler.SetVariousArtistsDownloadDirectory(SettingsHandler.GetVariousArtistsDownloadDirectory() + "\\");
+                }
                 if (!SkipReleaseFormatCheck())
                 {
                     if (SettingsHandler.GetHandleLoneTAsAlbum())
@@ -219,8 +244,18 @@ namespace CSL_Test__1
                     else
                         information[2] = ExtractAlbumFormat(birth, file, file.FullName.Contains("[CSL]--Temp"));
 
-                    if (!SettingsHandler.GetDownloadFormatExists(information[2]))
+                    if (information[14] == "true")
                         goto ReturnTorrent;
+                    else if (!SettingsHandler.GetDownloadFormatExists(information[2]))
+                        goto ReturnTorrent;
+                }
+
+                information[0] = ExtractArtist(birth, file);
+
+                //Check if it's a various artists and if so get the various artists directory
+                if (information[0].Contains("Various Artists"))
+                {
+                    directoryArray = SettingsHandler.GetVariousArtistsDownloadSwitches().ToCharArray();
                 }
 
                 for (int a = 0; a < directoryArray.Length; a++)
@@ -505,7 +540,10 @@ namespace CSL_Test__1
                     }
                 }
 
-                information[13] = SettingsHandler.GetDownloadDirectory().Trim() + directoryName.Trim();
+                if (information[0].Contains("Various Artists"))
+                    information[13] = SettingsHandler.GetVariousArtistsDownloadDirectory().Trim() + directoryName.Trim();
+                else
+                    information[13] = SettingsHandler.GetDownloadDirectory().Trim() + directoryName.Trim();
 
                 if (SettingsHandler.GetUppercaseAllFolderNames())
                     information[13] = information[13].ToUpper();
@@ -523,6 +561,7 @@ namespace CSL_Test__1
                 information[14] = "true";
             }
         }
+
         public Torrent VerifyMusicTorrent()
         {
             for (int a = 0; a < information.Length; a++)
@@ -957,6 +996,57 @@ namespace CSL_Test__1
 
             return SettingsHandler.GetDownloadDirectory() + directoryName.Trim();
         }
+        public static string RebuildMovieCustomPath(string[] information)
+        {
+            string directoryName = SettingsHandler.GetMovieDownloadDirectory();
+            char[] switches = SettingsHandler.GetMovieCustomDirectory().ToCharArray();
+
+            for (int a = 0; a < switches.Length; a++)
+            {
+                if (switches[a].Equals("%"))
+                {
+                    switch (switches[a + 1])
+                    {
+                        /* information
+                         * 0: Movie Title
+                         * 1: Year
+                         * 2: Source Media
+                         * 3: Codec Format
+                         * 4: File Format
+                         * */
+
+                        case 'm':
+                            directoryName += information[0];
+                            a++;
+                            break;
+                        case 'y':
+                            directoryName += information[1];
+                            a++;
+                            break;
+                        case 's':
+                            directoryName += information[2];
+                            a++;
+                            break;
+                        case 'c':
+                            directoryName += information[3];
+                            a++;
+                            break;
+                        case 'f':
+                            directoryName += information[4];
+                            a++;
+                            break;
+                        default:
+                            directoryName += switches[a] + switches[a + 1];
+                            break;
+                    }
+                }
+                else
+                {
+                    directoryName += switches[a];
+                }
+            }
+            return directoryName;
+        }
 
         public string GetTorrentBirth(FileInfo file)
         {
@@ -978,7 +1068,7 @@ namespace CSL_Test__1
                 else if (fileContents.Contains("passthepopcorn.me"))
                     value = "ptp";
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 ew.IssueGeneralWarning("Error reading from torrent file", "Please report", e.Message + "\n" + e.StackTrace);
                 value = null;
@@ -986,16 +1076,12 @@ namespace CSL_Test__1
             }
             finally
             {
-                if(fs != null)
-                fs.Dispose();
-                if(sr != null)
-                sr.Dispose();
+                if (fs != null)
+                    fs.Dispose();
+                if (sr != null)
+                    sr.Dispose();
             }
-
-            if (value == null)
-                return IssueError("Can't parse birth", file);
-            else
-                return value;
+            return value;
         }
         public string IssueError(string error, FileInfo file)
         {
@@ -1765,9 +1851,18 @@ namespace CSL_Test__1
             filecounter = info.Length - 1;
 
             for (int a = 0; a < 4; a++)
-                result[--counter] = info[--filecounter]; //Up until movie title, they will match up
+            {
+                counter--;
+                filecounter--;
+                try
+                {
+                    result[counter] = info[filecounter]; //Up until movie title, they will match up
+                }
+                catch { result[counter] = "ERROR"; }
+            }
 
             filecounter--;
+            //Worked way down complete, now work way up by piecing together the movie title if name includes space 
             for (int a = 0; a <= filecounter; a++)
             {
                 result[0] += " " + info[a];

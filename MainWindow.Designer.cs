@@ -1,4 +1,4 @@
-﻿namespace CSL_Test__1
+﻿namespace CSL
 {
     partial class MainWindow
     {
@@ -30,6 +30,10 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             this.MainMenu = new System.Windows.Forms.MenuStrip();
@@ -54,6 +58,7 @@
             this.MusicTab = new System.Windows.Forms.TabPage();
             this.torrentsTableDataGridView = new System.Windows.Forms.DataGridView();
             this.Sent = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.MusicOpenWithClient = new System.Windows.Forms.DataGridViewButtonColumn();
             this.Artist = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Album = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Save_Structure = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -67,25 +72,38 @@
             this.Site_Origin = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.torrentsTableBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.dataset = new CSL_Test__1.dataset();
+            this.dataset = new CSL.dataset();
             this.MoviesTab = new System.Windows.Forms.TabPage();
             this.moviesTableDataGridView = new System.Windows.Forms.DataGridView();
-            this.dataGridViewCheckBoxColumn1 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn8 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn6 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn9 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn10 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn7 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.MovieSent = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.MoviesOpenWithClient = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.MovieTitle = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.MovieYear = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.SourceMedia = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CodecFormat = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.FileFormat = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.MovieSaveStructure = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.MovieSiteOrigin = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.MovieFilePath = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.MovieFile = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.MovieID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.moviesTableBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.torrentsTableTableAdapter = new CSL_Test__1.datasetTableAdapters.TorrentsTableTableAdapter();
-            this.tableAdapterManager = new CSL_Test__1.datasetTableAdapters.TableAdapterManager();
-            this.moviesTableTableAdapter = new CSL_Test__1.datasetTableAdapters.MoviesTableTableAdapter();
+            this.OthersTab = new System.Windows.Forms.TabPage();
+            this.othersTableDataGridView = new System.Windows.Forms.DataGridView();
+            this.OthersSent = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.OpenWithClient = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.OthersSiteOrigin = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.OthersFile = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.OthersSaveStructure = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.OthersFilePath = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.OthersID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.othersTableBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.ProcessTimer = new System.Windows.Forms.Label();
+            this.torrentsTableTableAdapter = new CSL.datasetTableAdapters.TorrentsTableTableAdapter();
+            this.tableAdapterManager = new CSL.datasetTableAdapters.TableAdapterManager();
+            this.moviesTableTableAdapter = new CSL.datasetTableAdapters.MoviesTableTableAdapter();
+            this.othersTableTableAdapter = new CSL.datasetTableAdapters.OthersTableTableAdapter();
+            this.dataGridViewButtonColumn1 = new System.Windows.Forms.DataGridViewButtonColumn();
             this.MainMenu.SuspendLayout();
             this.TabbedContainer.SuspendLayout();
             this.MusicTab.SuspendLayout();
@@ -95,6 +113,9 @@
             this.MoviesTab.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.moviesTableDataGridView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.moviesTableBindingSource)).BeginInit();
+            this.OthersTab.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.othersTableDataGridView)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.othersTableBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // MainMenu
@@ -104,7 +125,7 @@
             this.optionsToolStripMenuItem});
             this.MainMenu.Location = new System.Drawing.Point(0, 0);
             this.MainMenu.Name = "MainMenu";
-            this.MainMenu.Size = new System.Drawing.Size(1132, 26);
+            this.MainMenu.Size = new System.Drawing.Size(1158, 26);
             this.MainMenu.TabIndex = 1;
             this.MainMenu.Text = "menuStrip1";
             // 
@@ -153,7 +174,7 @@
             this.DeleteButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
             this.DeleteButton.Font = new System.Drawing.Font("Courier New", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.DeleteButton.ForeColor = System.Drawing.Color.Maroon;
-            this.DeleteButton.Location = new System.Drawing.Point(1043, 152);
+            this.DeleteButton.Location = new System.Drawing.Point(1069, 145);
             this.DeleteButton.Name = "DeleteButton";
             this.DeleteButton.Size = new System.Drawing.Size(77, 31);
             this.DeleteButton.TabIndex = 4;
@@ -179,9 +200,9 @@
             // dataGridViewProgressBar
             // 
             this.dataGridViewProgressBar.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.dataGridViewProgressBar.Location = new System.Drawing.Point(0, 493);
+            this.dataGridViewProgressBar.Location = new System.Drawing.Point(0, 527);
             this.dataGridViewProgressBar.Name = "dataGridViewProgressBar";
-            this.dataGridViewProgressBar.Size = new System.Drawing.Size(1132, 19);
+            this.dataGridViewProgressBar.Size = new System.Drawing.Size(1158, 19);
             this.dataGridViewProgressBar.TabIndex = 1;
             // 
             // panel1
@@ -190,7 +211,7 @@
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.panel1.AutoSize = true;
             this.panel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.panel1.Location = new System.Drawing.Point(-2, 516);
+            this.panel1.Location = new System.Drawing.Point(-2, 554);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(0, 0);
             this.panel1.TabIndex = 0;
@@ -201,7 +222,7 @@
             this.uTorrentSendIndividualButton.BackColor = System.Drawing.Color.Snow;
             this.uTorrentSendIndividualButton.Font = new System.Drawing.Font("Franklin Gothic Medium", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.uTorrentSendIndividualButton.ForeColor = System.Drawing.Color.SteelBlue;
-            this.uTorrentSendIndividualButton.Location = new System.Drawing.Point(1003, 189);
+            this.uTorrentSendIndividualButton.Location = new System.Drawing.Point(1029, 182);
             this.uTorrentSendIndividualButton.Name = "uTorrentSendIndividualButton";
             this.uTorrentSendIndividualButton.Size = new System.Drawing.Size(117, 31);
             this.uTorrentSendIndividualButton.TabIndex = 7;
@@ -226,7 +247,7 @@
             this.RefreshButton.BackColor = System.Drawing.Color.Snow;
             this.RefreshButton.Font = new System.Drawing.Font("Franklin Gothic Medium", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.RefreshButton.ForeColor = System.Drawing.Color.SteelBlue;
-            this.RefreshButton.Location = new System.Drawing.Point(0, 166);
+            this.RefreshButton.Location = new System.Drawing.Point(0, 185);
             this.RefreshButton.Name = "RefreshButton";
             this.RefreshButton.Size = new System.Drawing.Size(67, 31);
             this.RefreshButton.TabIndex = 10;
@@ -267,9 +288,10 @@
             // 
             this.StatusLabel.AutoSize = true;
             this.StatusLabel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(192)))));
+            this.StatusLabel.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.StatusLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.StatusLabel.ForeColor = System.Drawing.Color.Yellow;
-            this.StatusLabel.Location = new System.Drawing.Point(-4, 491);
+            this.StatusLabel.Location = new System.Drawing.Point(0, 507);
             this.StatusLabel.Name = "StatusLabel";
             this.StatusLabel.Size = new System.Drawing.Size(62, 20);
             this.StatusLabel.TabIndex = 13;
@@ -280,7 +302,7 @@
             this.HideSentTorrentsCheckBox.AutoSize = true;
             this.HideSentTorrentsCheckBox.Checked = true;
             this.HideSentTorrentsCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.HideSentTorrentsCheckBox.Location = new System.Drawing.Point(69, 168);
+            this.HideSentTorrentsCheckBox.Location = new System.Drawing.Point(73, 200);
             this.HideSentTorrentsCheckBox.Name = "HideSentTorrentsCheckBox";
             this.HideSentTorrentsCheckBox.Size = new System.Drawing.Size(109, 17);
             this.HideSentTorrentsCheckBox.TabIndex = 14;
@@ -292,11 +314,12 @@
             // 
             this.TabbedContainer.Controls.Add(this.MusicTab);
             this.TabbedContainer.Controls.Add(this.MoviesTab);
+            this.TabbedContainer.Controls.Add(this.OthersTab);
             this.TabbedContainer.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.TabbedContainer.Location = new System.Drawing.Point(0, 204);
+            this.TabbedContainer.Location = new System.Drawing.Point(0, 218);
             this.TabbedContainer.Name = "TabbedContainer";
             this.TabbedContainer.SelectedIndex = 0;
-            this.TabbedContainer.Size = new System.Drawing.Size(1132, 289);
+            this.TabbedContainer.Size = new System.Drawing.Size(1158, 289);
             this.TabbedContainer.TabIndex = 15;
             // 
             // MusicTab
@@ -305,7 +328,7 @@
             this.MusicTab.Location = new System.Drawing.Point(4, 22);
             this.MusicTab.Name = "MusicTab";
             this.MusicTab.Padding = new System.Windows.Forms.Padding(3);
-            this.MusicTab.Size = new System.Drawing.Size(1124, 263);
+            this.MusicTab.Size = new System.Drawing.Size(1150, 263);
             this.MusicTab.TabIndex = 0;
             this.MusicTab.Text = "Music";
             this.MusicTab.UseVisualStyleBackColor = true;
@@ -313,13 +336,14 @@
             // torrentsTableDataGridView
             // 
             this.torrentsTableDataGridView.AllowUserToAddRows = false;
-            dataGridViewCellStyle5.BackColor = System.Drawing.Color.LightCyan;
-            this.torrentsTableDataGridView.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle1.BackColor = System.Drawing.Color.LightCyan;
+            this.torrentsTableDataGridView.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
             this.torrentsTableDataGridView.AutoGenerateColumns = false;
             this.torrentsTableDataGridView.BackgroundColor = System.Drawing.SystemColors.Window;
             this.torrentsTableDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.torrentsTableDataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Sent,
+            this.MusicOpenWithClient,
             this.Artist,
             this.Album,
             this.Save_Structure,
@@ -336,83 +360,117 @@
             this.torrentsTableDataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.torrentsTableDataGridView.Location = new System.Drawing.Point(3, 3);
             this.torrentsTableDataGridView.Name = "torrentsTableDataGridView";
-            this.torrentsTableDataGridView.Size = new System.Drawing.Size(1118, 257);
+            this.torrentsTableDataGridView.Size = new System.Drawing.Size(1144, 257);
             this.torrentsTableDataGridView.TabIndex = 13;
             // 
             // Sent
             // 
+            this.Sent.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
             this.Sent.DataPropertyName = "Sent";
             this.Sent.HeaderText = "Sent";
             this.Sent.Name = "Sent";
+            this.Sent.Width = 35;
+            // 
+            // MusicOpenWithClient
+            // 
+            this.MusicOpenWithClient.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle2.NullValue = "Open with µTorrent";
+            this.MusicOpenWithClient.DefaultCellStyle = dataGridViewCellStyle2;
+            this.MusicOpenWithClient.HeaderText = "Open File";
+            this.MusicOpenWithClient.Name = "MusicOpenWithClient";
+            this.MusicOpenWithClient.Width = 52;
             // 
             // Artist
             // 
+            this.Artist.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.Artist.DataPropertyName = "Artist";
             this.Artist.HeaderText = "Artist";
             this.Artist.Name = "Artist";
             // 
             // Album
             // 
+            this.Album.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.Album.DataPropertyName = "Album";
             this.Album.HeaderText = "Album";
             this.Album.Name = "Album";
             // 
             // Save_Structure
             // 
+            this.Save_Structure.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.Save_Structure.DataPropertyName = "Save Structure";
             this.Save_Structure.HeaderText = "Save Structure";
+            this.Save_Structure.MinimumWidth = 10;
             this.Save_Structure.Name = "Save_Structure";
+            this.Save_Structure.Width = 200;
             // 
             // Year
             // 
+            this.Year.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
             this.Year.DataPropertyName = "Year";
             this.Year.HeaderText = "Year";
             this.Year.Name = "Year";
+            this.Year.Width = 54;
             // 
             // Bit_Rate
             // 
+            this.Bit_Rate.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
             this.Bit_Rate.DataPropertyName = "Bit Rate";
             this.Bit_Rate.HeaderText = "Bit Rate";
             this.Bit_Rate.Name = "Bit_Rate";
+            this.Bit_Rate.Width = 65;
             // 
             // Bit_Format
             // 
+            this.Bit_Format.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
             this.Bit_Format.DataPropertyName = "Bit Format";
             this.Bit_Format.HeaderText = "Bit Format";
             this.Bit_Format.Name = "Bit_Format";
+            this.Bit_Format.Width = 73;
             // 
             // Physical_Format
             // 
+            this.Physical_Format.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
             this.Physical_Format.DataPropertyName = "Physical Format";
             this.Physical_Format.HeaderText = "Physical Format";
             this.Physical_Format.Name = "Physical_Format";
+            this.Physical_Format.Width = 97;
             // 
             // Release_Format
             // 
+            this.Release_Format.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
             this.Release_Format.DataPropertyName = "Release Format";
             this.Release_Format.HeaderText = "Release Format";
             this.Release_Format.Name = "Release_Format";
+            this.Release_Format.Width = 97;
             // 
             // File
             // 
+            this.File.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.File.DataPropertyName = "File";
             this.File.HeaderText = "File";
+            this.File.MinimumWidth = 75;
             this.File.Name = "File";
             // 
             // File_Path
             // 
+            this.File_Path.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.File_Path.DataPropertyName = "File Path";
             this.File_Path.HeaderText = "File Path";
+            this.File_Path.MinimumWidth = 106;
             this.File_Path.Name = "File_Path";
             // 
             // Site_Origin
             // 
+            this.Site_Origin.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
             this.Site_Origin.DataPropertyName = "Site Origin";
             this.Site_Origin.HeaderText = "Site Origin";
             this.Site_Origin.Name = "Site_Origin";
+            this.Site_Origin.Width = 74;
             // 
             // ID
             // 
+            this.ID.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.ID.DataPropertyName = "ID";
             this.ID.HeaderText = "ID";
             this.ID.Name = "ID";
@@ -434,7 +492,7 @@
             this.MoviesTab.Location = new System.Drawing.Point(4, 22);
             this.MoviesTab.Name = "MoviesTab";
             this.MoviesTab.Padding = new System.Windows.Forms.Padding(3);
-            this.MoviesTab.Size = new System.Drawing.Size(1124, 275);
+            this.MoviesTab.Size = new System.Drawing.Size(1150, 263);
             this.MoviesTab.TabIndex = 1;
             this.MoviesTab.Text = "Movies";
             this.MoviesTab.UseVisualStyleBackColor = true;
@@ -442,100 +500,224 @@
             // moviesTableDataGridView
             // 
             this.moviesTableDataGridView.AllowUserToAddRows = false;
-            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.Color.LightCyan;
-            this.moviesTableDataGridView.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle3.BackColor = System.Drawing.Color.LightCyan;
+            this.moviesTableDataGridView.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle3;
             this.moviesTableDataGridView.AutoGenerateColumns = false;
             this.moviesTableDataGridView.BackgroundColor = System.Drawing.SystemColors.Window;
             this.moviesTableDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.moviesTableDataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.dataGridViewCheckBoxColumn1,
-            this.dataGridViewTextBoxColumn1,
-            this.dataGridViewTextBoxColumn2,
-            this.dataGridViewTextBoxColumn3,
-            this.dataGridViewTextBoxColumn4,
-            this.dataGridViewTextBoxColumn5,
-            this.dataGridViewTextBoxColumn8,
-            this.dataGridViewTextBoxColumn6,
-            this.dataGridViewTextBoxColumn9,
-            this.dataGridViewTextBoxColumn10,
-            this.dataGridViewTextBoxColumn7});
+            this.MovieSent,
+            this.MoviesOpenWithClient,
+            this.MovieTitle,
+            this.MovieYear,
+            this.SourceMedia,
+            this.CodecFormat,
+            this.FileFormat,
+            this.MovieSaveStructure,
+            this.MovieSiteOrigin,
+            this.MovieFilePath,
+            this.MovieFile,
+            this.MovieID});
             this.moviesTableDataGridView.DataSource = this.moviesTableBindingSource;
             this.moviesTableDataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.moviesTableDataGridView.Location = new System.Drawing.Point(3, 3);
             this.moviesTableDataGridView.Name = "moviesTableDataGridView";
-            this.moviesTableDataGridView.Size = new System.Drawing.Size(1118, 269);
+            this.moviesTableDataGridView.Size = new System.Drawing.Size(1144, 257);
             this.moviesTableDataGridView.TabIndex = 0;
             // 
-            // dataGridViewCheckBoxColumn1
+            // MovieSent
             // 
-            this.dataGridViewCheckBoxColumn1.DataPropertyName = "Sent";
-            this.dataGridViewCheckBoxColumn1.HeaderText = "Sent";
-            this.dataGridViewCheckBoxColumn1.Name = "dataGridViewCheckBoxColumn1";
+            this.MovieSent.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.MovieSent.DataPropertyName = "Sent";
+            this.MovieSent.HeaderText = "Sent";
+            this.MovieSent.Name = "MovieSent";
+            this.MovieSent.Width = 35;
             // 
-            // dataGridViewTextBoxColumn1
+            // MoviesOpenWithClient
             // 
-            this.dataGridViewTextBoxColumn1.DataPropertyName = "Movie Title";
-            this.dataGridViewTextBoxColumn1.HeaderText = "Movie Title";
-            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
+            this.MoviesOpenWithClient.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle4.NullValue = "Open with µTorrent";
+            this.MoviesOpenWithClient.DefaultCellStyle = dataGridViewCellStyle4;
+            this.MoviesOpenWithClient.HeaderText = "Open File";
+            this.MoviesOpenWithClient.Name = "MoviesOpenWithClient";
+            this.MoviesOpenWithClient.Width = 52;
             // 
-            // dataGridViewTextBoxColumn2
+            // MovieTitle
             // 
-            this.dataGridViewTextBoxColumn2.DataPropertyName = "Year";
-            this.dataGridViewTextBoxColumn2.HeaderText = "Year";
-            this.dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
+            this.MovieTitle.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.MovieTitle.DataPropertyName = "Movie Title";
+            this.MovieTitle.HeaderText = "Movie Title";
+            this.MovieTitle.Name = "MovieTitle";
             // 
-            // dataGridViewTextBoxColumn3
+            // MovieYear
             // 
-            this.dataGridViewTextBoxColumn3.DataPropertyName = "Source Media";
-            this.dataGridViewTextBoxColumn3.HeaderText = "Source Media";
-            this.dataGridViewTextBoxColumn3.Name = "dataGridViewTextBoxColumn3";
+            this.MovieYear.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.MovieYear.DataPropertyName = "Year";
+            this.MovieYear.HeaderText = "Year";
+            this.MovieYear.Name = "MovieYear";
+            this.MovieYear.Width = 54;
             // 
-            // dataGridViewTextBoxColumn4
+            // SourceMedia
             // 
-            this.dataGridViewTextBoxColumn4.DataPropertyName = "Codec Format";
-            this.dataGridViewTextBoxColumn4.HeaderText = "Codec Format";
-            this.dataGridViewTextBoxColumn4.Name = "dataGridViewTextBoxColumn4";
+            this.SourceMedia.DataPropertyName = "Source Media";
+            this.SourceMedia.HeaderText = "Source Media";
+            this.SourceMedia.Name = "SourceMedia";
             // 
-            // dataGridViewTextBoxColumn5
+            // CodecFormat
             // 
-            this.dataGridViewTextBoxColumn5.DataPropertyName = "File Format";
-            this.dataGridViewTextBoxColumn5.HeaderText = "File Format";
-            this.dataGridViewTextBoxColumn5.Name = "dataGridViewTextBoxColumn5";
+            this.CodecFormat.DataPropertyName = "Codec Format";
+            this.CodecFormat.HeaderText = "Codec Format";
+            this.CodecFormat.Name = "CodecFormat";
             // 
-            // dataGridViewTextBoxColumn8
+            // FileFormat
             // 
-            this.dataGridViewTextBoxColumn8.DataPropertyName = "Save Structure";
-            this.dataGridViewTextBoxColumn8.HeaderText = "Save Structure";
-            this.dataGridViewTextBoxColumn8.Name = "dataGridViewTextBoxColumn8";
+            this.FileFormat.DataPropertyName = "File Format";
+            this.FileFormat.HeaderText = "File Format";
+            this.FileFormat.Name = "FileFormat";
             // 
-            // dataGridViewTextBoxColumn6
+            // MovieSaveStructure
             // 
-            this.dataGridViewTextBoxColumn6.DataPropertyName = "Site Origin";
-            this.dataGridViewTextBoxColumn6.HeaderText = "Site Origin";
-            this.dataGridViewTextBoxColumn6.Name = "dataGridViewTextBoxColumn6";
+            this.MovieSaveStructure.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.MovieSaveStructure.DataPropertyName = "Save Structure";
+            this.MovieSaveStructure.HeaderText = "Save Structure";
+            this.MovieSaveStructure.Name = "MovieSaveStructure";
             // 
-            // dataGridViewTextBoxColumn9
+            // MovieSiteOrigin
             // 
-            this.dataGridViewTextBoxColumn9.DataPropertyName = "File Path";
-            this.dataGridViewTextBoxColumn9.HeaderText = "File Path";
-            this.dataGridViewTextBoxColumn9.Name = "dataGridViewTextBoxColumn9";
+            this.MovieSiteOrigin.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.MovieSiteOrigin.DataPropertyName = "Site Origin";
+            this.MovieSiteOrigin.HeaderText = "Site Origin";
+            this.MovieSiteOrigin.Name = "MovieSiteOrigin";
+            this.MovieSiteOrigin.Width = 74;
             // 
-            // dataGridViewTextBoxColumn10
+            // MovieFilePath
             // 
-            this.dataGridViewTextBoxColumn10.DataPropertyName = "File";
-            this.dataGridViewTextBoxColumn10.HeaderText = "File";
-            this.dataGridViewTextBoxColumn10.Name = "dataGridViewTextBoxColumn10";
+            this.MovieFilePath.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.MovieFilePath.DataPropertyName = "File Path";
+            this.MovieFilePath.HeaderText = "File Path";
+            this.MovieFilePath.Name = "MovieFilePath";
             // 
-            // dataGridViewTextBoxColumn7
+            // MovieFile
             // 
-            this.dataGridViewTextBoxColumn7.DataPropertyName = "ID";
-            this.dataGridViewTextBoxColumn7.HeaderText = "ID";
-            this.dataGridViewTextBoxColumn7.Name = "dataGridViewTextBoxColumn7";
+            this.MovieFile.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.MovieFile.DataPropertyName = "File";
+            this.MovieFile.HeaderText = "File";
+            this.MovieFile.Name = "MovieFile";
+            // 
+            // MovieID
+            // 
+            this.MovieID.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.MovieID.DataPropertyName = "ID";
+            this.MovieID.HeaderText = "ID";
+            this.MovieID.Name = "MovieID";
             // 
             // moviesTableBindingSource
             // 
             this.moviesTableBindingSource.DataMember = "MoviesTable";
             this.moviesTableBindingSource.DataSource = this.dataset;
+            // 
+            // OthersTab
+            // 
+            this.OthersTab.AutoScroll = true;
+            this.OthersTab.Controls.Add(this.othersTableDataGridView);
+            this.OthersTab.Location = new System.Drawing.Point(4, 22);
+            this.OthersTab.Name = "OthersTab";
+            this.OthersTab.Size = new System.Drawing.Size(1150, 263);
+            this.OthersTab.TabIndex = 2;
+            this.OthersTab.Text = "Other";
+            this.OthersTab.UseVisualStyleBackColor = true;
+            // 
+            // othersTableDataGridView
+            // 
+            this.othersTableDataGridView.AllowUserToAddRows = false;
+            dataGridViewCellStyle5.BackColor = System.Drawing.Color.LightCyan;
+            this.othersTableDataGridView.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle5;
+            this.othersTableDataGridView.AutoGenerateColumns = false;
+            this.othersTableDataGridView.BackgroundColor = System.Drawing.SystemColors.Window;
+            this.othersTableDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.othersTableDataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.OthersSent,
+            this.OpenWithClient,
+            this.OthersSiteOrigin,
+            this.OthersFile,
+            this.OthersSaveStructure,
+            this.OthersFilePath,
+            this.OthersID});
+            this.othersTableDataGridView.DataSource = this.othersTableBindingSource;
+            this.othersTableDataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.othersTableDataGridView.Location = new System.Drawing.Point(0, 0);
+            this.othersTableDataGridView.Name = "othersTableDataGridView";
+            this.othersTableDataGridView.Size = new System.Drawing.Size(1150, 263);
+            this.othersTableDataGridView.TabIndex = 0;
+            // 
+            // OthersSent
+            // 
+            this.OthersSent.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.OthersSent.DataPropertyName = "Sent";
+            this.OthersSent.HeaderText = "Sent";
+            this.OthersSent.Name = "OthersSent";
+            this.OthersSent.Width = 35;
+            // 
+            // OpenWithClient
+            // 
+            this.OpenWithClient.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.OpenWithClient.DataPropertyName = "OpenWithClient";
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle6.NullValue = "Open with µTorrent";
+            this.OpenWithClient.DefaultCellStyle = dataGridViewCellStyle6;
+            this.OpenWithClient.HeaderText = "Open File";
+            this.OpenWithClient.Name = "OpenWithClient";
+            this.OpenWithClient.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.OpenWithClient.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.OpenWithClient.Width = 77;
+            // 
+            // OthersSiteOrigin
+            // 
+            this.OthersSiteOrigin.DataPropertyName = "Site Origin";
+            this.OthersSiteOrigin.HeaderText = "Site Origin";
+            this.OthersSiteOrigin.Name = "OthersSiteOrigin";
+            // 
+            // OthersFile
+            // 
+            this.OthersFile.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.OthersFile.DataPropertyName = "File";
+            this.OthersFile.HeaderText = "File";
+            this.OthersFile.Name = "OthersFile";
+            // 
+            // OthersSaveStructure
+            // 
+            this.OthersSaveStructure.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.OthersSaveStructure.DataPropertyName = "Save Structure";
+            this.OthersSaveStructure.HeaderText = "Save Structure";
+            this.OthersSaveStructure.Name = "OthersSaveStructure";
+            // 
+            // OthersFilePath
+            // 
+            this.OthersFilePath.DataPropertyName = "File Path";
+            this.OthersFilePath.HeaderText = "File Path";
+            this.OthersFilePath.Name = "OthersFilePath";
+            // 
+            // OthersID
+            // 
+            this.OthersID.DataPropertyName = "ID";
+            this.OthersID.HeaderText = "ID";
+            this.OthersID.Name = "OthersID";
+            // 
+            // othersTableBindingSource
+            // 
+            this.othersTableBindingSource.DataMember = "OthersTable";
+            this.othersTableBindingSource.DataSource = this.dataset;
+            // 
+            // ProcessTimer
+            // 
+            this.ProcessTimer.AutoSize = true;
+            this.ProcessTimer.Font = new System.Drawing.Font("Microsoft Sans Serif", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ProcessTimer.Location = new System.Drawing.Point(674, 110);
+            this.ProcessTimer.Name = "ProcessTimer";
+            this.ProcessTimer.Size = new System.Drawing.Size(37, 9);
+            this.ProcessTimer.TabIndex = 16;
+            this.ProcessTimer.Text = "0.00 secs";
             // 
             // torrentsTableTableAdapter
             // 
@@ -545,29 +727,37 @@
             // 
             this.tableAdapterManager.BackupDataSetBeforeUpdate = false;
             this.tableAdapterManager.MoviesTableTableAdapter = null;
+            this.tableAdapterManager.OthersTableTableAdapter = null;
             this.tableAdapterManager.TorrentsTableTableAdapter = this.torrentsTableTableAdapter;
-            this.tableAdapterManager.UpdateOrder = CSL_Test__1.datasetTableAdapters.TableAdapterManager.UpdateOrderOption.InsertUpdateDelete;
+            this.tableAdapterManager.UpdateOrder = CSL.datasetTableAdapters.TableAdapterManager.UpdateOrderOption.InsertUpdateDelete;
+            this.tableAdapterManager.UserStatsTableTableAdapter = null;
             // 
             // moviesTableTableAdapter
             // 
             this.moviesTableTableAdapter.ClearBeforeFill = true;
             // 
-            // ProcessTimer
+            // othersTableTableAdapter
             // 
-            this.ProcessTimer.AutoSize = true;
-            this.ProcessTimer.Location = new System.Drawing.Point(674, 104);
-            this.ProcessTimer.Name = "ProcessTimer";
-            this.ProcessTimer.Size = new System.Drawing.Size(53, 13);
-            this.ProcessTimer.TabIndex = 16;
-            this.ProcessTimer.Text = "0.00 secs";
+            this.othersTableTableAdapter.ClearBeforeFill = true;
+            // 
+            // dataGridViewButtonColumn1
+            // 
+            this.dataGridViewButtonColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.dataGridViewButtonColumn1.DataPropertyName = "OpenWithClient";
+            this.dataGridViewButtonColumn1.HeaderText = "Open w/ µTorrent";
+            this.dataGridViewButtonColumn1.Name = "dataGridViewButtonColumn1";
+            this.dataGridViewButtonColumn1.ReadOnly = true;
+            this.dataGridViewButtonColumn1.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridViewButtonColumn1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.dataGridViewButtonColumn1.Text = "Open w/ µTorrent";
+            this.dataGridViewButtonColumn1.ToolTipText = "Open w/ µTorrent";
             // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Azure;
-            this.ClientSize = new System.Drawing.Size(1132, 512);
-            this.Controls.Add(this.StatusLabel);
+            this.ClientSize = new System.Drawing.Size(1158, 546);
             this.Controls.Add(this.ProcessTimer);
             this.Controls.Add(this.ArrowText);
             this.Controls.Add(this.RefreshButton);
@@ -581,6 +771,7 @@
             this.Controls.Add(this.Arrow);
             this.Controls.Add(this.HideSentTorrentsCheckBox);
             this.Controls.Add(this.TabbedContainer);
+            this.Controls.Add(this.StatusLabel);
             this.Controls.Add(this.dataGridViewProgressBar);
             this.ForeColor = System.Drawing.SystemColors.ControlText;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -589,7 +780,6 @@
             this.Name = "MainWindow";
             this.Text = "CSL";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainWindow_FormClosing);
-            this.Load += new System.EventHandler(this.MainWindow_Load);
             this.Resize += new System.EventHandler(this.MainWindow_Resize);
             this.MainMenu.ResumeLayout(false);
             this.MainMenu.PerformLayout();
@@ -601,6 +791,9 @@
             this.MoviesTab.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.moviesTableDataGridView)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.moviesTableBindingSource)).EndInit();
+            this.OthersTab.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.othersTableDataGridView)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.othersTableBindingSource)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -636,7 +829,15 @@
         private System.Windows.Forms.BindingSource moviesTableBindingSource;
         private datasetTableAdapters.MoviesTableTableAdapter moviesTableTableAdapter;
         private System.Windows.Forms.DataGridView torrentsTableDataGridView;
+        private System.Windows.Forms.DataGridView moviesTableDataGridView;
+        private System.Windows.Forms.Label ProcessTimer;
+        private System.Windows.Forms.TabPage OthersTab;
+        private System.Windows.Forms.BindingSource othersTableBindingSource;
+        private datasetTableAdapters.OthersTableTableAdapter othersTableTableAdapter;
+        private System.Windows.Forms.DataGridViewButtonColumn dataGridViewButtonColumn1;
+        private System.Windows.Forms.DataGridView othersTableDataGridView;
         private System.Windows.Forms.DataGridViewCheckBoxColumn Sent;
+        private System.Windows.Forms.DataGridViewButtonColumn MusicOpenWithClient;
         private System.Windows.Forms.DataGridViewTextBoxColumn Artist;
         private System.Windows.Forms.DataGridViewTextBoxColumn Album;
         private System.Windows.Forms.DataGridViewTextBoxColumn Save_Structure;
@@ -649,19 +850,25 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn File_Path;
         private System.Windows.Forms.DataGridViewTextBoxColumn Site_Origin;
         private System.Windows.Forms.DataGridViewTextBoxColumn ID;
-        private System.Windows.Forms.DataGridView moviesTableDataGridView;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn dataGridViewCheckBoxColumn1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn3;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn4;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn5;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn8;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn6;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn9;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn10;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn7;
-        private System.Windows.Forms.Label ProcessTimer;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn MovieSent;
+        private System.Windows.Forms.DataGridViewButtonColumn MoviesOpenWithClient;
+        private System.Windows.Forms.DataGridViewTextBoxColumn MovieTitle;
+        private System.Windows.Forms.DataGridViewTextBoxColumn MovieYear;
+        private System.Windows.Forms.DataGridViewTextBoxColumn SourceMedia;
+        private System.Windows.Forms.DataGridViewTextBoxColumn CodecFormat;
+        private System.Windows.Forms.DataGridViewTextBoxColumn FileFormat;
+        private System.Windows.Forms.DataGridViewTextBoxColumn MovieSaveStructure;
+        private System.Windows.Forms.DataGridViewTextBoxColumn MovieSiteOrigin;
+        private System.Windows.Forms.DataGridViewTextBoxColumn MovieFilePath;
+        private System.Windows.Forms.DataGridViewTextBoxColumn MovieFile;
+        private System.Windows.Forms.DataGridViewTextBoxColumn MovieID;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn OthersSent;
+        private System.Windows.Forms.DataGridViewButtonColumn OpenWithClient;
+        private System.Windows.Forms.DataGridViewTextBoxColumn OthersSiteOrigin;
+        private System.Windows.Forms.DataGridViewTextBoxColumn OthersFile;
+        private System.Windows.Forms.DataGridViewTextBoxColumn OthersSaveStructure;
+        private System.Windows.Forms.DataGridViewTextBoxColumn OthersFilePath;
+        private System.Windows.Forms.DataGridViewTextBoxColumn OthersID;
 
     }
 }

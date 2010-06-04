@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 
-namespace CSL_Test__1
+namespace CSL
 {
     static class Program
     {

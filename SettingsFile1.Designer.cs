@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace CSL_Test__1 {
+namespace CSL {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
@@ -366,6 +366,42 @@ namespace CSL_Test__1 {
             }
             set {
                 this["MovieDownloadDirectory"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string OtherDownloadDirectory {
+            get {
+                return ((string)(this["OtherDownloadDirectory"]));
+            }
+            set {
+                this["OtherDownloadDirectory"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string VariousArtistsDownloadDirectory {
+            get {
+                return ((string)(this["VariousArtistsDownloadDirectory"]));
+            }
+            set {
+                this["VariousArtistsDownloadDirectory"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string VariousArtistsDownloadSwitches {
+            get {
+                return ((string)(this["VariousArtistsDownloadSwitches"]));
+            }
+            set {
+                this["VariousArtistsDownloadSwitches"] = value;
             }
         }
     }

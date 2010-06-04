@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <PublishUrlHistory>http://www.markjoslin.com/csl/</PublishUrlHistory>
+    <PublishUrlHistory>http://www.markjoslin.com/csl2/|http://www.markjoslin.com/csl/</PublishUrlHistory>
     <InstallUrlHistory>
     </InstallUrlHistory>
     <SupportUrlHistory>

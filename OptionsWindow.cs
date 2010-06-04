@@ -9,7 +9,7 @@ using System.Windows.Forms;
 using System.Text.RegularExpressions;
 using System.Threading;
 
-namespace CSL_Test__1
+namespace CSL
 {
     partial class OptionsWindow : Form
     {
@@ -37,14 +37,26 @@ namespace CSL_Test__1
             BitrateAPXTextBox.Text = SettingsHandler.GetBitrate("APX");
             BitrateCBRTextBox.Text = SettingsHandler.GetBitrate("CBR");
             BitrateLosslessTextBox.Text = SettingsHandler.GetBitrate("Lossless");
-            BitrateQ8xTextBox.Text = SettingsHandler.GetBitrate("q8x.");
+            BitrateQ8xTextBox.Text = SettingsHandler.GetBitrate("q8x");
             BitrateVBRTextBox.Text = SettingsHandler.GetBitrate("VBR");
             MusicFolderTextbox.Text = SettingsHandler.GetDownloadFolder();
             CustomFolderTextbox.Text = SettingsHandler.GetCustomDirectory();
             TorrentFolderTextbox.Text = SettingsHandler.GetTorrentSaveFolder();
             TorrentProgramDirectoryTextbox.Text = SettingsHandler.GetTorrentClientFolder();
             AutoCheckTime.Value = SettingsHandler.GetRawHandleTime();
+            MovieDownloadFolderTextBox.Text = SettingsHandler.GetMovieDownloadDirectory();
+            MovieSwitchesTextBox.Text = SettingsHandler.GetMovieCustomDirectory();
+            OtherDownloadTextBox.Text = SettingsHandler.GetOtherDownloadDirectory();
 
+            if (SettingsHandler.GetVariousArtistsDownloadDirectory().Equals("") || SettingsHandler.GetVariousArtistsDownloadDirectory().Equals(null))
+                VariousArtistsDirectoryTextBox.Text = MusicFolderTextbox.Text;
+            else
+                VariousArtistsDirectoryTextBox.Text = SettingsHandler.GetVariousArtistsDownloadDirectory();
+
+            if (SettingsHandler.GetVariousArtistsDownloadSwitches().Equals(null) || SettingsHandler.GetVariousArtistsDownloadSwitches().Equals(""))
+                VariousArtistsSwitchesTextBox.Text = CustomFolderTextbox.Text;
+            else
+                VariousArtistsSwitchesTextBox.Text = SettingsHandler.GetVariousArtistsDownloadSwitches();
 
             if (SettingsHandler.GetArtistFlip())
                 TheArtistOptions.Text = "Flip (Artist, The)";
@@ -360,12 +372,6 @@ namespace CSL_Test__1
             SwitchesWindow sw = new SwitchesWindow();
             sw.Show();
         }
-
-        private void label19_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void textBox5_TextChanged(object sender, EventArgs e)
         {
 
@@ -373,7 +379,6 @@ namespace CSL_Test__1
 
         private void OptionsWindow_Load(object sender, EventArgs e)
         {
-
         }
 
         private void AutoCheckTime_ValueChanged(object sender, EventArgs e)
@@ -566,6 +571,42 @@ namespace CSL_Test__1
                     SettingsHandler.SetUppercaseAllFolderNames(false);
                     break;
             }
+        }
+
+        private void MovieSwitchesLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            MovieSwitchesWindow mw = new MovieSwitchesWindow();
+            mw.Show();
+        }
+
+        private void MovieDownloadFolderTextBox_TextChanged(object sender, EventArgs e)
+        {
+            if (!MovieSwitchesTextBox.Text.EndsWith("\\"))
+                MovieSwitchesTextBox.Text = MovieSwitchesTextBox.Text + "\\";
+            SettingsHandler.SetMovieDownloadDirectory(MovieDownloadFolderTextBox.Text);
+        }
+
+        private void MovieSwitchesTextBox_TextChanged(object sender, EventArgs e)
+        {
+            SettingsHandler.SetMovieCustomDirectory(MovieSwitchesTextBox.Text);
+        }
+
+        private void OtherDownloadTextBox_TextChanged(object sender, EventArgs e)
+        {
+            if (!OtherDownloadTextBox.Text.EndsWith("\\"))
+                OtherDownloadTextBox.Text = OtherDownloadTextBox.Text + "\\";
+
+            SettingsHandler.SetOtherDownloadDirectory(OtherDownloadTextBox.Text);
+        }
+
+        private void VariousArtistsDirectoryTextBox_TextChanged(object sender, EventArgs e)
+        {
+            SettingsHandler.SetVariousArtistsDownloadDirectory(VariousArtistsDirectoryTextBox.Text);
+        }
+
+        private void VariousArtistsSwitchesTextBox_TextChanged(object sender, EventArgs e)
+        {
+            SettingsHandler.SetVariousArtistsDownloadSwitches(VariousArtistsSwitchesTextBox.Text);
         }
     }
 }

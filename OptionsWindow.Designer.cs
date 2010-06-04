@@ -1,4 +1,4 @@
-﻿namespace CSL_Test__1
+﻿namespace CSL
 {
     partial class OptionsWindow
     {
@@ -66,7 +66,6 @@
             this.label12 = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
-            this.MoviesOptionsTab = new System.Windows.Forms.TabPage();
             this.MusicDirectoryTab = new System.Windows.Forms.TabPage();
             this.panel1 = new System.Windows.Forms.Panel();
             this.label2 = new System.Windows.Forms.Label();
@@ -117,6 +116,23 @@
             this.label33 = new System.Windows.Forms.Label();
             this.ReleaseAlbumTextBox = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
+            this.MoviesOptionsTab = new System.Windows.Forms.TabPage();
+            this.MovieSwitchesLink = new System.Windows.Forms.LinkLabel();
+            this.MovieSwitchesTextBox = new System.Windows.Forms.TextBox();
+            this.MovieDownloadFolderTextBox = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label29 = new System.Windows.Forms.Label();
+            this.label30 = new System.Windows.Forms.Label();
+            this.OtherOptionsTab = new System.Windows.Forms.TabPage();
+            this.label32 = new System.Windows.Forms.Label();
+            this.OtherDownloadTextBox = new System.Windows.Forms.TextBox();
+            this.label24 = new System.Windows.Forms.Label();
+            this.label31 = new System.Windows.Forms.Label();
+            this.VALabel = new System.Windows.Forms.Label();
+            this.VariousArtistsDirectoryTextBox = new System.Windows.Forms.TextBox();
+            this.label37 = new System.Windows.Forms.Label();
+            this.VariousArtistsSwitchesTextBox = new System.Windows.Forms.TextBox();
+            this.label43 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.ErrorProvider)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.MusicOptionsTab.SuspendLayout();
@@ -126,6 +142,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.AutoCheckTime)).BeginInit();
             this.MusicDirectoryTab.SuspendLayout();
             this.panel1.SuspendLayout();
+            this.MoviesOptionsTab.SuspendLayout();
+            this.OtherOptionsTab.SuspendLayout();
             this.SuspendLayout();
             // 
             // FolderBrowser
@@ -139,8 +157,9 @@
             // tabControl1
             // 
             this.tabControl1.Controls.Add(this.MusicOptionsTab);
-            this.tabControl1.Controls.Add(this.MoviesOptionsTab);
             this.tabControl1.Controls.Add(this.MusicDirectoryTab);
+            this.tabControl1.Controls.Add(this.MoviesOptionsTab);
+            this.tabControl1.Controls.Add(this.OtherOptionsTab);
             this.tabControl1.Location = new System.Drawing.Point(0, 2);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
@@ -638,15 +657,6 @@
             this.label14.TabIndex = 11;
             this.label14.Text = "Program Options";
             // 
-            // MoviesOptionsTab
-            // 
-            this.MoviesOptionsTab.Location = new System.Drawing.Point(4, 22);
-            this.MoviesOptionsTab.Name = "MoviesOptionsTab";
-            this.MoviesOptionsTab.Size = new System.Drawing.Size(687, 487);
-            this.MoviesOptionsTab.TabIndex = 3;
-            this.MoviesOptionsTab.Text = "Movies Options";
-            this.MoviesOptionsTab.UseVisualStyleBackColor = true;
-            // 
             // MusicDirectoryTab
             // 
             this.MusicDirectoryTab.Controls.Add(this.panel1);
@@ -659,6 +669,11 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.label43);
+            this.panel1.Controls.Add(this.label37);
+            this.panel1.Controls.Add(this.VariousArtistsSwitchesTextBox);
+            this.panel1.Controls.Add(this.VALabel);
+            this.panel1.Controls.Add(this.VariousArtistsDirectoryTextBox);
             this.panel1.Controls.Add(this.label2);
             this.panel1.Controls.Add(this.TextCaseOptions);
             this.panel1.Controls.Add(this.TheArtistOptions);
@@ -764,7 +779,7 @@
             // 
             this.label8.AutoSize = true;
             this.label8.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label8.Location = new System.Drawing.Point(383, 360);
+            this.label8.Location = new System.Drawing.Point(306, 360);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(133, 14);
             this.label8.TabIndex = 126;
@@ -776,7 +791,7 @@
             this.DoubleSpaceRemoverCheckBox.Checked = true;
             this.DoubleSpaceRemoverCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
             this.DoubleSpaceRemoverCheckBox.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.DoubleSpaceRemoverCheckBox.Location = new System.Drawing.Point(309, 380);
+            this.DoubleSpaceRemoverCheckBox.Location = new System.Drawing.Point(309, 441);
             this.DoubleSpaceRemoverCheckBox.Name = "DoubleSpaceRemoverCheckBox";
             this.DoubleSpaceRemoverCheckBox.Size = new System.Drawing.Size(243, 18);
             this.DoubleSpaceRemoverCheckBox.TabIndex = 125;
@@ -788,7 +803,7 @@
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.ForeColor = System.Drawing.Color.Maroon;
-            this.label1.Location = new System.Drawing.Point(9, 416);
+            this.label1.Location = new System.Drawing.Point(9, 410);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(272, 64);
             this.label1.TabIndex = 120;
@@ -1169,6 +1184,178 @@
             this.label4.TabIndex = 26;
             this.label4.Text = "Customize Literal Switches*";
             // 
+            // MoviesOptionsTab
+            // 
+            this.MoviesOptionsTab.Controls.Add(this.MovieSwitchesLink);
+            this.MoviesOptionsTab.Controls.Add(this.MovieSwitchesTextBox);
+            this.MoviesOptionsTab.Controls.Add(this.MovieDownloadFolderTextBox);
+            this.MoviesOptionsTab.Controls.Add(this.label3);
+            this.MoviesOptionsTab.Controls.Add(this.label29);
+            this.MoviesOptionsTab.Controls.Add(this.label30);
+            this.MoviesOptionsTab.Location = new System.Drawing.Point(4, 22);
+            this.MoviesOptionsTab.Name = "MoviesOptionsTab";
+            this.MoviesOptionsTab.Size = new System.Drawing.Size(687, 487);
+            this.MoviesOptionsTab.TabIndex = 3;
+            this.MoviesOptionsTab.Text = "Movies Options";
+            this.MoviesOptionsTab.UseVisualStyleBackColor = true;
+            // 
+            // MovieSwitchesLink
+            // 
+            this.MovieSwitchesLink.AutoSize = true;
+            this.MovieSwitchesLink.Location = new System.Drawing.Point(307, 83);
+            this.MovieSwitchesLink.Name = "MovieSwitchesLink";
+            this.MovieSwitchesLink.Size = new System.Drawing.Size(133, 13);
+            this.MovieSwitchesLink.TabIndex = 37;
+            this.MovieSwitchesLink.TabStop = true;
+            this.MovieSwitchesLink.Text = "Custom Directory Switches";
+            this.MovieSwitchesLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.MovieSwitchesLink_LinkClicked);
+            // 
+            // MovieSwitchesTextBox
+            // 
+            this.MovieSwitchesTextBox.Location = new System.Drawing.Point(153, 77);
+            this.MovieSwitchesTextBox.Name = "MovieSwitchesTextBox";
+            this.MovieSwitchesTextBox.Size = new System.Drawing.Size(148, 20);
+            this.MovieSwitchesTextBox.TabIndex = 36;
+            this.MovieSwitchesTextBox.Text = "%m [%y]";
+            this.MovieSwitchesTextBox.TextChanged += new System.EventHandler(this.MovieSwitchesTextBox_TextChanged);
+            // 
+            // MovieDownloadFolderTextBox
+            // 
+            this.MovieDownloadFolderTextBox.Location = new System.Drawing.Point(153, 51);
+            this.MovieDownloadFolderTextBox.Name = "MovieDownloadFolderTextBox";
+            this.MovieDownloadFolderTextBox.Size = new System.Drawing.Size(297, 20);
+            this.MovieDownloadFolderTextBox.TabIndex = 34;
+            this.MovieDownloadFolderTextBox.TextChanged += new System.EventHandler(this.MovieDownloadFolderTextBox_TextChanged);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Location = new System.Drawing.Point(11, 83);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(140, 14);
+            this.label3.TabIndex = 33;
+            this.label3.Text = "Download Setting...";
+            // 
+            // label29
+            // 
+            this.label29.AutoSize = true;
+            this.label29.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label29.Location = new System.Drawing.Point(11, 57);
+            this.label29.Name = "label29";
+            this.label29.Size = new System.Drawing.Size(112, 14);
+            this.label29.TabIndex = 31;
+            this.label29.Text = "Movie Folder...";
+            // 
+            // label30
+            // 
+            this.label30.AutoSize = true;
+            this.label30.Font = new System.Drawing.Font("Courier New", 15.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label30.Location = new System.Drawing.Point(10, 14);
+            this.label30.Name = "label30";
+            this.label30.Size = new System.Drawing.Size(231, 23);
+            this.label30.TabIndex = 30;
+            this.label30.Text = "Directory Options";
+            // 
+            // OtherOptionsTab
+            // 
+            this.OtherOptionsTab.Controls.Add(this.label32);
+            this.OtherOptionsTab.Controls.Add(this.OtherDownloadTextBox);
+            this.OtherOptionsTab.Controls.Add(this.label24);
+            this.OtherOptionsTab.Controls.Add(this.label31);
+            this.OtherOptionsTab.Location = new System.Drawing.Point(4, 22);
+            this.OtherOptionsTab.Name = "OtherOptionsTab";
+            this.OtherOptionsTab.Size = new System.Drawing.Size(687, 487);
+            this.OtherOptionsTab.TabIndex = 4;
+            this.OtherOptionsTab.Text = "Other Torrents Options";
+            this.OtherOptionsTab.UseVisualStyleBackColor = true;
+            // 
+            // label32
+            // 
+            this.label32.AutoSize = true;
+            this.label32.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label32.Location = new System.Drawing.Point(9, 81);
+            this.label32.Name = "label32";
+            this.label32.Size = new System.Drawing.Size(490, 42);
+            this.label32.TabIndex = 38;
+            this.label32.Text = "*Any unrecognized torrent will be added into a separate table. \r\nYou can specify " +
+                "a download folder or choose to open them in uTorrent \r\nwhen they are added in.";
+            // 
+            // OtherDownloadTextBox
+            // 
+            this.OtherDownloadTextBox.Location = new System.Drawing.Point(151, 48);
+            this.OtherDownloadTextBox.Name = "OtherDownloadTextBox";
+            this.OtherDownloadTextBox.Size = new System.Drawing.Size(297, 20);
+            this.OtherDownloadTextBox.TabIndex = 37;
+            this.OtherDownloadTextBox.TextChanged += new System.EventHandler(this.OtherDownloadTextBox_TextChanged);
+            // 
+            // label24
+            // 
+            this.label24.AutoSize = true;
+            this.label24.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label24.Location = new System.Drawing.Point(9, 54);
+            this.label24.Name = "label24";
+            this.label24.Size = new System.Drawing.Size(133, 14);
+            this.label24.TabIndex = 36;
+            this.label24.Text = "Download Folder...";
+            // 
+            // label31
+            // 
+            this.label31.AutoSize = true;
+            this.label31.Font = new System.Drawing.Font("Courier New", 15.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label31.Location = new System.Drawing.Point(8, 11);
+            this.label31.Name = "label31";
+            this.label31.Size = new System.Drawing.Size(231, 23);
+            this.label31.TabIndex = 35;
+            this.label31.Text = "Directory Options";
+            // 
+            // VALabel
+            // 
+            this.VALabel.AutoSize = true;
+            this.VALabel.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.VALabel.Location = new System.Drawing.Point(306, 386);
+            this.VALabel.Name = "VALabel";
+            this.VALabel.Size = new System.Drawing.Size(203, 14);
+            this.VALabel.TabIndex = 132;
+            this.VALabel.Text = "Various Artists Directory...";
+            // 
+            // VariousArtistsDirectoryTextBox
+            // 
+            this.VariousArtistsDirectoryTextBox.Location = new System.Drawing.Point(522, 380);
+            this.VariousArtistsDirectoryTextBox.Name = "VariousArtistsDirectoryTextBox";
+            this.VariousArtistsDirectoryTextBox.Size = new System.Drawing.Size(155, 20);
+            this.VariousArtistsDirectoryTextBox.TabIndex = 131;
+            this.VariousArtistsDirectoryTextBox.TextChanged += new System.EventHandler(this.VariousArtistsDirectoryTextBox_TextChanged);
+            // 
+            // label37
+            // 
+            this.label37.AutoSize = true;
+            this.label37.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label37.Location = new System.Drawing.Point(306, 416);
+            this.label37.Name = "label37";
+            this.label37.Size = new System.Drawing.Size(196, 14);
+            this.label37.TabIndex = 134;
+            this.label37.Text = "Various Artists Switches...";
+            // 
+            // VariousArtistsSwitchesTextBox
+            // 
+            this.VariousArtistsSwitchesTextBox.Location = new System.Drawing.Point(522, 410);
+            this.VariousArtistsSwitchesTextBox.Name = "VariousArtistsSwitchesTextBox";
+            this.VariousArtistsSwitchesTextBox.Size = new System.Drawing.Size(155, 20);
+            this.VariousArtistsSwitchesTextBox.TabIndex = 133;
+            this.VariousArtistsSwitchesTextBox.TextChanged += new System.EventHandler(this.VariousArtistsSwitchesTextBox_TextChanged);
+            // 
+            // label43
+            // 
+            this.label43.AutoSize = true;
+            this.label43.Font = new System.Drawing.Font("Tahoma", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label43.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.label43.Location = new System.Drawing.Point(520, 433);
+            this.label43.Name = "label43";
+            this.label43.Size = new System.Drawing.Size(124, 11);
+            this.label43.TabIndex = 135;
+            this.label43.Text = "Use %a for \"Various Artists\"";
+            // 
             // OptionsWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1190,6 +1377,10 @@
             this.MusicDirectoryTab.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            this.MoviesOptionsTab.ResumeLayout(false);
+            this.MoviesOptionsTab.PerformLayout();
+            this.OtherOptionsTab.ResumeLayout(false);
+            this.OtherOptionsTab.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -1288,6 +1479,22 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ComboBox TextCaseOptions;
         private System.Windows.Forms.TabPage MoviesOptionsTab;
+        private System.Windows.Forms.LinkLabel MovieSwitchesLink;
+        private System.Windows.Forms.TextBox MovieSwitchesTextBox;
+        private System.Windows.Forms.TextBox MovieDownloadFolderTextBox;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label29;
+        private System.Windows.Forms.Label label30;
+        private System.Windows.Forms.TabPage OtherOptionsTab;
+        private System.Windows.Forms.Label label32;
+        private System.Windows.Forms.TextBox OtherDownloadTextBox;
+        private System.Windows.Forms.Label label24;
+        private System.Windows.Forms.Label label31;
+        private System.Windows.Forms.Label VALabel;
+        private System.Windows.Forms.TextBox VariousArtistsDirectoryTextBox;
+        private System.Windows.Forms.Label label37;
+        private System.Windows.Forms.TextBox VariousArtistsSwitchesTextBox;
+        private System.Windows.Forms.Label label43;
 
 
     }

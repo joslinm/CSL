@@ -4,12 +4,12 @@ using System.ComponentModel;
 using System.IO;
 using System.Threading;
 using System.Windows.Forms;
-
-namespace CSL_Test__1
+using System.Collections.Specialized;
+using System.Collections;
+namespace CSL
 {
     public partial class MainWindow : Form
     {
-
         #region Local Variables
         TorrentBuilder tb = new TorrentBuilder();
         OptionsWindow ow = new OptionsWindow();
@@ -38,12 +38,25 @@ namespace CSL_Test__1
         public MainWindow()
         {
             InitializeComponent();
-            this.torrentsTableTableAdapter.Fill(this.dataset.TorrentsTable);
+            this.ResizeRedraw = true;
+            this.MainWindow_Resize(new object(), new EventArgs()); //Force a resize to make things look nice
 
-            dgvh = new DataGridViewHandler(ref torrentsTableDataGridView, ref torrentsTableBindingSource);
-            data = new TorrentDataHandler(ref dataset);
+            this.torrentsTableTableAdapter.Fill(this.dataset.TorrentsTable);
+            this.moviesTableTableAdapter.Fill(this.dataset.MoviesTable);
+            this.othersTableTableAdapter.Fill(this.dataset.OthersTable);
+
+            //Allow another class to handle the deleting/handling of the datagridviews to keep this class slimmer
+            dgvh = new DataGridViewHandler(ref torrentsTableDataGridView, ref torrentsTableBindingSource, 
+                ref moviesTableDataGridView, ref moviesTableBindingSource,
+                ref othersTableDataGridView, ref othersTableBindingSource);
+            data = new TorrentDataHandler(ref dataset, ref torrentsTableTableAdapter);
 
             timer.Interval = (double)SettingsHandler.GetAutoHandleTime();
+            if (timer.Interval < (1000*10))
+            {
+                SettingsHandler.SetAutoHandleTime(10000);
+                timer.Interval = 10000;
+            }
             timer.Elapsed += new System.Timers.ElapsedEventHandler(timer_Elapsed);
 
             tb.RunWorkerCompleted += new RunWorkerCompletedEventHandler(BuildWorkerCompleted);
@@ -76,7 +89,8 @@ namespace CSL_Test__1
                 }
             }
             catch (Exception) { }
-            
+
+            test();
         }
 
         #region Timer
@@ -95,24 +109,14 @@ namespace CSL_Test__1
 
 #endregion
         #region Testing
-        /*
         private void test()
         {
-            Random r = new Random();
-            string[] information = new string[20];
-            for (int a = 0; a < 20; a++)
-            {
-                r.Next();
-                byte[] buffer = new byte[10];
-                r.NextBytes(buffer);
-                int num = r.Next(0,9);
-                char d;
-                information[a] = (Char.TryParse(buffer[num].ToString(), out d))? Char.Parse(buffer[num].ToString()).ToString() : buffer[num].ToString();
-            }
-            data.AddTorrent(new Torrent(information));
-            this.tableAdapterManager.UpdateAll(this.dataset);
-        }*/
-
+            /*
+                UTorrentWebClient web = new Cleverscape.UTorrentClient.WebClient.UTorrentWebClient();
+                Cleverscape.UTorrentClient.WebClient.Torrent torrent = new Cleverscape.UTorrentClient.WebClient.Torrent();
+                torrent;
+            Cleverscape.UTorrentClient.WebClient.*/
+        }
         #endregion
 
         #region General
@@ -157,14 +161,15 @@ namespace CSL_Test__1
             }
             //DATAGRIDVIEW
             TabbedContainer.Location = new System.Drawing.Point(0, 187);
-            TabbedContainer.Size = new System.Drawing.Size(this.Width - 15, this.Height - 225);
-            //torrentsTableDataGridView.ScrollBars = ScrollBars.Both;
+            TabbedContainer.Size = new System.Drawing.Size(this.Width - 15, this.Height - 240);
+           
             //DELETE BUTTON
             DeleteButton.Location = new System.Drawing.Point(this.Width - 105, 113);
             //uTORRENT SEND BUTTON
             uTorrentSendIndividualButton.Location = new System.Drawing.Point(this.Width - 145, 150);
             //REFRESH BUTTON
             RefreshButton.Location = new System.Drawing.Point(0, 151);
+            HideSentTorrentsCheckBox.Location = new System.Drawing.Point(RefreshButton.Width + 5, 155);
             //PROGRESS BAR
             dataGridViewProgressBar.Location = new System.Drawing.Point(0, this.Height - 80);
             dataGridViewProgressBar.Width = this.Width;
@@ -197,20 +202,20 @@ namespace CSL_Test__1
         //Click
         private void DeleteButton_Click(object sender, EventArgs e)
         {
-            StatusLabel.Text = "Deleting..";
-            StatusLabel.Visible = true;
-
             dgvh.DeleteTorrents();
             torrentsTableTableAdapter.Update(dataset.TorrentsTable);
             torrentsTableBindingSource.EndEdit();
+            moviesTableTableAdapter.Update(dataset.MoviesTable);
+            moviesTableBindingSource.EndEdit();
+            othersTableTableAdapter.Update(dataset.OthersTable);
+            othersTableBindingSource.EndEdit();
             tableAdapterManager.UpdateAll(dataset);
-
-            StatusLabel.Text = "";
-            StatusLabel.Visible = false;
         }
         private void RefreshButton_Click(object sender, EventArgs e)
         {
             torrentsTableDataGridView.Refresh();
+            moviesTableDataGridView.Refresh();
+            othersTableDataGridView.Refresh();
         }
         private void ProcessTorrentsButton_Click(object sender, EventArgs e)
         {
@@ -242,11 +247,46 @@ namespace CSL_Test__1
         }
         private void uTorrentSendIndividualButton_Click(object sender, EventArgs e)
         {
-            dgvh.SendIndividualTorrent();
+            switch (TabbedContainer.SelectedIndex)
+            {
+                case 0:
+                    dgvh.SendIndividualTorrent("music");
+                    torrentsTableTableAdapter.Update(dataset.TorrentsTable);
+                    torrentsTableBindingSource.EndEdit();
+                    break;
+                case 1:
+
+                    dgvh.SendIndividualTorrent("movies");
+                    moviesTableTableAdapter.Update(dataset.MoviesTable);
+                    moviesTableBindingSource.EndEdit();
+                    break;
+                case 2:
+                    dgvh.SendIndividualTorrent("others");
+                    othersTableTableAdapter.Update(dataset.OthersTable);
+                    othersTableBindingSource.EndEdit();
+                    break;
+            }
+            
+            tableAdapterManager.UpdateAll(dataset);
+
         }
         private void uTorrentSendAllButton_Click(object sender, EventArgs e)
         {
-            //uTorrentHandler.SendAllTorrents();
+            torrentsTableDataGridView.SelectAll();
+            moviesTableDataGridView.SelectAll();
+            othersTableDataGridView.SelectAll();
+
+            dgvh.SendIndividualTorrent("music");
+            dgvh.SendIndividualTorrent("movies");
+            dgvh.SendIndividualTorrent("others");
+
+            torrentsTableTableAdapter.Update(dataset.TorrentsTable);
+            torrentsTableBindingSource.EndEdit();
+            moviesTableTableAdapter.Update(dataset.MoviesTable);
+            moviesTableBindingSource.EndEdit();
+            othersTableTableAdapter.Update(dataset.OthersTable);
+            othersTableBindingSource.EndEdit();
+            tableAdapterManager.UpdateAll(dataset);
         }
         private void PerformClickProcessTorrents()
         {
@@ -259,6 +299,10 @@ namespace CSL_Test__1
         private void ShowProcessTorrentsButton()
         {
             ProcessTorrentsButton.Visible = true;
+        }
+        private void UpdateAdapter()
+        {
+            torrentsTableTableAdapter.Update(dataset.TorrentsTable);
         }
         //Hover
         private void DeleteButton_MouseEnter(object sender, EventArgs e)
@@ -332,8 +376,6 @@ namespace CSL_Test__1
             DirectoryHandler.DeleteTempFolder();
             DirectoryHandler.DeleteZipFiles();
 
-            dgvh.ResumeLayout();
-
             ProcessTorrentsButton.Enabled = true;
             RefreshButton.Enabled = true;
             DeleteButton.Enabled = true;
@@ -347,12 +389,15 @@ namespace CSL_Test__1
             torrentsTableBindingSource.EndEdit();
             moviesTableTableAdapter.Update(dataset.MoviesTable);
             moviesTableBindingSource.EndEdit();
-
+            othersTableTableAdapter.Update(dataset.OthersTable);
+            othersTableBindingSource.EndEdit();
             tableAdapterManager.UpdateAll(dataset);
 
             endtime = DateTime.Now;
             TimeSpan duration = endtime - startime;
             ProcessTimer.Text = duration.Seconds + " secs";
+
+            dgvh.ResumeLayout();
         }
         void ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
@@ -367,7 +412,7 @@ namespace CSL_Test__1
                 string test = sender.ToString();
                 switch (test)
                 {
-                    case "CSL_Test__1.TorrentBuilder":
+                    case "CSL.TorrentBuilder":
                         StatusLabel.Text = "Building " + 10 * (e.ProgressPercentage / 10) + "%";
                         if (precedence.Equals("TorrentBuilder"))
                         {
@@ -385,7 +430,7 @@ namespace CSL_Test__1
                             }
                         }
                         break;
-                    case "CSL_Test__1.DirectoryHandler":
+                    case "CSL.DirectoryHandler":
                         StatusLabel.Text = "Moving files " + 10 * (e.ProgressPercentage / 10) + "%";
                         if (precedence.Equals("DirectoryHandler"))
                         {
@@ -411,14 +456,5 @@ namespace CSL_Test__1
                 dataGridViewProgressBar.Value = progress;
         }
         #endregion
-
-        private void MainWindow_Load(object sender, EventArgs e)
-        {
-            // TODO: This line of code loads data into the 'dataset.MoviesTable' table. You can move, or remove it, as needed.
-            this.moviesTableTableAdapter.Fill(this.dataset.MoviesTable);
-
-        }
-
-        
     }
 }

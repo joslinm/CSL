@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-namespace CSL_Test__1
+namespace CSL
 {
     public partial class SwitchesWindow : Form
     {

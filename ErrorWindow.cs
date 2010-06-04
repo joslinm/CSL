@@ -10,7 +10,7 @@ using System.Windows.Forms;
 using System.IO;
 using System.Data.SqlServerCe;
 
-namespace CSL_Test__1
+namespace CSL
 {
     public partial class ErrorWindow : Form
     {

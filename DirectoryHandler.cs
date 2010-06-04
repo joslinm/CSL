@@ -10,7 +10,7 @@ using System.Collections;
 using System.Threading;
 using System.ComponentModel;
 
-namespace CSL_Test__1
+namespace CSL
 {
     class DirectoryHandler : BackgroundWorker
     {
@@ -38,11 +38,14 @@ namespace CSL_Test__1
         }
         public static void LogError(string error)
         {
+            /*
+            FileStream fs = null;
+
             if (!ErrorLog.Exists)
                 ErrorLog.Create();
             try
             {
-                FileStream fs = ErrorLog.OpenWrite();
+                fs = ErrorLog.OpenWrite();
                 List<byte> bytes = new List<byte>();
                 foreach (char l in error.ToCharArray())
                     bytes.Add(Convert.ToByte(l));
@@ -50,6 +53,7 @@ namespace CSL_Test__1
                 fs.Write(bytes.ToArray(), 0, bytes.Count);
             }
             catch { }
+            finally { if(fs != null)fs.Close(); }*/
         }
 
         public static bool DeleteFile(FileInfo file)
@@ -153,10 +157,8 @@ namespace CSL_Test__1
             return infos.ToArray<FileInfo>();
         }
 
-
         public static string GetHTMLLookUp(string value)
         {
-            ErrorWindow ew = new ErrorWindow();
             StreamReader sr = null;
 
             string[] ab = new string[2];
@@ -199,10 +201,12 @@ namespace CSL_Test__1
             }
             catch (FileNotFoundException)
             {
+                ErrorWindow ew = new ErrorWindow();
                 ew.IssueGeneralWarning("HTML replacing will not occur", "Could not find HTML-Look-Up.txt...", null);
             }
             catch (Exception e)
             {
+                ErrorWindow ew = new ErrorWindow();
                 ew.IssueGeneralWarning("Error..", lines[c], e.Message);
             }
             finally
@@ -254,6 +258,12 @@ namespace CSL_Test__1
                     fz.ExtractZip(zipFile, destination, ".torrent");
 
                     files = Directory.GetFiles(destination, "*.torrent", SearchOption.AllDirectories);
+
+                    try
+                    {
+                        fi.MoveTo(SettingsHandler.GetTorrentSaveFolder() + @"\[CSL] -- Processed Zips\" + fi.Name);
+                    }
+                    catch(Exception e) { }
                     return files;
                 }
 
@@ -340,6 +350,12 @@ namespace CSL_Test__1
                     }
                 }
 
+
+                try
+                {
+                    zipfile.MoveTo(SettingsHandler.GetTorrentSaveFolder() + @"\[CSL] -- Processed Zips\" + zipfile.Name);
+                }
+                catch { }
                 progress = (++count / total) * 100;
 
                 if (progress <= 100 && progress >= 0)
@@ -373,7 +389,7 @@ namespace CSL_Test__1
                         {
                             zip.MoveTo(zipsavefolder.FullName + "\\" + zip.Name);
                         }
-                        catch (Exception e) { zip.Delete(); }
+                        catch { zip.Delete(); }
                     }
                 }
             }

@@ -1,4 +1,4 @@
-﻿namespace CSL_Test__1
+﻿namespace CSL
 {
     partial class UpdatedInformationWindow
     {
@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(UpdatedInformationWindow));
             this.ChangesTitle = new System.Windows.Forms.Label();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -51,7 +50,8 @@
             this.richTextBox1.Name = "richTextBox1";
             this.richTextBox1.Size = new System.Drawing.Size(784, 257);
             this.richTextBox1.TabIndex = 1;
-            this.richTextBox1.Text = resources.GetString("richTextBox1.Text");
+            this.richTextBox1.Text = "->Added in various artists options in advanced music options\n\nOlder...\nThis is ve" +
+                "rsion 2. Check forums for details.";
             // 
             // label1
             // 

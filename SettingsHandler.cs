@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace CSL_Test__1
+namespace CSL
 {
     class SettingsHandler
     {
@@ -16,8 +16,27 @@ namespace CSL_Test__1
         {
             settings.Save();
         }
-
         #region Set Options
+        public static void SetVariousArtistsDownloadDirectory(string value)
+        {
+            settings.VariousArtistsDownloadDirectory = value;
+            settings.Save();
+        }
+        public static void SetVariousArtistsDownloadSwitches(string value)
+        {
+            settings.VariousArtistsDownloadSwitches = value;
+            settings.Save();
+        }
+        public static void SetOtherDownloadDirectory(string value)
+        {
+            settings.OtherDownloadDirectory = value;
+            settings.Save();
+        }
+        public static void SetMovieDownloadDirectory(string value)
+        {
+            settings.MovieDownloadDirectory = value;
+            settings.Save();
+        }
         public static void SetMovieCustomDirectory(string value)
         {
             settings.MovieCustomDirectory = value;
@@ -181,6 +200,22 @@ namespace CSL_Test__1
         }
         #endregion
         #region Get Options
+        public static string GetVariousArtistsDownloadDirectory()
+        {
+            return settings.VariousArtistsDownloadDirectory;
+        }
+        public static string GetVariousArtistsDownloadSwitches()
+        {
+            return settings.VariousArtistsDownloadSwitches;
+        }
+        public static string GetOtherDownloadDirectory()
+        {
+            return settings.OtherDownloadDirectory;
+        }
+        public static string GetMovieDownloadDirectory()
+        {
+            return settings.MovieDownloadDirectory;
+        }
         public static string GetMovieCustomDirectory()
         {
             return settings.MovieCustomDirectory;

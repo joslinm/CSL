@@ -1,5 +1,5 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="CSL_Test__1" GeneratedClassName="SettingsFile">
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="CSL" GeneratedClassName="SettingsFile">
   <Profiles />
   <Settings>
     <Setting Name="ArtistFlip" Type="System.Boolean" Scope="User">
@@ -103,6 +103,15 @@
       <Value Profile="(Default)">%m [%y] [%s] [%f] [%c]</Value>
     </Setting>
     <Setting Name="MovieDownloadDirectory" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="OtherDownloadDirectory" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="VariousArtistsDownloadDirectory" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="VariousArtistsDownloadSwitches" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
   </Settings>
