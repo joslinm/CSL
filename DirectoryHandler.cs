@@ -424,7 +424,8 @@ namespace CSL
 
                 if (!cslSaveFolder.Exists)
                     cslSaveFolder.Create();
-
+                if (fi.FullName.Equals(cslSaveFolder + fi.Name)) //In handled directory already
+                    return fi.FullName;
                 if (File.Exists(cslSaveFolder.FullName + fi.Name))
                 {
                     fi.Delete();

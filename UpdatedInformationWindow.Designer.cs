@@ -50,8 +50,8 @@
             this.richTextBox1.Name = "richTextBox1";
             this.richTextBox1.Size = new System.Drawing.Size(784, 257);
             this.richTextBox1.TabIndex = 1;
-            this.richTextBox1.Text = "->Added in various artists options in advanced music options\n\nOlder...\nThis is ve" +
-                "rsion 2. Check forums for details.";
+            this.richTextBox1.Text = "->Put drag&drop functionality back in\n\nOlder...\nAdded in various artists options " +
+                "in advanced music options\nThis is version 2. Check forums for details.";
             // 
             // label1
             // 

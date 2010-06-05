@@ -225,9 +225,8 @@ namespace CSL
 
             if (torrents != null || zips != null)
             {
-                //Prevent anything complicated from happening..
                 startime = DateTime.Now;
-
+                //Prevent anything complicated from happening..
                 dgvh.SuspendLayout();
                 ProcessTorrentsButton.Enabled = false;
                 RefreshButton.Enabled = false;
@@ -456,5 +455,37 @@ namespace CSL
                 dataGridViewProgressBar.Value = progress;
         }
         #endregion
+
+        private void MainWindow_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop, false) == true)
+                e.Effect = DragDropEffects.All;
+        }
+
+        private void MainWindow_DragDrop(object sender, DragEventArgs e)
+        {
+            string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+            FileInfo fi;
+            List<FileInfo> torrents = new List<FileInfo>();
+            foreach (string file in files)
+            {
+                fi = new FileInfo(file);
+                if (fi.Extension.Equals(".torrent"))
+                    torrents.Add(fi);
+                else if (fi.Extension.Equals(".rar") || fi.Extension.Equals(".zip"))
+                    torrents.AddRange(DirectoryHandler.GetFileInfos(DirectoryHandler.UnzipFile(fi.FullName)));
+            }
+            if (torrents.Count > 0)
+            {
+                dgvh.SuspendLayout();
+                ProcessTorrentsButton.Enabled = false;
+                RefreshButton.Enabled = false;
+                DeleteButton.Enabled = false;
+                StatusLabel.Visible = true;
+                dataGridViewProgressBar.Visible = true;
+                timer.Stop();
+                tb.RunWorkerAsync(torrents);
+            }
+        }
     }
 }
