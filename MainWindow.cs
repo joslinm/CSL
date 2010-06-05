@@ -487,5 +487,29 @@ namespace CSL
                 tb.RunWorkerAsync(torrents);
             }
         }
+
+        private void createDirectoriesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ErrorWindow ew = new ErrorWindow();
+            bool response = ew.IssueCreateEmptyDirectoriesWarning("Click OK to proceed", "This option will create the save structure\n directories of the current torrents");
+            if (response)
+            {
+                try
+                {
+                    List<String> save_structures = new List<string>();
+                    foreach (DataGridViewRow r in dataGridView.Rows)
+                    {
+                        try
+                        {
+                            save_structures.Add((string)r.Cells["Save Structure"].Value);
+                        }
+                        catch { }
+                    }
+                    DirectoryHandler.CreateEmptyDirectories(save_structures);
+                }
+                catch
+                { }
+            }
+        }
     }
 }

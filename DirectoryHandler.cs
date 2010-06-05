@@ -36,6 +36,19 @@ namespace CSL
                 }
             }
         }
+
+        public static void CreateEmptyDirectories(List<String> paths)
+        {
+            foreach (string path in paths)
+            {
+                try
+                {
+                    DirectoryInfo di = new DirectoryInfo(path);
+                    if (!di.Exists) { di.Create(); }
+                }
+                catch { }
+            }
+        }
         public static void LogError(string error)
         {
             /*

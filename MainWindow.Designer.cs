@@ -41,6 +41,7 @@
             this.optionsToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.optionsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.miscToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.createDirectoriesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ProcessTorrentsButton = new System.Windows.Forms.Button();
             this.DeleteButton = new System.Windows.Forms.Button();
             this.uTorrentSendAllButton = new System.Windows.Forms.Button();
@@ -105,7 +106,6 @@
             this.moviesTableTableAdapter = new CSL.datasetTableAdapters.MoviesTableTableAdapter();
             this.othersTableTableAdapter = new CSL.datasetTableAdapters.OthersTableTableAdapter();
             this.dataGridViewButtonColumn1 = new System.Windows.Forms.DataGridViewButtonColumn();
-            this.createDirectoriesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.MainMenu.SuspendLayout();
             this.TabbedContainer.SuspendLayout();
             this.MusicTab.SuspendLayout();
@@ -165,6 +165,13 @@
             this.miscToolStripMenuItem.Name = "miscToolStripMenuItem";
             this.miscToolStripMenuItem.Size = new System.Drawing.Size(44, 22);
             this.miscToolStripMenuItem.Text = "Misc";
+            // 
+            // createDirectoriesToolStripMenuItem
+            // 
+            this.createDirectoriesToolStripMenuItem.Name = "createDirectoriesToolStripMenuItem";
+            this.createDirectoriesToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
+            this.createDirectoriesToolStripMenuItem.Text = "Create Directories";
+            this.createDirectoriesToolStripMenuItem.Click += new System.EventHandler(this.createDirectoriesToolStripMenuItem_Click);
             // 
             // ProcessTorrentsButton
             // 
@@ -762,12 +769,6 @@
             this.dataGridViewButtonColumn1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
             this.dataGridViewButtonColumn1.Text = "Open w/ µTorrent";
             this.dataGridViewButtonColumn1.ToolTipText = "Open w/ µTorrent";
-            // 
-            // createDirectoriesToolStripMenuItem
-            // 
-            this.createDirectoriesToolStripMenuItem.Name = "createDirectoriesToolStripMenuItem";
-            this.createDirectoriesToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
-            this.createDirectoriesToolStripMenuItem.Text = "Create Directories";
             // 
             // MainWindow
             // 
