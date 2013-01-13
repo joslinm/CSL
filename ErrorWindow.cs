@@ -18,7 +18,7 @@ namespace CSL
 
         int s_index;
         int e_index;
-
+        bool okButtonSelected;
         bool discard = false;
         static string applyToAll = "";
         
@@ -423,6 +423,19 @@ namespace CSL
             this.ShowDialog();
         }
 
+        public bool IssueCreateEmptyDirectoriesWarning(string message, string submessage)
+        {
+            InstructionalLabel.Text = message;
+            ErrorLabel.Text = submessage;
+            DiscardButton.Visible = false;
+
+            this.Text = "[CSL] -- Warning";
+            this.Activate();
+            this.ShowDialog();
+
+            return this.okButtonSelected;
+        }
+
         private void DiscardButton_Click(object sender, EventArgs e)
         {
             discard = true;
@@ -446,6 +459,7 @@ namespace CSL
             BitrateSelectionComboBox.Visible = false;
             BirthSelectionComboBox.Visible = false;
             PhysicalFormatSelectionComboBox.Visible = false;
+            this.okButtonSelected = true;
 
             this.Hide();
         }

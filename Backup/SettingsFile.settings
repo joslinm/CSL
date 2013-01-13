@@ -1,0 +1,103 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="CSL_Test__1" GeneratedClassName="SettingsFile">
+  <Profiles />
+  <Settings>
+    <Setting Name="ArtistFlip" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="DeleteZipFiles" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="TorrentClient" Type="System.String" Scope="User">
+      <Value Profile="(Default)">uTorrent.exe</Value>
+    </Setting>
+    <Setting Name="TorrentClientFolder" Type="System.String" Scope="User">
+      <Value Profile="(Default)">C:\Program Files\uTorrent</Value>
+    </Setting>
+    <Setting Name="TorrentSaveFolder" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="DownloadFolder" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="CustomDirectory" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="DisableNotifications" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="AutoCheckTime" Type="System.Decimal" Scope="User">
+      <Value Profile="(Default)">10</Value>
+    </Setting>
+    <Setting Name="AutoCheck" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="UppercaseAllFolderNames" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="LowercaseAllFolderNames" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="RemoveDoubleSpaces" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="TrackZipFiles" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="TrackTorrentFiles" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="DownloadFormats" Type="System.String" Scope="User">
+      <Value Profile="(Default)">%a\%y - %t</Value>
+    </Setting>
+    <Setting Name="ReleaseFormatNames" Type="System.Collections.Specialized.StringCollection" Scope="User">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ArrayOfString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;string&gt;Album:Album&lt;/string&gt;
+  &lt;string&gt;EP:EP&lt;/string&gt;
+  &lt;string&gt;Live:Live&lt;/string&gt;
+  &lt;string&gt;Single:Single&lt;/string&gt;
+  &lt;string&gt;Mixtape:Mixtape&lt;/string&gt;
+  &lt;string&gt;Remix:Remix&lt;/string&gt;
+  &lt;string&gt;Soundboard:Soundboard&lt;/string&gt;
+  &lt;string&gt;Compilation:Compilation&lt;/string&gt;
+  &lt;string&gt;Bootleg:Bootleg&lt;/string&gt;
+  &lt;string&gt;Interview:Interview&lt;/string&gt;
+  &lt;string&gt;Unknown:Unknown&lt;/string&gt;
+&lt;/ArrayOfString&gt;</Value>
+    </Setting>
+    <Setting Name="BitrateNames" Type="System.Collections.Specialized.StringCollection" Scope="User">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ArrayOfString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;string&gt;VBR:V# (VBR)&lt;/string&gt;
+  &lt;string&gt;CBR:### (CBR)&lt;/string&gt;
+  &lt;string&gt;APX:APX (VBR)&lt;/string&gt;
+  &lt;string&gt;APS:APS (VBR)&lt;/string&gt;
+  &lt;string&gt;q8.x:q8.x(VBR)&lt;/string&gt;
+  &lt;string&gt;Lossless:Lossless&lt;/string&gt;
+  &lt;string&gt;24bitLossless:24bit Lossless&lt;/string&gt;
+&lt;/ArrayOfString&gt;</Value>
+    </Setting>
+    <Setting Name="MinimizeToTray" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="SkipReleaseFormatCheck" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="ProcessLoneTsAlbums" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="DeleteTheFolderNames" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="CurrentVersion" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="RawHandleTime" Type="System.Decimal" Scope="User">
+      <Value Profile="(Default)">10</Value>
+    </Setting>
+    <Setting Name="TimeFormat" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Seconds</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

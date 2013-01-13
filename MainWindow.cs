@@ -497,7 +497,7 @@ namespace CSL
                 try
                 {
                     List<String> save_structures = new List<string>();
-                    foreach (DataGridViewRow r in dataGridView.Rows)
+                    foreach (DataGridViewRow r in dgvh.dv.Rows)
                     {
                         try
                         {

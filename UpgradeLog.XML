@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type='text/xsl' href='_UpgradeReport_Files/UpgradeReport.xslt'?><UpgradeLog>
+<Properties><Property Name="Solution" Value="CSL[Test]_1">
+</Property><Property Name="Solution File" Value="C:\Users\Mark\Documents\Visual Studio 2008\Projects\CSL[Test]_1\CSL[Test]_1.sln">
+</Property><Property Name="User Options File" Value="C:\Users\Mark\Documents\Visual Studio 2008\Projects\CSL[Test]_1\CSL[Test]_1.suo">
+</Property><Property Name="Date" Value="Wednesday, May 19, 2010">
+</Property><Property Name="Time" Value="19:45 PM">
+</Property></Properties><Event ErrorLevel="0" Project="" Source="CSL[Test]_1.sln" Description="File successfully backed up as C:\Users\Mark\Documents\Visual Studio 2008\Projects\CSL[Test]_1\Backup\CSL[Test]_1.sln">
+</Event><Event ErrorLevel="0" Project="" Source="CSL[Test]_1.suo" Description="File successfully backed up as C:\Users\Mark\Documents\Visual Studio 2008\Projects\CSL[Test]_1\Backup\CSL[Test]_1.suo">
+</Event><Event ErrorLevel="0" Project="CSL[Test]_1" Source="CSL[Test]_1.csproj" Description="Project file successfully backed up as C:\Users\Mark\Documents\Visual Studio 2008\Projects\CSL[Test]_1\Backup\CSL[Test]_1.csproj">
+</Event><Event ErrorLevel="0" Project="CSL[Test]_1" Source="CSL[Test]_1.csproj.user" Description="Project user file successfully backed up as C:\Users\Mark\Documents\Visual Studio 2008\Projects\CSL[Test]_1\Backup\CSL[Test]_1.csproj.user">
+</Event><Event ErrorLevel="0" Project="CSL[Test]_1" Source="BWHandler.cs" Description="File successfully backed up as C:\Users\Mark\Documents\Visual Studio 2008\Projects\CSL[Test]_1\Backup\BWHandler.cs">
+</Event><Event ErrorLevel="0" Project="CSL[Test]_1" Source="DataGridViewHandler.cs" Description="File successfully backed up as C:\Users\Mark\Documents\Visual Studio 2008\Projects\CSL[Test]_1\Backup\DataGridViewHandler.cs">
+</Event><Event ErrorLevel="0" Project="CSL[Test]_1" Source="DirectoryHandler.cs" Description="File successfully backed up as C:\Users\Mark\Documents\Visual Studio 2008\Projects\CSL[Test]_1\Backup\DirectoryHandler.cs">
+</Event><Event ErrorLevel="0" Project="CSL[Test]_1" Source="ErrorWindow.cs" Description="File successfully backed up as C:\Users\Mark\Documents\Visual Studio 2008\Projects\CSL[Test]_1\Backup\ErrorWindow.cs">
+</Event><Event ErrorLevel="0" Project="CSL[Test]_1" Source="ErrorWindow.Designer.cs" Description="File successfully backed up as C:\Users\Mark\Documents\Visual Studio 2008\Projects\CSL[Test]_1\Backup\ErrorWindow.Designer.cs">
+</Event><Event ErrorLevel="0" Project="CSL[Test]_1" Source="OptionsWindow.cs" Description="File successfully backed up as C:\Users\Mark\Documents\Visual Studio 2008\Projects\CSL[Test]_1\Backup\OptionsWindow.cs">
+</Event><Event ErrorLevel="0" Project="CSL[Test]_1" Source="OptionsWindow.Designer.cs" Description="File successfully backed up as C:\Users\Mark\Documents\Visual Studio 2008\Projects\CSL[Test]_1\Backup\OptionsWindow.Designer.cs">
+</Event><Event ErrorLevel="0" Project="CSL[Test]_1" Source="MainWindow.cs" Description="File successfully backed up as C:\Users\Mark\Documents\Visual Studio 2008\Projects\CSL[Test]_1\Backup\MainWindow.cs">
+</Event><Event ErrorLevel="0" Project="CSL[Test]_1" Source="MainWindow.Designer.cs" Description="File successfully backed up as C:\Users\Mark\Documents\Visual Studio 2008\Projects\CSL[Test]_1\Backup\MainWindow.Designer.cs">
+</Event><Event ErrorLevel="0" Project="CSL[Test]_1" Source="MusicBrainzXMLDocumentCreator.cs" Description="File successfully backed up as C:\Users\Mark\Documents\Visual Studio 2008\Projects\CSL[Test]_1\Backup\MusicBrainzXMLDocumentCreator.cs">
+</Event><Event ErrorLevel="0" Project="CSL[Test]_1" Source="MusicBrainzXMLDocumentRelease.cs" Description="File successfully backed up as C:\Users\Mark\Documents\Visual Studio 2008\Projects\CSL[Test]_1\Backup\MusicBrainzXMLDocumentRelease.cs">
+</Event><Event ErrorLevel="0" Project="CSL[Test]_1" Source="SettingsFile.cs" Description="File successfully backed up as C:\Users\Mark\Documents\Visual Studio 2008\Projects\CSL[Test]_1\Backup\SettingsFile.cs">
+</Event><Event ErrorLevel="0" Project="CSL[Test]_1" Source="SettingsFile1.Designer.cs" Description="File successfully backed up as C:\Users\Mark\Documents\Visual Studio 2008\Projects\CSL[Test]_1\Backup\SettingsFile1.Designer.cs">
+</Event><Event ErrorLevel="0" Project="CSL[Test]_1" Source="SettingsHandler.cs" Description="File successfully backed up as C:\Users\Mark\Documents\Visual Studio 2008\Projects\CSL[Test]_1\Backup\SettingsHandler.cs">
+</Event><Event ErrorLevel="0" Project="CSL[Test]_1" Source="SwitchesWindow.cs" Description="File successfully backed up as C:\Users\Mark\Documents\Visual Studio 2008\Projects\CSL[Test]_1\Backup\SwitchesWindow.cs">
+</Event><Event ErrorLevel="0" Project="CSL[Test]_1" Source="SwitchesWindow.Designer.cs" Description="File successfully backed up as C:\Users\Mark\Documents\Visual Studio 2008\Projects\CSL[Test]_1\Backup\SwitchesWindow.Designer.cs">
+</Event><Event ErrorLevel="0" Project="CSL[Test]_1" Source="Torrent.cs" Description="File successfully backed up as C:\Users\Mark\Documents\Visual Studio 2008\Projects\CSL[Test]_1\Backup\Torrent.cs">
+</Event><Event ErrorLevel="0" Project="CSL[Test]_1" Source="Program.cs" Description="File successfully backed up as C:\Users\Mark\Documents\Visual Studio 2008\Projects\CSL[Test]_1\Backup\Program.cs">
+</Event><Event ErrorLevel="0" Project="CSL[Test]_1" Source="Properties\AssemblyInfo.cs" Description="File successfully backed up as C:\Users\Mark\Documents\Visual Studio 2008\Projects\CSL[Test]_1\Backup\Properties\AssemblyInfo.cs">
+</Event><Event ErrorLevel="0" Project="CSL[Test]_1" Source="Properties\Resources.Designer.cs" Description="File successfully backed up as C:\Users\Mark\Documents\Visual Studio 2008\Projects\CSL[Test]_1\Backup\Properties\Resources.Designer.cs">
+</Event><Event ErrorLevel="0" Project="CSL[Test]_1" Source="Properties\Settings.Designer.cs" Description="File successfully backed up as C:\Users\Mark\Documents\Visual Studio 2008\Projects\CSL[Test]_1\Backup\Properties\Settings.Designer.cs">
+</Event><Event ErrorLevel="0" Project="CSL[Test]_1" Source="TorrentBuilder.cs" Description="File successfully backed up as C:\Users\Mark\Documents\Visual Studio 2008\Projects\CSL[Test]_1\Backup\TorrentBuilder.cs">
+</Event><Event ErrorLevel="0" Project="CSL[Test]_1" Source="TorrentXMLHandler.cs" Description="File successfully backed up as C:\Users\Mark\Documents\Visual Studio 2008\Projects\CSL[Test]_1\Backup\TorrentXMLHandler.cs">
+</Event><Event ErrorLevel="0" Project="CSL[Test]_1" Source="UpdatedInformationWindow.cs" Description="File successfully backed up as C:\Users\Mark\Documents\Visual Studio 2008\Projects\CSL[Test]_1\Backup\UpdatedInformationWindow.cs">
+</Event><Event ErrorLevel="0" Project="CSL[Test]_1" Source="UpdatedInformationWindow.Designer.cs" Description="File successfully backed up as C:\Users\Mark\Documents\Visual Studio 2008\Projects\CSL[Test]_1\Backup\UpdatedInformationWindow.Designer.cs">
+</Event><Event ErrorLevel="0" Project="CSL[Test]_1" Source="uTorrentHandler.cs" Description="File successfully backed up as C:\Users\Mark\Documents\Visual Studio 2008\Projects\CSL[Test]_1\Backup\uTorrentHandler.cs">
+</Event><Event ErrorLevel="0" Project="CSL[Test]_1" Source="app.config" Description="File successfully backed up as C:\Users\Mark\Documents\Visual Studio 2008\Projects\CSL[Test]_1\Backup\app.config">
+</Event><Event ErrorLevel="0" Project="CSL[Test]_1" Source="CSL[Test]_1_TemporaryKey.pfx" Description="File successfully backed up as C:\Users\Mark\Documents\Visual Studio 2008\Projects\CSL[Test]_1\Backup\CSL[Test]_1_TemporaryKey.pfx">
+</Event><Event ErrorLevel="0" Project="CSL[Test]_1" Source="Properties\Settings.settings" Description="File successfully backed up as C:\Users\Mark\Documents\Visual Studio 2008\Projects\CSL[Test]_1\Backup\Properties\Settings.settings">
+</Event><Event ErrorLevel="0" Project="CSL[Test]_1" Source="SettingsFile.settings" Description="File successfully backed up as C:\Users\Mark\Documents\Visual Studio 2008\Projects\CSL[Test]_1\Backup\SettingsFile.settings">
+</Event><Event ErrorLevel="0" Project="CSL[Test]_1" Source="HTML-Look-Up.txt" Description="File successfully backed up as C:\Users\Mark\Documents\Visual Studio 2008\Projects\CSL[Test]_1\Backup\HTML-Look-Up.txt">
+</Event><Event ErrorLevel="0" Project="CSL[Test]_1" Source="ErrorWindow.resx" Description="File successfully backed up as C:\Users\Mark\Documents\Visual Studio 2008\Projects\CSL[Test]_1\Backup\ErrorWindow.resx">
+</Event><Event ErrorLevel="0" Project="CSL[Test]_1" Source="MainWindow.resx" Description="File successfully backed up as C:\Users\Mark\Documents\Visual Studio 2008\Projects\CSL[Test]_1\Backup\MainWindow.resx">
+</Event><Event ErrorLevel="0" Project="CSL[Test]_1" Source="OptionsWindow.resx" Description="File successfully backed up as C:\Users\Mark\Documents\Visual Studio 2008\Projects\CSL[Test]_1\Backup\OptionsWindow.resx">
+</Event><Event ErrorLevel="0" Project="CSL[Test]_1" Source="Properties\Resources.resx" Description="File successfully backed up as C:\Users\Mark\Documents\Visual Studio 2008\Projects\CSL[Test]_1\Backup\Properties\Resources.resx">
+</Event><Event ErrorLevel="0" Project="CSL[Test]_1" Source="SwitchesWindow.resx" Description="File successfully backed up as C:\Users\Mark\Documents\Visual Studio 2008\Projects\CSL[Test]_1\Backup\SwitchesWindow.resx">
+</Event><Event ErrorLevel="0" Project="CSL[Test]_1" Source="UpdatedInformationWindow.resx" Description="File successfully backed up as C:\Users\Mark\Documents\Visual Studio 2008\Projects\CSL[Test]_1\Backup\UpdatedInformationWindow.resx">
+</Event><Event ErrorLevel="0" Project="CSL[Test]_1" Source="CSL[Test]_1.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="CSL[Test]_1" Source="CSL[Test]_1.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="" Source="CSL[Test]_1.sln" Description="Solution converted successfully">
+</Event><Event ErrorLevel="3" Project="" Source="CSL[Test]_1.sln" Description="Converted">
+</Event><Event ErrorLevel="0" Project="CSL[Test]_1" Source="CSL[Test]_1.csproj" Description="Scan complete: Upgrade not required for project files.">
+</Event></UpgradeLog>

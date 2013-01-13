@@ -30,12 +30,12 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             this.MainMenu = new System.Windows.Forms.MenuStrip();
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.optionsToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
@@ -354,8 +354,8 @@
             // torrentsTableDataGridView
             // 
             this.torrentsTableDataGridView.AllowUserToAddRows = false;
-            dataGridViewCellStyle7.BackColor = System.Drawing.Color.LightCyan;
-            this.torrentsTableDataGridView.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle1.BackColor = System.Drawing.Color.LightCyan;
+            this.torrentsTableDataGridView.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
             this.torrentsTableDataGridView.AutoGenerateColumns = false;
             this.torrentsTableDataGridView.BackgroundColor = System.Drawing.SystemColors.Window;
             this.torrentsTableDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
@@ -392,9 +392,9 @@
             // MusicOpenWithClient
             // 
             this.MusicOpenWithClient.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle8.NullValue = "Open with µTorrent";
-            this.MusicOpenWithClient.DefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle2.NullValue = "Open with µTorrent";
+            this.MusicOpenWithClient.DefaultCellStyle = dataGridViewCellStyle2;
             this.MusicOpenWithClient.HeaderText = "Open File";
             this.MusicOpenWithClient.Name = "MusicOpenWithClient";
             this.MusicOpenWithClient.Width = 52;
@@ -518,8 +518,8 @@
             // moviesTableDataGridView
             // 
             this.moviesTableDataGridView.AllowUserToAddRows = false;
-            dataGridViewCellStyle9.BackColor = System.Drawing.Color.LightCyan;
-            this.moviesTableDataGridView.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle9;
+            dataGridViewCellStyle3.BackColor = System.Drawing.Color.LightCyan;
+            this.moviesTableDataGridView.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle3;
             this.moviesTableDataGridView.AutoGenerateColumns = false;
             this.moviesTableDataGridView.BackgroundColor = System.Drawing.SystemColors.Window;
             this.moviesTableDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
@@ -554,9 +554,9 @@
             // MoviesOpenWithClient
             // 
             this.MoviesOpenWithClient.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle10.NullValue = "Open with µTorrent";
-            this.MoviesOpenWithClient.DefaultCellStyle = dataGridViewCellStyle10;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle4.NullValue = "Open with µTorrent";
+            this.MoviesOpenWithClient.DefaultCellStyle = dataGridViewCellStyle4;
             this.MoviesOpenWithClient.HeaderText = "Open File";
             this.MoviesOpenWithClient.Name = "MoviesOpenWithClient";
             this.MoviesOpenWithClient.Width = 52;
@@ -649,8 +649,8 @@
             // othersTableDataGridView
             // 
             this.othersTableDataGridView.AllowUserToAddRows = false;
-            dataGridViewCellStyle11.BackColor = System.Drawing.Color.LightCyan;
-            this.othersTableDataGridView.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle11;
+            dataGridViewCellStyle5.BackColor = System.Drawing.Color.LightCyan;
+            this.othersTableDataGridView.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle5;
             this.othersTableDataGridView.AutoGenerateColumns = false;
             this.othersTableDataGridView.BackgroundColor = System.Drawing.SystemColors.Window;
             this.othersTableDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
@@ -681,9 +681,9 @@
             // 
             this.OpenWithClient.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
             this.OpenWithClient.DataPropertyName = "OpenWithClient";
-            dataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle12.NullValue = "Open with µTorrent";
-            this.OpenWithClient.DefaultCellStyle = dataGridViewCellStyle12;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle6.NullValue = "Open with µTorrent";
+            this.OpenWithClient.DefaultCellStyle = dataGridViewCellStyle6;
             this.OpenWithClient.HeaderText = "Open File";
             this.OpenWithClient.Name = "OpenWithClient";
             this.OpenWithClient.Resizable = System.Windows.Forms.DataGridViewTriState.True;
@@ -747,8 +747,8 @@
             this.tableAdapterManager.MoviesTableTableAdapter = null;
             this.tableAdapterManager.OthersTableTableAdapter = null;
             this.tableAdapterManager.TorrentsTableTableAdapter = this.torrentsTableTableAdapter;
+            this.tableAdapterManager.TrackersTableTableAdapter = null;
             this.tableAdapterManager.UpdateOrder = CSL.datasetTableAdapters.TableAdapterManager.UpdateOrderOption.InsertUpdateDelete;
-            this.tableAdapterManager.UserStatsTableTableAdapter = null;
             // 
             // moviesTableTableAdapter
             // 
